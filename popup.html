@@ -1,0 +1,115 @@
+<html>
+  <head>
+    <title>Bandit Popup</title>
+
+    <style>
+      body {
+        font-family: "Segoe UI", "Lucida Grande", Tahoma, sans-serif;
+        font-size: 100%;
+        background-color: #ECEAE0;
+        color: #63AA9C;
+        min-width: 800px;
+      }
+      #status {
+        /* avoid an excessively wide status text */
+        white-space: pre;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        max-width: 400px;
+      }
+      a{
+        font-family: 'Open Sans', Verdana, Helvetica, sans-serif;
+        text-decoration: none;
+      }
+      a:link {
+          color: #E9633B;
+          text-decoration: none;
+      }
+
+      /* visited link */
+      a:visited {
+          color: #E9633B;
+          text-decoration: none;
+      }
+
+      /* mouse over link */
+      a:hover {
+          color: #E9633B;
+          text-decoration: underline;
+      }
+
+      /* selected link */
+      a:active {
+          color: #E9633B;
+          text-decoration: none;
+      }
+      .del{
+        padding: 5pt !important;
+      }
+
+      button.black-list{
+        background-color: #333 !important;
+        color: #fff !important;
+      }
+
+      #view-heading{
+         cursor: pointer; cursor: hand; 
+      }
+
+      .time{
+        font-size : 18px;
+        background: #fff4a3;
+        text-decoration: none;
+      }
+
+    </style>
+
+    
+    
+
+  </head>
+  <body>
+    <link href="http://fonts.googleapis.com/css?family=Bree+Serif" rel="stylesheet" type="text/css">
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="bootstrap.min.css">
+    <script src="jquery.js"></script>
+    <script src="popup.js"></script>
+    <script src="bootstrap.js"></script>
+ 
+ <div class="row"><div class="col-xs-12">
+  <div id="view-heading" class="col-xs-4 " style="font-size: 24px; font-family:'Bree Serif', Georgia, serif">TOP VISITED LINKS</div>
+  <div class="col-xs-6">
+    <div class="input-group">
+      <input type="text" id="search-text-input" class="form-control" placeholder="Search for...">
+      <span  class="input-group-btn">
+        <button id="search-btn"  class="btn btn-default" type="button">Go!</button>
+      </span>
+    </div>
+  </div>
+  <div class="col-xs-2"><button type='button' id='delete-link-all'class='del btn btn-danger'>Clear Data</button></div>
+</div>
+</div>
+
+    <div id="status"></div>
+    <div id="duration"></div>
+    
+
+    
+    <div id= "top-links-view" class="row">
+    <div class="col-xs-12" id = "page-list"> </div>
+    </div>
+  </body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+

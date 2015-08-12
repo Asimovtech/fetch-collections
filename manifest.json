@@ -1,0 +1,35 @@
+{
+  "manifest_version": 2,
+
+  "name": "activityWatcher",
+  "description": "This extension shows time spent on each page",
+  "version": "1.0",
+  "background": {
+    "page": "background.html"
+  },
+
+  "browser_action": {
+    "default_icon": "icon.png",
+    "default_popup": "popup.html"
+  },
+  "permissions": [
+    "tabs",
+    "activeTab",
+    "storage",
+    "https://ajax.googleapis.com/",
+    "http://localhost/",
+    "http://52.25.38.219/",
+    "notifications"
+
+  ],
+  "web_accessible_resources": [
+    "icon.png"
+  ],
+
+  "content_scripts": [{
+    "matches": ["http://*/*", "https://*/*"],
+    "js": ["jquery.js", "msgs.js"]
+
+  }]
+
+}
