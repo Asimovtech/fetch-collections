@@ -63,8 +63,8 @@ function deleteAllLinks(user) {
 
 function searchLinks(userId) {
   var searchText = $('#search-text-input').val();
-  var getUrl = "http://52.26.155.37:9080/TimerWidget/api/view/userId/" + userId+"/search/"+searchText;
-    /*var getUrl = "http://localhost:9082/TimerWidget/api/view/userId/" + userId + "/search/"+searchText;*/
+  var getUrl = "http://52.26.155.37:9080/TimerWidget/api/view/userId/" + userId + "/search/" + searchText;
+  /*var getUrl = "http://localhost:9082/TimerWidget/api/view/userId/" + userId + "/search/"+searchText;*/
   var data = $.ajax({
     type: "GET",
     async: false,
@@ -78,8 +78,6 @@ function searchLinks(userId) {
   console.log(jsonData);
   createListView(jsonData)
 }
-
-
 
 
 
@@ -146,11 +144,19 @@ function createListView(jsonData) {
 
 
 
-    $('#fb-share-btn-' + count).on('click', function() {
+/*    $('#fb-share-btn-' + count).on('click', function() {
       window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(item.pageId),
         'facebook-share-dialog',
         'width=626,height=436,top=200,left=450');
     });
+*/
+
+    $('#fb-share-btn-' + count).on('click', function() {
+      window.open('http://www.facebook.com/sharer.php?s=100&p[url]='+ encodeURIComponent(item.pageId)+'&p[title]=Whatsup NIGGA&p[summary]=assnigga');
+    });
+
+
+
 
     $('#tweet-btn-' + count).on('click', function() {
       window.open(
@@ -190,6 +196,13 @@ document.addEventListener('DOMContentLoaded', function() {
     $('#page-list').empty();
     getUsersPages();
 
+  });
+
+  $('#search-text-input').on('keypress', function(e) {
+    if (e.which == '13') {
+      $('#page-list').empty();
+      searchLinks(userId);
+    }
   });
 
 
