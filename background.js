@@ -4,8 +4,10 @@ var curUrl = "";
 var curPageTitle = "";
 var pageActive = true;
 var popupTimer = 120;
-
-
+var curFavIconUrl = "";
+var pauseFetch = false;
+/*var serverUrl = "http://52.26.203.91:80/";*/
+var serverUrl = "http://localhost:9082/";
 
 chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
@@ -14,14 +16,17 @@ chrome.runtime.onMessage.addListener(
             pageActiveTimeout = 30;
             if (popupTimer == 0) {
                 getPopupDetail();
+                popupTimer = 120;
             }
-            popupTimer = 120;
+            
+        }
+        if (request.message=="toggle") {
+            pauseFetch = !pauseFetch;
         }
     });
 
 function createUserId() {
     var randomId = uuid.v4();
-
     chrome.storage.sync.set({
         'userId': randomId
     }, function() {
@@ -30,14 +35,14 @@ function createUserId() {
     return randomId;
 }
 
-function updateUserTimer(curUrl, pageTitle, timer) {
+function updateUserTimer(curUrl, pageTitle, timer, favIconUrl) {
     var userId = "";
     chrome.storage.sync.get('userId', function(items) {
         userId = items.userId;
         if (userId == undefined || userId == "") {
             userId = createUserId();
         }
-        updateTimer(curUrl, pageTitle, timer, userId);
+        updateTimer(curUrl, pageTitle, timer, userId, favIconUrl);
     });
 
 }
@@ -77,17 +82,17 @@ function getPopupDetail() {
 
     });
 
- chrome.storage.sync.set({
-                'popupDate': date.getDate()
-            }, function() {});
+    chrome.storage.sync.set({
+        'popupDate': date.getDate()
+    }, function() {});
 
 }
 
 
 
 function getPopUpLink(userId) {
-    var getUrl = "http://52.26.155.37:9080/TimerWidget/api/view/userId/" + userId + "/notify";
-    /*var getUrl = "http://localhost:9082/TimerWidget/api/view/userId/" + userId + "/notify";*/
+    var getUrl = serverUrl + "TimerWidget/api/view/userId/" + userId + "/notify";
+    /* var getUrl = "http://localhost:9082/TimerWidget/api/view/userId/" + userId + "/notify";*/
     var data = $.ajax({
         type: "GET",
         async: false,
@@ -159,7 +164,7 @@ function getCurTab() {
     return url;
 }
 
-function updateTimer(curUrl, pageTitle, timer, uniqueId) {
+function updateTimer(curUrl, pageTitle, timer, uniqueId, favIconUrl) {
     console.log("update trigerred");
     $.ajax({
         type: "POST",
@@ -168,10 +173,11 @@ function updateTimer(curUrl, pageTitle, timer, uniqueId) {
             url: curUrl,
             title: pageTitle,
             time: timer,
-            userId: uniqueId
+            userId: uniqueId,
+            iconUrl: favIconUrl
         },
 
-        url: "http://52.26.155.37:9080/TimerWidget/api/update/timerId/duration"
+        url: serverUrl + "TimerWidget/api/update/timerId/duration"
             /*url: "http://localhost:9082/TimerWidget/api/update/timerId/duration"*/
 
     }).done(function(msg) {
@@ -183,54 +189,61 @@ function updateTimer(curUrl, pageTitle, timer, uniqueId) {
 $(document).ready(function() {
 
 
-
     setInterval(function() {
-        chrome.tabs.query({
-            active: true,
-            currentWindow: true
-        }, function(tabs) {
-            var tab = tabs[0];
-            var url = tab.url;
-            var pageTitle = tab.title;
 
-            console.assert(typeof url == 'string', 'tab.url should be a string');
-            console.assert(typeof pageTitle == 'string', 'tab.title should be a string');
-            if (curUrl != url) {
-                updateUserTimer(curUrl, curPageTitle, timer);
-                curUrl = url;
-                curPageTitle = pageTitle;
-                timer = 0;
-            } else {
-                if (pageActive == true) {
-                    timer = timer + 3;
-                    if (pageActive == true && timer == 15) {
-                        updateUserTimer(curUrl, curPageTitle, timer);
-                        timer = 0;
-                        console.log("interval update");
+        if (pauseFetch == false) {
+
+            chrome.tabs.query({
+                active: true,
+                currentWindow: true
+            }, function(tabs) {
+                var tab = tabs[0];
+                var url = tab.url;
+                var pageTitle = tab.title;
+                var favIconUrl = tab.favIconUrl;
+                console.log("URL =" + favIconUrl);
+
+                console.assert(typeof url == 'string', 'tab.url should be a string');
+                console.assert(typeof pageTitle == 'string', 'tab.title should be a string');
+                if (curUrl != url) {
+                    updateUserTimer(curUrl, curPageTitle, timer, curFavIconUrl);
+                    curUrl = url;
+                    curPageTitle = pageTitle;
+                    curFavIconUrl = favIconUrl;
+                    timer = 0;
+                } else {
+                    if (pageActive == true) {
+                        timer = timer + 3;
+                        if (pageActive == true && timer == 15) {
+                            updateUserTimer(curUrl, curPageTitle, timer, curFavIconUrl);
+                            timer = 0;
+                            console.log("interval update");
+                        }
                     }
+                    console.log("active time" + timer);
                 }
-                console.log("active time" + timer);
-            }
-        });
+            });
+        }
     }, 3000);
 
     setInterval(function() {
-        console.log("popup " + popupTimer);
-        if (pageActive == false) {
-            return;
-        } else {
-            pageActiveTimeout--;
-            console.log(pageActiveTimeout);
-            if (pageActiveTimeout == 0) {
-                pageActive = false;
-                updateUserTimer(curUrl, curPageTitle, timer);
-                timer = 0;
+        if (pauseFetch == false) {
+            console.log("popup " + popupTimer);
+            if (pageActive == false) {
+                return;
+            } else {
+                pageActiveTimeout--;
+                console.log(pageActiveTimeout);
+                if (pageActiveTimeout == 0) {
+                    pageActive = false;
+                    updateUserTimer(curUrl, curPageTitle, timer, favIconUrl);
+                    timer = 0;
+                }
+            }
+            if (popupTimer != 0) {
+                popupTimer -= 1
             }
         }
-        if (popupTimer != 0) {
-            popupTimer -= 1
-        }
-
     }, 1000);
 
 

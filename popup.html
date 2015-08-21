@@ -1,115 +1,166 @@
 <html>
-  <head>
-    <title>Bandit Popup</title>
-
-    <style>
-      body {
-        font-family: "Segoe UI", "Lucida Grande", Tahoma, sans-serif;
-        font-size: 100%;
-        background-color: #ECEAE0;
-        color: #63AA9C;
-        min-width: 800px;
-      }
-      #status {
-        /* avoid an excessively wide status text */
-        white-space: pre;
-        text-overflow: ellipsis;
-        overflow: hidden;
-        max-width: 400px;
-      }
-      a{
-        font-family: 'Open Sans', Verdana, Helvetica, sans-serif;
-        text-decoration: none;
-      }
-      a:link {
-          color: #E9633B;
-          text-decoration: none;
-      }
-
-      /* visited link */
-      a:visited {
-          color: #E9633B;
-          text-decoration: none;
-      }
-
-      /* mouse over link */
-      a:hover {
-          color: #E9633B;
-          text-decoration: underline;
-      }
-
-      /* selected link */
-      a:active {
-          color: #E9633B;
-          text-decoration: none;
-      }
-      .del{
-        padding: 5pt !important;
-      }
-
-      button.black-list{
-        background-color: #333 !important;
-        color: #fff !important;
-      }
-
-      #view-heading{
-         cursor: pointer; cursor: hand; 
-      }
-
-      .time{
-        font-size : 18px;
-        background: #fff4a3;
-        text-decoration: none;
-      }
-
+    <head>
+        <title>Bandit Popup</title>
+        <style>
+        body {
+            font-family: "Segoe UI", "Lucida Grande", Tahoma, sans-serif;
+            font-size: 100%;
+            background-color: #ECEAE0;
+            color: #63AA9C;
+            min-width: 680;
+            max-height: 580;
+        }
+        html {
+            max-height: 600;
+        }
+        #status {
+            /* avoid an excessively wide status text */
+            
+            white-space: pre;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            max-width: 400px;
+        }
+        a {
+            font-family: 'Open Sans', Verdana, Helvetica, sans-serif;
+            text-decoration: none;
+        }
+        a:link {
+            color: #E9633B;
+            text-decoration: none;
+        }
+        /* visited link */
+        
+        a:visited {
+            color: #E9633B;
+            text-decoration: none;
+        }
+        /* mouse over link */
+        
+        a:hover {
+            color: #E9633B;
+            text-decoration: underline;
+        }
+        /* selected link */
+        
+        a:active {
+            color: #E9633B;
+            text-decoration: none;
+        }
+        .del {
+            padding: 5pt !important;
+        }
+        button.black-list {
+            background-color: #B6B6B6 !important;
+            color: #fff !important;
+        }
+        #view-heading {
+            cursor: pointer;
+            cursor: hand;
+        }
+        .time {
+            font-size: 18px;
+            background: #fff4a3;
+            text-decoration: none;
+        }
+        .favicon-btn {
+            margin-top: 3px;
+            height: 25px;
+            width: 25px;
+        }
+        .toggler {
+            
+            padding: 15px;
+            cursor: pointer;
+            position: absolute;
+            background: #C0C0C0  url(icon-color.png) center no-repeat;
+        }
+      
+        .theme-options {
+            min-width: 100px;
+            top: 31px;
+            right: 13px;
+            cursor: pointer;
+            text-align: center;
+            display: none;
+            position: absolute;
+            background: #C0C0C0 ;
+            z-index: 10;
+        }
+        #top-links-view{
+          height: 370px;
+          width :678;    
+          
+          overflow-y: scroll !important; 
+          overflow-x: hidden !important; 
+            }
+            ::-webkit-scrollbar {
+                width: 12px;
+            }
+             
+            ::-webkit-scrollbar-track {
+               /* -webkit-box-shadow: inset 0 0 0px rgba(0,0,0,0.3); */
+                background: #F0F0F0  ; 
+               /* border-radius: 10px;*/
+            }
+             
+            ::-webkit-scrollbar-thumb {
+                /*border-radius: 10px;*/
+                /*-webkit-box-shadow: inset 0 0 0px rgba(0,0,0,0.5); */
+                 background: #D3D3D3; 
+            }
     </style>
-
-    
-    
-
-  </head>
-  <body>
-    <link href="http://fonts.googleapis.com/css?family=Bree+Serif" rel="stylesheet" type="text/css">
-    <link href="http://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" href="bootstrap.min.css">
-    <script src="jquery.js"></script>
-    <script src="popup.js"></script>
-    <script src="bootstrap.js"></script>
- 
- <div class="row"><div class="col-xs-12">
-  <div id="view-heading" class="col-xs-4 " style="font-size: 24px; font-family:'Bree Serif', Georgia, serif">TOP VISITED LINKS</div>
-  <div class="col-xs-6">
-    <div class="input-group">
-      <input type="text" id="search-text-input" class="form-control" placeholder="Search for...">
-      <span  class="input-group-btn">
-        <button id="search-btn"  class="btn btn-default" type="button">Go!</button>
-      </span>
-    </div>
-  </div>
-  <div class="col-xs-2"><button type='button' id='delete-link-all'class='del btn btn-danger'>Clear Data</button></div>
-</div>
-</div>
-
-    <div id="status"></div>
-    <div id="duration"></div>
-    
-
-    
-    <div id= "top-links-view" class="row">
-    <div class="col-xs-12" id = "page-list"> </div>
-    </div>
-  </body>
-</html>
-
-
-
-
-
-
-
-
-
-
-
-
-
+    </head>
+    <body class="body">
+        <link href="http://fonts.googleapis.com/css?family=Bree+Serif" rel="stylesheet" type="text/css">
+            <link href="http://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css">
+                <link rel="stylesheet" href="bootstrap.min.css">
+                    <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css">
+                        <link rel="stylesheet" type="text/css" href="style.css">
+                            <link rel="stylesheet" type="text/css" href="scrollbar.css">
+                                <script src="jquery.js"></script>
+                                <script src="core.js"></script>
+                                <script src="scrollbar.js"></script>
+                                <script src="popup.js"></script>
+                                <script src="bootstrap.js"></script>
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <div id="view-heading" class="col-xs-4 " style="font-size: 23px; font-family:'Bree Serif', Georgia, serif">TOP VISITED LINKS</div>
+                                        <div class="col-xs-7">
+                                            <div class="input-group">
+                                                <input type="text" id="search-text-input" class="form-control" placeholder="Search for...">
+                                                    <span class="input-group-btn">
+                                                        <button id="search-btn"  class="btn btn-default" type="button">Go!</button>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div id="toggler-panel" class="col-xs-1">
+                                              <div class="toggler" style="display: block;"></div>
+                                                  <div class="theme-options" >
+                                                      <div id='delete-link-all' class="theme-option">
+                                                          <span style ="color: white;font-weight:bold">Clear Data </span>
+                                                      </div>
+                                                  </div>
+                                                <!-- <button type='button' id='delete-link-all' class='del btn btn-danger'>Clear Data</button> -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                   <!--  <div id="status"></div>
+                                    <div id="duration"></div>
+                                    --> 
+                                    <div id="top-links-view" class="row">
+                                        <div class="col-xs-12" id="page-list"></div>
+                                        <div id="loadmoreajaxloader" style="display:none;">
+                                            <center>
+                                                <img src="ajax-loader.gif" />
+                                            </center>
+                                        </div>
+                                    </div>
+                                    <footer>
+                                        <div class="col-xs-9"></div>
+                                        <div class="col-xs-2">
+                                            <button id='toggle-fetch-btn' type='button' class='btn btn-default black-list'>Pause Fetch</button>
+                                        </div>
+                                    </footer>
+                                </body>
+                            </html>
