@@ -5,17 +5,16 @@
         body {
             font-family: "Segoe UI", "Lucida Grande", Tahoma, sans-serif;
             font-size: 100%;
-            background-color: #ECEAE0;
+            /*background-color: #ECEAE0;*/
             color: #63AA9C;
             min-width: 680;
             max-height: 580;
         }
-        html {
+        html {  
             max-height: 600;
         }
         #status {
-            /* avoid an excessively wide status text */
-            
+                        
             white-space: pre;
             text-overflow: ellipsis;
             overflow: hidden;
@@ -26,33 +25,34 @@
             text-decoration: none;
         }
         a:link {
-            color: #E9633B;
+            color: #007ecb;
             text-decoration: none;
         }
         /* visited link */
         
         a:visited {
-            color: #E9633B;
+            color: #007ecb;
             text-decoration: none;
         }
         /* mouse over link */
         
         a:hover {
-            color: #E9633B;
+            color: #007ecb;
             text-decoration: underline;
         }
         /* selected link */
         
         a:active {
-            color: #E9633B;
+            color: #007ecb;
             text-decoration: none;
         }
         .del {
             padding: 5pt !important;
         }
         button.black-list {
-            background-color: #B6B6B6 !important;
+            background-color: black !important;
             color: #fff !important;
+            font-weight: bolder;
         }
         #view-heading {
             cursor: pointer;
@@ -60,7 +60,8 @@
         }
         .time {
             font-size: 18px;
-            background: #fff4a3;
+            font-weight: bolder;
+            color: black;
             text-decoration: none;
         }
         .favicon-btn {
@@ -87,11 +88,13 @@
             background: #C0C0C0 ;
             z-index: 10;
         }
+
         #top-links-view{
-          height: 370px;
+          min-height: 50px;
+          max-height: 370px;
           width :678;    
-          
-          overflow-y: scroll !important; 
+          overflow : auto;
+          /*overflow-y: scroll !important; */
           overflow-x: hidden !important; 
             }
             ::-webkit-scrollbar {
@@ -125,8 +128,8 @@
                                 <script src="bootstrap.js"></script>
                                 <div class="row">
                                     <div class="col-xs-12">
-                                        <div id="view-heading" class="col-xs-4 " style="font-size: 23px; font-family:'Bree Serif', Georgia, serif">TOP VISITED LINKS</div>
-                                        <div class="col-xs-7">
+                                        <!--                                        <div id="view-heading" class="col-xs-4 " style="font-size: 23px; font-family:'Bree Serif', Georgia, serif">TOP VISITED LINKS</div> -->
+                                        <div class="col-xs-11">
                                             <div class="input-group">
                                                 <input type="text" id="search-text-input" class="form-control" placeholder="Search for...">
                                                     <span class="input-group-btn">
@@ -135,21 +138,25 @@
                                                 </div>
                                             </div>
                                             <div id="toggler-panel" class="col-xs-1">
-                                              <div class="toggler" style="display: block;"></div>
-                                                  <div class="theme-options" >
-                                                      <div id='delete-link-all' class="theme-option">
-                                                          <span style ="color: white;font-weight:bold">Clear Data </span>
-                                                      </div>
-                                                  </div>
+                                                <div class="toggler" style="display: block;"></div>
+                                                <div class="theme-options" >
+                                                    <div id='delete-link-all' class="theme-option">
+                                                        <span style ="color: white;font-weight:bold">Clear Data </span>
+                                                    </div>
+                                                </div>
                                                 <!-- <button type='button' id='delete-link-all' class='del btn btn-danger'>Clear Data</button> -->
                                             </div>
                                         </div>
                                     </div>
-                                   <!--  <div id="status"></div>
-                                    <div id="duration"></div>
-                                    --> 
+                                    <!--  <div id="status"></div><div id="duration"></div>
+                                    -->
+<!--                                     <div id="collated-view" class="row">
+
+
+                                    </div> -->
                                     <div id="top-links-view" class="row">
                                         <div class="col-xs-12" id="page-list"></div>
+                                        <div id="empty-result" style="display:none;"></div>
                                         <div id="loadmoreajaxloader" style="display:none;">
                                             <center>
                                                 <img src="ajax-loader.gif" />
