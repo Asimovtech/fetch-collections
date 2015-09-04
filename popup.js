@@ -5,6 +5,7 @@ var doSearch = false;
 var serverUrl = "http://52.26.203.91:80/";
 /*var serverUrl = "http://localhost:9082/";*/
 var baseUrls = {};
+var loadedBaseUrls = {};
 var collated = false;
 
 function getUsersPages(baseUrl) {
@@ -37,7 +38,7 @@ function deleteLink(user, page, option) {
 
 
 function deleteAllLinks(user) {
-  var removeUrl = serverUrl + "/TimerWidget/api/remove/page/all";
+  var removeUrl = serverUrl + "TimerWidget/api/remove/page/all";
   /*var removeUrl = "http://localhost:9082/TimerWidget/api/remove/page/all";*/
   var data = $.ajax({
     type: "PUT",
@@ -69,13 +70,13 @@ function searchLinks(userId) {
         if (!$.isEmptyObject(data.lPageItems)) {
           createListView(data, baseUrl);
         } else {
-          $('div#empty-result').html('<center>No posts to show.</center>');
+
           $('div#empty-result').show();
         }
 
       } else {
-       $('div#empty-result').html('<center>No more posts to show.</center>');
-       $('div#empty-result').show();
+
+        $('div#empty-result').show();
       }
       $('div#loadmoreajaxloader').hide();
     }
@@ -91,6 +92,7 @@ function searchLinks(userId) {
 
 
 function populateList(userId, baseUrl) {
+  
   $('div#empty-result').hide();
   $('div#loadmoreajaxloader').show();
   var getUrl = "";
@@ -110,13 +112,13 @@ function populateList(userId, baseUrl) {
         if (!$.isEmptyObject(data.lPageItems)) {
           createListView(data, baseUrl);
         } else {
-          $('div#empty-result').html('<center>No posts to show.</center>');
-           $('div#empty-result').show();
+
+          $('div#empty-result').show();
         }
-     
+
 
       } else {
-        $('div#empty-result').html('<center>No more posts to show.</center>');
+
         $('div#empty-result').show();
       }
       $('div#loadmoreajaxloader').hide();
@@ -144,6 +146,8 @@ function createListView(jsonData, baseUrl) {
 
     $('#collapse-links').on('click', function() {
       i = 0;
+      loadedBaseUrls = {};
+
       collated = false;
       $('#page-list').empty();
       getUsersPages("");
@@ -159,19 +163,28 @@ function createListView(jsonData, baseUrl) {
 
   }
   $.each(list, function(index, item) {
+
+    if (!doSearch && loadedBaseUrls[item.baseUrl] && (baseUrl == "" || baseUrl == undefined)) {
+      return true;
+    }
+    loadedBaseUrls[item.baseUrl] = true;
     console.log(item.pageId);
     var timeSpent = item.duration;
     var minutes = Math.floor(timeSpent / 60);
     var seconds = timeSpent % 60;
+    var pageTitle = item.pageTitle;
+    if (pageTitle.length >= 45) {
+      pageTitle = pageTitle.substr(0, 35);
+      pageTitle = pageTitle.concat('...');
+    }
 
-
-    var section = $().add("<div id = section-" + count + "></div>").addClass("col-xs-12").addClass("del").addClass("list-item");
-    var link = $().add("<div id = link-" + count + "><span class=\'time col-xs-3\'>" + minutes + "m " + seconds + "s" + " </span><div style='position:relative;left:-45px' class=\'col-xs-9\'><span id=\'favicon-btn-" + count + "\'  ><img class=\'favicon-btn\'' src=\'" + item.iconUrl + "\'' /></span><a href=\'" + item.pageId + "\'>  " + item.pageTitle + "</a></div></div>").addClass("col-xs-10");
+    var section = $().add("<div id = section-" + count + "></div>").addClass("col-xs-12").addClass("list-item");
+    var link = $().add("<div id = link-" + count + "><span class=\'time-container col-xs-3\'><span class=\'time\'>" + minutes + "<span class=\'time-mins\'>m </span>" + seconds + "<span class=\'time-mins\'>s </span>" + " </span></span><div style='position:relative;left:-20px' class=\'col-xs-9\'><span id=\'favicon-btn-" + count + "\' class=\'favIcon-container\'  ><img class=\'favicon-btn\'' src=\'" + item.iconUrl + "\'' /></span><span class=\'link-text\'><a href=\'" + item.pageId + "\'>  " + pageTitle + "</a><span></div></div>").addClass("col-xs-10");
     /*    var delButton = $().add("<button type=\'button\' id=\'delete-link" + count + "\''>Delete</button>").addClass('btn').addClass('btn-danger').addClass('col-xs-1');*/
-    var favIcon = $().add("<div id=\'favicon-btn-" + count + "\'  class=\'col-xs-1\'><img class=\'favicon-btn\'' src=\'" + item.iconUrl + "\'' /></div>")
+    var favIcon = $().add("<div id=\'favicon-btn-" + count + "\'  class=\'favIcon-container\'><img class=\'favicon-btn\'' src=\'" + item.iconUrl + "\'' /></div>")
     var fbshare = $().add("<a id=\'fb-share-btn-" + count + "\'  class=\'btn azm-social azm-size-32 azm-circle azm-gradient azm-facebook \'><i class=\'fa fa-facebook\''></i></a>")
     var tweet = $().add("<a id=\'tweet-btn-" + count + "\'  class=\'btn azm-social azm-size-32 azm-circle azm-gradient azm-twitter\'><i class=\'fa fa-twitter\''></i></a>")
-    var expand = $().add("<span id=\'expand-links-" + count + "\' > <i class=\'fa fa-chevron-right fa-2\'></i></span>");
+    var expand = $().add("<span id=\'expand-links-" + count + "\' class=\'expand-links\'> <i class=\'fa fa-chevron-right fa-2\'></i></span>");
     /*    var blackList = $().add("<button id=\'blacklist-btn-" + count + "\' type=\'button\' class=\'btn btn-default black-list col-xs-1\'>Block</button>")*/
 
     baseUrls["expand-links-" + count] = item.baseUrl;
@@ -187,7 +200,8 @@ function createListView(jsonData, baseUrl) {
       $('#section-' + count).append(expand[0]);
     } else if (baseUrl != "" && baseUrl != undefined) {
       $('#section-' + count).css("position", "relative");
-      $('#section-' + count).css("left", "70px");
+      $('#section-' + count).css("left", "35px");
+      $('#section-' + count).css("width", "615px");
     }
     $('#section-' + count).append(link[0]);
     $('#section-' + count).append(link[1]);
@@ -211,6 +225,7 @@ function createListView(jsonData, baseUrl) {
     */
     $('#expand-links-' + count).on('click', function() {
       i = 0;
+      loadedBaseUrls = {};
       collated = true;
       console.log("expand");
       $('#page-list').empty();
@@ -221,16 +236,21 @@ function createListView(jsonData, baseUrl) {
 
 
     $('#fb-share-btn-' + count).on('click', function() {
+
+      //      fbShareUrl = "https://www.facebook.com/dialog/feed?%20app_id=603739439768329%20&display=popup&caption=Spent&link=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2F&redirect_uri=https://developers.facebook.com/tools/explorer";
+      //fbShareUrl = "https://www.facebook.com/dialog/feed?%20app_id=145634995501895%20&display=popup&caption=Spent%20"+minutes+"minutes%20"+seconds+"seconds%20reading%20"+ item.pageTitle+"&link="+encodeURIComponent(item.pageId)+"&redirect_uri="+encodeURIComponent(item.pageId);
       window.open('http://www.facebook.com/sharer.php?s=100&p[url]=' + encodeURIComponent(item.pageId) + '&p[title]=Whatsup NIGGA&p[summary]=assnigga');
+      /*  window.open(fbShareUrl)*/
     });
 
 
 
     $('#tweet-btn-' + count).on('click', function() {
       window.open(
-        'https://www.twitter.com/share?url=' + encodeURIComponent(item.pageId),
-        'facebook-share-dialog',
-        'width=626,height=436,top=200,left=450');
+        'https://www.twitter.com/intent/tweet?text=' + encodeURIComponent("Spent " + minutes + " mins " + seconds + " secs on ") +
+        '&hashtags=fetchExtension' +
+        '&url=' + encodeURIComponent(item.pageId) +
+        '&width=326,height=236,top=200,left=450');
     });
 
     count++;
@@ -309,6 +329,7 @@ document.addEventListener('DOMContentLoaded', function() {
   getUsersPages("");
 
   $("#top-links-view").scroll(function() {
+    $('div#empty-result').hide();
     if (!collated) {
 
       if ($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight) {
@@ -327,11 +348,11 @@ document.addEventListener('DOMContentLoaded', function() {
   $("#toggler-panel").hover(
     function() {
       console.log("enter");
-
+      $(".toggler").css("background-color", "#C0C0C0");
       $(".theme-options").stop(true, true).delay(250).slideDown(); /*.css("display","block");*/
     },
     function() {
-      $(".toggler").css("background-color", "#C0C0C0");
+      $(".toggler").css("background-color", "#FFF");
       $(".theme-options").stop(true, true).delay(100).slideUp();
       console.log("exit");
     }

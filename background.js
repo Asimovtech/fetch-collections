@@ -18,13 +18,15 @@ chrome.runtime.onMessage.addListener(
                 getPopupDetail();
                 popupTimer = 120;
             }
-            
+
         }
-        if (request.message=="toggle") {
+        if (request.message == "toggle") {
             pauseFetch = !pauseFetch;
         }
-     if (request.message=="queryState") {
-            sendResponse({state : pauseFetch});
+        if (request.message == "queryState") {
+            sendResponse({
+                state: pauseFetch
+            });
         }
     });
 
@@ -95,7 +97,7 @@ function getPopupDetail() {
 
 function getPopUpLink(userId) {
     var getUrl = serverUrl + "TimerWidget/api/view/userId/" + userId + "/notify";
-    
+
     var data = $.ajax({
         type: "GET",
         async: false,
@@ -169,6 +171,10 @@ function getCurTab() {
 
 function updateTimer(curUrl, pageTitle, timer, uniqueId, favIconUrl) {
     console.log("update trigerred");
+    curUrl = curUrl.replace(/'/g, "\\\'");
+    pageTitle = pageTitle.replace(/'/g, "\\\'");
+    favIconUrl = favIconUrl.replace(/'/g, "\\\'");
+
     $.ajax({
         type: "POST",
         crossDomain: "true",
@@ -181,7 +187,7 @@ function updateTimer(curUrl, pageTitle, timer, uniqueId, favIconUrl) {
         },
 
         url: serverUrl + "TimerWidget/api/update/timerId/duration"
-    
+
 
     }).done(function(msg) {
         console.log("Timer Updated");
@@ -202,31 +208,40 @@ $(document).ready(function() {
             }, function(tabs) {
                 var tab = tabs[0];
                 var url = tab.url;
-                var pageTitle = tab.title;
-                var favIconUrl = tab.favIconUrl;
+                //var pageTitle = tab.title;
+                var pageTitle = "";
+                var favIconUrl = encodeURIComponent(url);
                 console.log("URL =" + favIconUrl);
 
-                console.assert(typeof url == 'string', 'tab.url should be a string');
-                console.assert(typeof pageTitle == 'string', 'tab.title should be a string');
-                if (curUrl != url) {
-                    updateUserTimer(curUrl, curPageTitle, timer, curFavIconUrl);
-                    curUrl = url;
-                    curPageTitle = pageTitle;
-                    curFavIconUrl = favIconUrl;
-                    timer = 0;
-                } else {
-                    if (pageActive == true) {
-                        timer = timer + 1;
-                        if (pageActive == true && timer == 15) {
-                            updateUserTimer(curUrl, curPageTitle, timer, curFavIconUrl);
-                            timer = 0;
-                            console.log("interval update");
+                chrome.tabs.sendMessage(tabs[0].id, {
+                    greeting: "poll"
+                }, function(response) {
+                    pageTitle = response.pageTitle;
+
+
+                    console.log("title " + pageTitle);
+                    console.assert(typeof url == 'string', 'tab.url should be a string');
+                    console.assert(typeof pageTitle == 'string', 'tab.title should be a string');
+                    if (curUrl != url) {
+                        updateUserTimer(curUrl, curPageTitle, timer, curFavIconUrl);
+                        curUrl = url;
+                        curPageTitle = pageTitle;
+                        curFavIconUrl = favIconUrl;
+                        timer = 0;
+                    } else {
+                        if (pageActive == true) {
+                            timer = timer + 1;
+                            if (pageActive == true && timer == 15) {
+                                updateUserTimer(curUrl, curPageTitle, timer, curFavIconUrl);
+                                timer = 0;
+                                console.log("interval update");
+                            }
                         }
+                        console.log("active time" + timer);
                     }
-                    console.log("active time" + timer);
-                }
+                });
             });
-    
+
             console.log("popup " + popupTimer);
             if (pageActive == false) {
                 return;

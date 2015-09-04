@@ -7,6 +7,8 @@ activeMessage = function (trigger_event) {
     });
 }
 
+
+
 var cur_x = 0,
     cur_y = 0;
 
@@ -33,3 +35,11 @@ $(document).scroll(function () {
     activeMessage("scroll");
     console.log("scroll");
 });
+
+chrome.runtime.onMessage.addListener(
+  function(request, sender, sendResponse) {
+    if (request.greeting == "poll"){
+        var title = $('title').text();
+    }
+      sendResponse({pageTitle: title});
+  });

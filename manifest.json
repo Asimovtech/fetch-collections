@@ -26,6 +26,8 @@
     "icon.png"
   ],
 
+  "content_security_policy": "script-src 'self'  https://*.facebook.com https://connect.facebook.net https://platform.twitter.com/widgets.js 'unsafe-eval' ; object-src 'self'",
+
   "content_scripts": [{
     "matches": ["http://*/*", "https://*/*"],
     "js": ["jquery.js", "msgs.js"]
