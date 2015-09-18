@@ -9,6 +9,7 @@ var pauseFetch = false;
 var serverUrl = "http://52.26.203.91:80/";
 /*var serverUrl = "http://localhost:9082/";*/
 
+
 chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
         if (request.status == "active") {
@@ -96,7 +97,7 @@ function getPopupDetail() {
 
 
 function getPopUpLink(userId) {
-    var getUrl = serverUrl + "TimerWidget/api/view/userId/" + userId + "/notify";
+    var getUrl = serverUrl + "fetch/user/" + userId + "/notify";
 
     var data = $.ajax({
         type: "GET",
@@ -179,14 +180,14 @@ function updateTimer(curUrl, pageTitle, timer, uniqueId, favIconUrl) {
         type: "POST",
         crossDomain: "true",
         data: {
-            url: curUrl,
-            title: pageTitle,
-            time: timer,
-            userId: uniqueId,
-            iconUrl: favIconUrl
+            page_id: curUrl,
+            page_title: pageTitle,
+            user_id: uniqueId,
+            icon_url: favIconUrl,
+            cumulative_time: timer
         },
 
-        url: serverUrl + "TimerWidget/api/update/timerId/duration"
+        url: serverUrl + "fetch/update/"
 
 
     }).done(function(msg) {

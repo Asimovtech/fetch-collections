@@ -1,32 +1,15 @@
-<html>
-    <head>
-        <title>Bandit Popup</title>
-        <style>
-
-        /*.auto-complete{
-             width: 540px !important;
-        }        */
-
-        .login-btn{
-            background: url("./icons/google.png") center no-repeat  #FFF !important;
-            height: 35px;
-            width: 35px;
-        }
-        .input-group-btn {
-            left:-10px;
-        }
         .typeahead,
         .tt-query,
         .tt-hint {
-          width: 500px !important;
+          width: 540px !important;
           height: 30px !important;
           padding: 8px 12px  !important;
           font-size: 14pt  !important;
           line-height: 30px !important;
-          /*border: 2px solid #ccc !important;*/
-          /*-webkit-border-radius: 8px;
+          border: 2px solid #ccc !important;
+          -webkit-border-radius: 8px;
              -moz-border-radius: 8px;
-                  border-radius: 8px;*/
+                  border-radius: 8px;
           outline: none !important;
           color: black !important;
         }
@@ -35,8 +18,8 @@
           background-color: #fff;
         }
 
-        tt-suggestion:hover{
-            
+        .typeahead:focus {
+          border: 2px solid #0097cf !important;
         }
 
         .tt-query {
@@ -51,41 +34,30 @@
         }
 
         .tt-menu {
-        cursor: hand;
         background-color: #FFF;
         border: 1px solid rgba(0, 0, 0, 0.2);
-        /*border-radius: 8px 8px 8px 8px;*/
+        border-radius: 8px 8px 8px 8px;
         box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-        margin-top: 0px;
+        margin-top: 5px;
         padding: 8px 0;
-        width: 500px !important;
-        text-overflow: ellipsis; 
+        width: 540px !important;
         }
 
         .tt-suggestion {
-        text-overflow: ellipsis; 
           color: black !important;
           padding: 3px 20px;
           font-size: 18px !important;
           line-height: 20px !important;
         }
 
-        .tt-suggestion:hover {
-            font-weight: bolder;
-         background-color: #CCCCCC;
-        }
-
-
         .tt-suggestion.tt-cursor {
          font-weight: bolder;
-         background-color: #CCCCCC;
          }
-        
 
         .tt-suggestion p {
           margin: 0;
         }
-        .tt-highlight{
+        tt-highlight{
             color:red;
         }
 
@@ -303,86 +275,3 @@
                 /*-webkit-box-shadow: inset 0 0 0px rgba(0,0,0,0.5); */
                  background: #D3D3D3; 
             }
-    </style>
-
-    </head>
-    <body class="body">
-
-        <link href="http://fonts.googleapis.com/css?family=Bree+Serif" rel="stylesheet" type="text/css">
-       <!-- <script id="facebook-jssdk" src="https://connect.facebook.net/en_IN/sdk.js#xfbml=1&version=v2.4&appId=603739439768329" type="text/javascript"></script> -->
-            <link href="http://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css">
-                <link rel="stylesheet" href="bootstrap.min.css">
-                    <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css">
-                        <link rel="stylesheet" type="text/css" href="style.css">
-                            <link rel="stylesheet" type="text/css" href="scrollbar.css">
-                                <script src="md5.js"></script>
-                                <script src="jquery.js"></script>
-                                <script src="typeahead.bundle.js"></script>
-                                <script src="core.js"></script>
-                                <script src="scrollbar.js"></script>
-                                <script src="popup.js"></script>
-                                <script src="bootstrap.js"></script>
-                    <!--            <script id="twitter-wjs" src="https://platform.twitter.com/widgets.js"></script> -->
-                                <div class="row">
-                        
-                                    <div class="col-xs-12">
-                        
-                                        <!--                                        <div id="view-heading" class="col-xs-4 " style="font-size: 23px; font-family:'Bree Serif', Georgia, serif">TOP VISITED LINKS</div> -->
-                                        
-                                            <div class="col-xs-10">
-                                                <div class="input-group search-box">
-                                                <input type="text" class="typeahead" id="search-text-input"  placeholder="Search for...">
-                                                    <span class="input-group-btn ">
-                                                        <button id="search-btn"  class="btn btn-default search-button-icon" type="button"></button>
-                                                    </span>
-                                                    </div>
-                                                </div>
-                                            <div class="col-xs-1">
-                                                     <button id="signin-btn"  class="btn login-btn" type="button"></button>
-                                            </div>
-                                            <div id="toggler-panel" class="col-xs-1 toggler-panel">
-                                                <div class="toggler" style="display: block;"></div>
-                                                <div class="theme-options" >
-                                                    <div id='delete-link-all' class="theme-option">
-                                                        <span>Clear Data </span>
-                                                    </div>
-                                                </div>
-                                                <!-- <button type='button' id='delete-link-all' class='del btn btn-danger'>Clear Data</button> -->
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!--  <div id="status"></div><div id="duration"></div>
-                                    -->
-<!--                                     <div id="collated-view" class="row">
-
-
-                                    </div> -->
-                    
-                                    <div id="top-links-view" class="row top-links-view">
-                                        <div class="col-xs-12" id="page-list"></div>
-                                        
-                                        <div id="loadmoreajaxloader" style="display:none;">
-                                            <center>
-                                                <img src="ajax-loader.gif" />
-                                            </center>
-                                        </div>
-                                    </div>
-                                    <div id="empty-result" style="display:none; position:relative;">
-                                            <center>No posts to show.</center>
-                                    </div>
-
-          
-
-                                    <footer>
-                                        <div class="col-xs-9">
-                                 <div class="g-signin2" data-width="300" data-height="200" data-longtitle="true" data-onsuccess="onSignIn" data-theme="dark"></div>
-                                        </div>
-                                        <div class="col-xs-2 pause-fetch-container">
-                                            <button id='toggle-fetch-btn' type='button' class='btn btn-default black-list'>Pause Fetch</button>
-                                        </div>
-                                    </footer>
-
-
-
-                                </body>
-                            </html>

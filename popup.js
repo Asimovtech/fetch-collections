@@ -8,6 +8,8 @@ var baseUrls = {};
 var loadedBaseUrls = {};
 var collated = false;
 
+
+
 function getUsersPages(baseUrl) {
 
   chrome.storage.sync.get('userId', function(items) {
@@ -20,15 +22,15 @@ function getUsersPages(baseUrl) {
 
 
 function deleteLink(user, page, option) {
-  var removeUrl = serverUrl + "TimerWidget/api/" + option + "/page/";
+  var removeUrl = serverUrl + "fetch/" + option + "/page/";
   /*var removeUrl = "http://localhost:9082/TimerWidget/api/" + option + "/page/";*/
   var data = $.ajax({
     type: "PUT",
     async: true,
     crossDomain: "true",
     data: {
-      userId: userId,
-      pageId: page
+      user_id: userId,
+      base_url: page
     },
     url: removeUrl
 
@@ -38,26 +40,27 @@ function deleteLink(user, page, option) {
 
 
 function deleteAllLinks(user) {
-  var removeUrl = serverUrl + "TimerWidget/api/remove/page/all";
+  var removeUrl = serverUrl + "fetch/user/" + userId + "/clear/";
   /*var removeUrl = "http://localhost:9082/TimerWidget/api/remove/page/all";*/
   var data = $.ajax({
     type: "PUT",
     async: true,
     crossDomain: "true",
     data: {
-      userId: userId
+      user_id: userId
     },
     url: removeUrl
   });
 }
 
 function searchLinks(userId) {
+  $('.typeahead').typeahead('close');
   $('div#empty-result').hide();
   $('div#loadmoreajaxloader').show();
   baseUrl = "";
   doSearch = true;
   var searchText = $('#search-text-input').val();
-  var getUrl = serverUrl + "TimerWidget/api/view/userId/" + userId + "/search/" + searchText + "/page/" + i++;
+  var getUrl = serverUrl + "fetch/user/" + userId + "/search/" + searchText + "/page/" + i++;
   /*var getUrl = "http://localhost:9082/TimerWidget/api/view/userId/" + userId + "/search/" + searchText + "/page/" + i++;*/
   var data = $.ajax({
     type: "GET",
@@ -92,14 +95,14 @@ function searchLinks(userId) {
 
 
 function populateList(userId, baseUrl) {
-  
+
   $('div#empty-result').hide();
   $('div#loadmoreajaxloader').show();
   var getUrl = "";
   if (baseUrl == "") {
-    getUrl = serverUrl + "TimerWidget/api/view/userId/" + userId + "/trending/" + i++;
+    getUrl = serverUrl + "fetch/user/" + userId + "/page/" + i++;
   } else {
-    getUrl = serverUrl + "TimerWidget/api/view/userId/" + userId + "/baseurl/" + baseUrl;
+    getUrl = serverUrl + "fetch/user/" + userId + "/base/" + baseUrl;
   }
   var data = $.ajax({
     type: "GET",
@@ -266,9 +269,54 @@ function createListView(jsonData, baseUrl) {
 
 }
 
-var userId = "";
+
 
 document.addEventListener('DOMContentLoaded', function() {
+
+  var autoComplete;
+
+  getUsersPages("");
+
+  chrome.storage.sync.get('userId', function(items) {
+    userId = items.userId;
+
+
+
+    autoComplete = new Bloodhound({
+      limit: 5,
+      datumTokenizer: function(datum) {
+        return Bloodhound.tokenizers.whitespace(datum.value);
+      },
+      queryTokenizer: Bloodhound.tokenizers.whitespace,
+      remote: {
+        url: serverUrl + 'fetch/user/' + userId + '/suggest/%QUERY',
+        wildcard: '%QUERY',
+        filter: function(suggestions) {
+          suggestions = $.parseJSON(suggestions);
+          var a = $.map(suggestions.lPageItems, function(item) {
+            return {
+              value: item.pageTitle
+            };
+          });
+          console.log(a);
+          return a;
+        }
+      }
+    });
+
+
+    autoComplete.initialize();
+
+
+    $('.typeahead').typeahead(null, {
+      displayKey: 'value',
+      source: autoComplete.ttAdapter()
+    });
+  });
+
+  $('.typeahead').bind('typeahead:cursorchange', function(ev, suggestion) {
+    console.log('Selection: ' + suggestion.value);
+  });
 
   $('#delete-link-all').on('click', function() {
     deleteAllLinks(userId);
@@ -283,6 +331,14 @@ document.addEventListener('DOMContentLoaded', function() {
     i = 0;
     searchLinks(userId);
 
+  });
+
+  $('.typeahead').bind('typeahead:select', function(ev, suggestion) {
+    console.log('Selection: ' + suggestion.value);
+    $('#page-list').empty();
+    i = 0;
+    count = 1;
+    searchLinks(userId);
   });
 
   $('#view-heading').on('click', function() {
@@ -326,7 +382,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 
-  getUsersPages("");
+
 
   $("#top-links-view").scroll(function() {
     $('div#empty-result').hide();
@@ -358,5 +414,45 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   );
 
+  $("#signin-btn").on('click', function() {
 
+
+    chrome.identity.getAuthToken({
+      'interactive': true
+    }, function(token) {
+      console.log(token)
+
+    });
+    chrome.identity.getProfileUserInfo(function callback(obj) {
+      console.log(obj.email);
+      new_userId = CryptoJS.MD5(obj.email).toString()
+
+      $.ajax({
+        type: "POST",
+        crossDomain: "true",
+        data: {
+          user_id: userId,
+          new_id: new_userId
+        },
+        url: serverUrl + "fetch/update/userdetails/"
+      }).done(function(msg) {
+        console.log("Details Updated");
+        chrome.storage.sync.set({
+          'userId': userId
+        }, function() {
+          console.log('user created');
+          $('#page-list').empty();
+          i = 0;
+          loadedBaseUrls = {};
+          count = 1;
+          getUsersPages("");
+
+
+        });
+      });
+
+      userId = new_userId;
+    });
+
+  })
 });

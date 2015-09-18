@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
 
-  "name": "activityWatcher",
+  "name": "Fetch",
   "description": "This extension shows time spent on each page",
   "version": "1.0",
   "background": {
@@ -19,19 +19,31 @@
     "https://ajax.googleapis.com/",
     "http://localhost/",
     "http://52.25.38.219/",
-    "notifications"
+    "notifications",
+    "https://docs.google.com/feeds/*",
+    "https://www.google.com/accounts/OAuthGetRequestToken",
+    "https://www.google.com/accounts/OAuthAuthorizeToken",
+    "https://www.google.com/accounts/OAuthGetAccessToken",
+    "identity",
+    "identity.email"
 
   ],
   "web_accessible_resources": [
     "icon.png"
   ],
 
-  "content_security_policy": "script-src 'self'  https://*.facebook.com https://connect.facebook.net https://platform.twitter.com/widgets.js 'unsafe-eval' ; object-src 'self'",
+  "content_security_policy": "script-src 'self'  https://platform.twitter.com/widgets.js 'unsafe-eval' ; object-src 'self'",
 
   "content_scripts": [{
     "matches": ["http://*/*", "https://*/*"],
-    "js": ["jquery.js", "msgs.js"]
+    "js": ["jquery.js", "msgs.js"]  
 
-  }]
-
+  }],
+  "oauth2" : {
+      "client_id": "643379839593-lfju2n8urt9rjst0lvmoja5oopt6rvub.apps.googleusercontent.com",
+      "scopes": [
+        "https://www.googleapis.com/auth/plus.login",
+        "https://www.googleapis.com/auth/plus.me"
+      ]
+    }
 }
