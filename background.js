@@ -6,7 +6,7 @@ var pageActive = true;
 var popupTimer = 120;
 var curFavIconUrl = "";
 var pauseFetch = false;
-var serverUrl = "http://52.26.203.91:80/";
+var serverUrl = "http://52.89.238.187:80/";
 /*var serverUrl = "http://localhost:9082/";*/
 
 

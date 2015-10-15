@@ -2,7 +2,7 @@ var i = 0;
 var count = 1;
 var userId;
 var doSearch = false;
-var serverUrl = "http://52.26.203.91:80/";
+var serverUrl = "http://52.89.238.187:80/";
 /*var serverUrl = "http://localhost:9082/";*/
 var baseUrls = {};
 var loadedBaseUrls = {};
@@ -60,7 +60,7 @@ function searchLinks(userId) {
   baseUrl = "";
   doSearch = true;
   var searchText = $('#search-text-input').val();
-  var getUrl = serverUrl + "fetch/user/" + userId + "/search/" + searchText + "/page/" + i++;
+  var getUrl = serverUrl + "fetch/user/" + userId + "/sphinx/" + searchText + "/page/" + i++;
   /*var getUrl = "http://localhost:9082/TimerWidget/api/view/userId/" + userId + "/search/" + searchText + "/page/" + i++;*/
   var data = $.ajax({
     type: "GET",
@@ -86,10 +86,10 @@ function searchLinks(userId) {
 
   });
 
-
-  var jsonData = $.parseJSON(data.responseText);
-  console.log(jsonData);
-  createListView(jsonData)
+  /*
+    var jsonData = $.parseJSON(data.responseText);
+    console.log(jsonData);
+    createListView(jsonData)*/
 }
 
 
@@ -187,7 +187,9 @@ function createListView(jsonData, baseUrl) {
     var favIcon = $().add("<div id=\'favicon-btn-" + count + "\'  class=\'favIcon-container\'><img class=\'favicon-btn\'' src=\'" + item.iconUrl + "\'' /></div>")
     var fbshare = $().add("<a id=\'fb-share-btn-" + count + "\'  class=\'btn azm-social azm-size-32 azm-circle azm-gradient azm-facebook \'><i class=\'fa fa-facebook\''></i></a>")
     var tweet = $().add("<a id=\'tweet-btn-" + count + "\'  class=\'btn azm-social azm-size-32 azm-circle azm-gradient azm-twitter\'><i class=\'fa fa-twitter\''></i></a>")
+
     var expand = $().add("<span id=\'expand-links-" + count + "\' class=\'expand-links\'> <i class=\'fa fa-chevron-right fa-2\'></i></span>");
+
     /*    var blackList = $().add("<button id=\'blacklist-btn-" + count + "\' type=\'button\' class=\'btn btn-default black-list col-xs-1\'>Block</button>")*/
 
     baseUrls["expand-links-" + count] = item.baseUrl;
@@ -199,7 +201,7 @@ function createListView(jsonData, baseUrl) {
     //$('#section-' + count).append(favIcon[0]);
     $('#section-' + count).append(fbshare[0]);
     $('#section-' + count).append(tweet[0]);
-    if (baseUrl == "" && baseUrl != undefined) {
+    if (baseUrl == "" && baseUrl != undefined && !doSearch) {
       $('#section-' + count).append(expand[0]);
     } else if (baseUrl != "" && baseUrl != undefined) {
       $('#section-' + count).css("position", "relative");
@@ -239,11 +241,8 @@ function createListView(jsonData, baseUrl) {
 
 
     $('#fb-share-btn-' + count).on('click', function() {
-
-      //      fbShareUrl = "https://www.facebook.com/dialog/feed?%20app_id=603739439768329%20&display=popup&caption=Spent&link=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2F&redirect_uri=https://developers.facebook.com/tools/explorer";
-      //fbShareUrl = "https://www.facebook.com/dialog/feed?%20app_id=145634995501895%20&display=popup&caption=Spent%20"+minutes+"minutes%20"+seconds+"seconds%20reading%20"+ item.pageTitle+"&link="+encodeURIComponent(item.pageId)+"&redirect_uri="+encodeURIComponent(item.pageId);
       window.open('http://www.facebook.com/sharer.php?s=100&p[url]=' + encodeURIComponent(item.pageId) + '&p[title]=Whatsup NIGGA&p[summary]=assnigga');
-      /*  window.open(fbShareUrl)*/
+
     });
 
 
@@ -279,8 +278,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
   chrome.storage.sync.get('userId', function(items) {
     userId = items.userId;
-
-
 
     autoComplete = new Bloodhound({
       limit: 5,
@@ -420,13 +417,15 @@ document.addEventListener('DOMContentLoaded', function() {
     chrome.identity.getAuthToken({
       'interactive': true
     }, function(token) {
-      console.log(token)
+      console.log(token);
 
     });
     chrome.identity.getProfileUserInfo(function callback(obj) {
-      console.log(obj.email);
       new_userId = CryptoJS.MD5(obj.email).toString()
-
+      if (userId == undefined || userId == "") {
+          userId = uuid.v4();
+          console.log("user id made empty");
+      }
       $.ajax({
         type: "POST",
         crossDomain: "true",
@@ -438,7 +437,7 @@ document.addEventListener('DOMContentLoaded', function() {
       }).done(function(msg) {
         console.log("Details Updated");
         chrome.storage.sync.set({
-          'userId': userId
+          'userId': new_userId
         }, function() {
           console.log('user created');
           $('#page-list').empty();
