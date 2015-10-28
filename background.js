@@ -6,8 +6,8 @@ var pageActive = true;
 var popupTimer = 120;
 var curFavIconUrl = "";
 var pauseFetch = false;
-var serverUrl = "http://52.89.238.187:80/";
-/*var serverUrl = "http://localhost:9082/";*/
+var serverUrl = "http://52.89.35.176:80/";
+//var serverUrl = "http://localhost:9082/";
 
 
 chrome.runtime.onMessage.addListener(
@@ -32,6 +32,7 @@ chrome.runtime.onMessage.addListener(
     });
 
 function createUserId() {
+    return;
     var randomId = uuid.v4();
     chrome.storage.sync.set({
         'userId': randomId
@@ -46,7 +47,9 @@ function updateUserTimer(curUrl, pageTitle, timer, favIconUrl) {
     chrome.storage.sync.get('userId', function(items) {
         userId = items.userId;
         if (userId == undefined || userId == "") {
+            return;
             userId = createUserId();
+            
         }
         updateTimer(curUrl, pageTitle, timer, userId, favIconUrl);
     });
@@ -66,7 +69,9 @@ function getPopupDetail() {
                 chrome.storage.sync.get('userId', function(items) {
                     userId = items.userId;
                     if (userId == undefined || userId == "") {
+                        return;
                         userId = createUserId();
+
                     }
                     getPopUpLink(userId);
                 });
@@ -79,6 +84,7 @@ function getPopupDetail() {
                 chrome.storage.sync.get('userId', function(items) {
                     userId = items.userId;
                     if (userId == undefined || userId == "") {
+                        return;
                         userId = createUserId();
                     }
                     getPopUpLink(userId);

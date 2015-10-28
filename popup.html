@@ -7,8 +7,8 @@
              width: 540px !important;
         }        */
 
-        .login-btn{
-            background: url("./icons/google.png") center no-repeat  #FFF !important;
+        .logout-btn{
+            background: url("./icons/logout.png") center no-repeat  #FFF !important;
             height: 35px;
             width: 35px;
         }
@@ -23,10 +23,6 @@
           padding: 8px 12px  !important;
           font-size: 14pt  !important;
           line-height: 30px !important;
-          /*border: 2px solid #ccc !important;*/
-          /*-webkit-border-radius: 8px;
-             -moz-border-radius: 8px;
-                  border-radius: 8px;*/
           outline: none !important;
           color: black !important;
         }
@@ -238,7 +234,11 @@
         }
 
         #view-heading {
-            cursor: pointer;
+            
+            cursor: hand;
+        }
+
+        li {
             cursor: hand;
         }
         .time {
@@ -304,6 +304,11 @@
                 /*-webkit-box-shadow: inset 0 0 0px rgba(0,0,0,0.5); */
                  background: #D3D3D3; 
             }
+            .sign-in{
+                position: relative;
+                left: 100px;
+
+            }
     </style>
 
     </head>
@@ -324,12 +329,71 @@
                                 <script src="scrollbar.js"></script>
                                 <script src="popup.js"></script>
                                 <script src="bootstrap.js"></script>
-                    <!--            <script id="twitter-wjs" src="https://platform.twitter.com/widgets.js"></script> -->
-                                <div class="row">
+<!-- Login -->
+                            <div id="register-signin-panel">
+                                <ul id="mytabs" class="nav nav-tabs" role="tablist">
+                                      <li id="fetch-signin" role="presentation" class="active"><a role="tab" data-toggle="tab"  aria-expanded="false">Signin</a></li>
+                                      <li id="fetch-register" role="presentation" class="">
+                                        <a role="tab" data-toggle="tab"  aria-expanded="true">Signup</a></li>
+                                      
+                                </ul>
+                                <div id="alert-container"></div>
+                           
+                               <div id = "fetch-signin-form" class="form-signin">
+
+                                    <h2 style="text-align:center" class="form-signin-heading">Sign In</h2>
+                                
+                                    <div class="form-group sign-in col-xs-8">
+
+                                    <label for=" inputEmail" class="sr-only">Email address</label>
+
+                                    <input type="email" id="signin-inputEmail" required= "required" class="form-control" placeholder="Email address" required="" autofocus="">
+                                    </div>
+                 
+                                    <div class="form-group sign-in col-xs-8">
+                                    <label for="inputPassword" class="sr-only">Password</label>
+                                    <input type="password" id="signin-inputPassword" required= "required" class="form-control" placeholder="Password" required="">
+                                </div>
+                                <br>
+                                <div style="left:290px" class="sign-in col-xs-5">
+                                    <button id="fetch-signin-btn"  class="btn btn-primary" type="submit">Sign in</button>
+                                    </div>
+                                  </div>
+<!-- Login -->
+<!-- register -->
+                               <div style="display:none" id = "fetch-register-form" class="form-signin">
+
+                                    <h2 style="text-align:center" class="form-signin-heading">Sign Up</h2>
+                                
+                                    <div class="form-group sign-in col-xs-8">
+
+                                    <label for="inputEmail" class="sr-only">Email address</label>
+
+                                    <input type="email" id="signup-inputEmail" required= "required" class="form-control" placeholder="Email address" required="" autofocus="">
+                                    </div>
+                                   
+                                    <div class="form-group sign-in col-xs-8">
+                                    <label for="inputPassword" class="sr-only">Password</label>
+                                    <input type="password" id="signup-inputPassword" required= "required" class="form-control" placeholder="Password" required="">
+                                </div>
+                                <div class="form-group sign-in col-xs-8">
+                                    <label for="inputPassword" class="sr-only">Confirm Password</label>
+                                    <input type="password" id="signup-confirmInputPassword" required= "required" class="form-control" placeholder="Confirm Password" required="">
+                                </div>
+                                <div style="left:290px" class="sign-in col-xs-5">
+                                    <button id="fetch-signup-btn"  class="btn btn-primary" type="submit">Sign Up</button>
+                                    </div>
+                                  </div>
+                                  </div>
+<!-- register -->
+
+
+                                <div id="extension-main-content" class="row">
                         
                                     <div class="col-xs-12">
-                        
-                                        <!--                                        <div id="view-heading" class="col-xs-4 " style="font-size: 23px; font-family:'Bree Serif', Georgia, serif">TOP VISITED LINKS</div> -->
+
+
+
                                         
                                             <div class="col-xs-10">
                                                 <div class="input-group search-box">
@@ -340,7 +404,7 @@
                                                     </div>
                                                 </div>
                                             <div class="col-xs-1">
-                                                     <button id="signin-btn"  class="btn login-btn" type="button"></button>
+                                                     <button id="logout-btn"  class="btn logout-btn" type="button"></button>
                                             </div>
                                             <div id="toggler-panel" class="col-xs-1 toggler-panel">
                                                 <div class="toggler" style="display: block;"></div>
@@ -349,16 +413,9 @@
                                                         <span>Clear Data </span>
                                                     </div>
                                                 </div>
-                                                <!-- <button type='button' id='delete-link-all' class='del btn btn-danger'>Clear Data</button> -->
                                             </div>
                                         </div>
-                                    </div>
-                                    <!--  <div id="status"></div><div id="duration"></div>
-                                    -->
-<!--                                     <div id="collated-view" class="row">
-
-
-                                    </div> -->
+                                    
                     
                                     <div id="top-links-view" class="row top-links-view">
                                         <div class="col-xs-12" id="page-list"></div>
@@ -373,7 +430,7 @@
                                             <center>No posts to show.</center>
                                     </div>
 
-          
+                            
 
                                     <footer>
                                         <div class="col-xs-9">
@@ -384,7 +441,7 @@
                                         </div>
                                     </footer>
 
-
+                                    </div>
 
                                 </body>
                             </html>

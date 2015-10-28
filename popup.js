@@ -2,11 +2,17 @@ var i = 0;
 var count = 1;
 var userId;
 var doSearch = false;
-var serverUrl = "http://52.89.238.187:80/";
-/*var serverUrl = "http://localhost:9082/";*/
+var serverUrl = "http://52.89.35.176:80/";
+//var serverUrl = "http://localhost:9082/";
 var baseUrls = {};
 var loadedBaseUrls = {};
 var collated = false;
+
+
+function isEmail(email) {
+  var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+  return regex.test(email);
+}
 
 
 
@@ -14,7 +20,17 @@ function getUsersPages(baseUrl) {
 
   chrome.storage.sync.get('userId', function(items) {
     userId = items.userId;
-    populateList(userId, baseUrl);
+    if (userId == undefined || userId == "") {
+      $('#register-signin-panel').show();
+      $('#extension-main-content').hide();
+      return false;
+    } else {
+      $('#register-signin-panel').hide();
+      $('#extension-main-content').show();
+      populateList(userId, baseUrl);
+    }
+
+
 
   });
 }
@@ -356,6 +372,7 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
 
+
   $('#toggle-fetch-btn').on('click', function() {
     chrome.runtime.sendMessage({
       message: "toggle"
@@ -411,47 +428,146 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   );
 
-  $("#signin-btn").on('click', function() {
+
+  $("#fetch-signin-btn").on('click', function() {
+    var email = $('#signin-inputEmail').val();
+    var password = $('#signin-inputPassword').val();
+    var validPassword = true;
+    var validEmail = true;
+    if (!isEmail(email) || email == "") {
+      $('#signin-inputEmail').parent().addClass('has-error');
+      return false;
+    }
+
+    if (password.length < 6) {
+      $('#signin-inputPassword').parent().addClass('has-error');
+      return false;
+    }
 
 
-    chrome.identity.getAuthToken({
-      'interactive': true
-    }, function(token) {
-      console.log(token);
+    var data = $.ajax({
+      type: "PUT",
+      async: true,
+      url: serverUrl + "fetch/login/",
+      crossDomain: "true",
+      data: {
+        email: email,
+        password: password
+      },
 
-    });
-    chrome.identity.getProfileUserInfo(function callback(obj) {
-      new_userId = CryptoJS.MD5(obj.email).toString()
-      if (userId == undefined || userId == "") {
-          userId = uuid.v4();
-          console.log("user id made empty");
-      }
-      $.ajax({
-        type: "POST",
-        crossDomain: "true",
-        data: {
-          user_id: userId,
-          new_id: new_userId
-        },
-        url: serverUrl + "fetch/update/userdetails/"
-      }).done(function(msg) {
-        console.log("Details Updated");
-        chrome.storage.sync.set({
-          'userId': new_userId
-        }, function() {
-          console.log('user created');
-          $('#page-list').empty();
-          i = 0;
-          loadedBaseUrls = {};
-          count = 1;
+      success: function(data) {
+        if (data) {
+          data = $.parseJSON(data);
+          userId = data['userId'];
+          chrome.storage.sync.set({
+            'userId': userId
+          }, function() {});
+          $('#register-signin-panel').hide();
+          $('#extension-main-content').show();
           getUsersPages("");
+        } else {
+          return false;
+        }
 
 
-        });
-      });
+      }
+    }).fail(function(data) {
+      $("#alert-container").append("<div id='alert-body' class='alert alert-warning alert-dismissible' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label=''Close'><span aria-hidden='true'>&times;</span></button> <span id='alert-text'>" + data.responseText + "</span></div>");
 
-      userId = new_userId;
+      return false;
     });
 
+
+  });
+
+  $("#fetch-signup-btn").on('click', function() {
+    var email = $('#signup-inputEmail').val();
+    var password = $('#signup-inputPassword').val();
+    var confirmPassword = $('#signup-confirmInputPassword').val();
+    if (!isEmail(email)) {
+      $('#signup-inputEmail').parent().addClass('has-error');
+      return false;
+    }
+    if (password.length < 6) {
+      $('#signup-inputPassword').parent().addClass('has-error');
+      return false;
+    }
+    if (password != confirmPassword) {
+      $('#signup-confirmInputPassword').parent().addClass('has-error');
+      $('#signup-inputPassword').parent().addClass('has-error');
+      return false;
+    }
+    var data = $.ajax({
+      type: "POST",
+      async: false,
+      url: serverUrl + "fetch/register/",
+      crossDomain: "true",
+      data: {
+        email: email,
+        password: password
+      },
+
+      success: function(data) {
+        if (data) {
+          data = $.parseJSON(data);
+          userId = data['userId'];
+          chrome.storage.sync.set({
+            'userId': userId
+          }, function() {});
+          $('#register-signin-panel').hide();
+          $('#extension-main-content').show();
+          getUsersPages("");
+        }
+
+      }
+
+    }).fail(function(data) {
+
+      $("#alert-container").append("<div id='alert-body' class='alert alert-warning alert-dismissible' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label=''Close'><span aria-hidden='true'>&times;</span></button> <span id='alert-text'>" + data.responseText + "</span></div>");
+
+      return false;
+    });
+  });
+
+
+  $("#logout-btn").on('click', function() {
+
+    chrome.storage.sync.set({
+      'userId': ""
+    }, function() {});
+
+    $('#extension-main-content').hide();
+    $("#mytabs").remove();
+    var tabs = "<ul id='mytabs' class='nav nav-tabs' role='tablist'>  <li id='fetch-signin' role='presentation' class='active'><a role='tab' data-toggle='tab'  aria-expanded='false'>Signin</a></li>  <li id='fetch-register' role='presentation' class=''>    <a role='tab' data-toggle='tab'  aria-expanded='true'>Signup</a></li>  </ul>"
+    $("#register-signin-panel").prepend(tabs);
+      $('#mytabs li#fetch-register').click(function(e) {
+    e.preventDefault()
+    $("#fetch-register-form").show()
+    $("#fetch-signin-form").hide()
   })
+
+  $('#mytabs li#fetch-signin').click(function(e) {
+    e.preventDefault()
+    $("#fetch-register-form").hide()
+    $("#fetch-signin-form").show()
+  })
+    $('#register-signin-panel').show();
+
+    return false;
+
+  });
+
+
+  $('#mytabs li#fetch-register').click(function(e) {
+    e.preventDefault()
+    $("#fetch-register-form").show()
+    $("#fetch-signin-form").hide()
+  })
+
+  $('#mytabs li#fetch-signin').click(function(e) {
+    e.preventDefault()
+    $("#fetch-register-form").hide()
+    $("#fetch-signin-form").show()
+  })
+
 });
