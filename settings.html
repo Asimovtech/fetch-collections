@@ -1,0 +1,161 @@
+<html>
+    <head>
+        <title>Fetch Settings</title>
+		<style>
+			.clickable {
+				cursor: pointer;
+			}
+		</style>
+    </head>
+    <body class="body">
+        <link href="http://fonts.googleapis.com/css?family=Bree+Serif" rel="stylesheet" type="text/css">
+        <!-- <script id="facebook-jssdk" src="https://connect.facebook.net/en_IN/sdk.js#xfbml=1&version=v2.4&appId=603739439768329" type="text/javascript"></script> -->
+        <link href="http://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css">
+        <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+        <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="settings.css">
+        <link rel="stylesheet" type="text/css" href="scrollbar.css"> 
+        <link rel="stylesheet" href="textext/src/css/textext.core.css">
+        <link rel="stylesheet" href="textext/src/css/textext.plugin.tags.css">
+        <link rel="stylesheet" href="textext/src/css/textext.plugin.prompt.css">
+        <script src="utils/md5.js"></script>
+        <script type="text/javascript" src="utils/uuid.js"></script>
+        <script src="utils/jquery.js"></script>
+        <script src="typeahead/typeahead.bundle.js"></script>
+        <script src="utils/core.js"></script>
+        <script src="scrollbar.js"></script>
+        <script src="bootstrap/js/bootstrap.js"></script>
+        <script src="textext/src/js/textext.core.js"></script>
+        <script src="textext/src/js/textext.plugin.tags.js"></script>
+        <script src="textext/src/js/textext.plugin.prompt.js"></script>
+
+	<div class="container">
+		<div class="row">
+			<div class="col-xs-12">
+				<h5>Fetch Settings</h5>
+	
+				<div id="register-signin-panel">
+						<ul id="mytabs" class="nav nav-tabs" role="tablist">
+						<li role="presentation" class="clickable active"><a data-target="#edit-profile" role="tab" data-toggle="tab" aria-expanded="false">Edit Profile</a></li>
+						<li role="presentation" class="clickable"><a data-target="#blocked-websites" role="tab" data-toggle="tab" aria-expanded="true">Blocked Websites</a></li>
+						<li role="presentation" class="clickable"><a data-target="#upgrade" role="tab" data-toggle="tab" aria-expanded="true">Upgrade</a></li>
+						<li role="presentation" class="clickable"><a data-target="#clear-history" role="tab" data-toggle="tab" aria-expanded="true">Clear History</a></li>
+						<li role="presentation" class="clickable"><a data-target="#contact" role="tab" data-toggle="tab" aria-expanded="true">Contact</a></li>
+					</ul>
+					<div class="tab-content">
+						<div role="tabpanel" class="tab-pane active row" id="edit-profile">
+							<div class="col-xs-12">
+						    	<p>Enter your old and new passwords and click Update to save</p>
+							</div>
+							<!-- <form onsubmit="return apiChangePassword()"> -->
+								<div class="col-xs-8 form-group" id="oldpasswordgroup">
+									<input type="password" class="form-control input-sm" id="oldpassword" placeholder="Current Password">
+								</div>
+								<div class="col-xs-8 form-group" id="newpassword1group">
+									<input type="password" class="form-control input-sm" id="newpassword1" placeholder="New Password">
+								</div>
+								<div class="col-xs-8 form-group" id="newpassword2group">
+									<input type="password" class="form-control input-sm" id="newpassword2" placeholder="Re-enter New Password">
+								</div>
+								<div class="col-xs-8 form-group">
+									<button type="submit" class="btn btn-info" id="changepasswordbtn">Update</button>
+									<label id="changepassworderrors"></label>
+								</div>
+							<!-- </form> -->
+						</div>
+						<div role="tabpanel" class="tab-pane row" id="blocked-websites">
+							<div class="col-xs-12" style="height: 170px">
+								<p>Blacklist sites by typing in the full site name(e.g. google.co.uk) and pressing Enter,<br>
+								Remove sites from blacklist by clicking on the delete icon</p>
+								<textarea id="blocked-sites" style="width: 500px" rows="8"></textarea>
+							</div>
+							<div class="col-xs-12 form-group">
+								<button type="button" id="blocksitesbtn" class="btn btn-info">Update</button>
+								<label id="blocksiteserrors"></label>
+							</div>
+						</div>
+						<div role="tabpanel" class="tab-pane row" id="upgrade">
+							<div class="col-xs-12">
+								<center>
+									<h3>Coming Soon</h3>
+									<p>Is there a feature you'd like to pay for? Let us know</p>
+									<textarea type="text" id="paidfeaturetext" class="form-control"></textarea>
+									<br>
+									<button id="paidfeaturebtn" type="button" class="btn btn-info">Send</button>
+									<label id="paidfeatureerrors"></label>
+								</center>
+							</div>
+						</div>
+						<div role="tabpanel" class="tab-pane row" id="clear-history">
+							<div class="col-xs-12">
+								<p>Clear history by choosing a period and pressing Update</p>
+							</div>
+							<div class="col-xs-12 form-horizontal">
+								<div class="form-group">
+									<div class="radio col-xs-4">
+										<label>
+											<input type="radio" name="duration" id="durationhour" value="0" checked>
+											Last Hour
+										</label>
+									</div>
+									<div class="radio col-xs-4">
+										<label>
+											<input type="radio" name="duration" id="durationday" value="1">
+											Last Day
+										</label>
+									</div>
+									<div class="radio col-xs-4">
+										<label>
+											<input type="radio" name="duration" id="durationweek" value="7">
+											Last Week
+										</label>
+									</div>
+									<div class="radio col-xs-4">
+										<label>
+											<input type="radio" name="duration" id="durationmonth" value="31">
+											Last Month
+										</label>
+									</div>
+									<div class="radio col-xs-4">
+										<label>
+											<input type="radio" name="duration" id="durationyear" value="365">
+											Last Year
+										</label>
+									</div>
+									<div class="radio col-xs-12">
+										<label>
+											<input type="radio" name="duration" id="durationall" value="all">
+											All History
+										</label>
+									</div>
+								</div>
+								<div id="contractgroup" class="form-group">
+									<div class="checkbox col-xs-12">
+										<label>
+											<input type="checkbox" name="acceptcontract" id="contract" value="accepted">
+											I'm sure I'll never need this period of browsing history ever again
+										</label>
+									</div>
+								</div>
+								<div class="form-group col-xs-12">
+									<button id="clearhistorybtn" type="submit" class="btn btn-info">Update</button>
+									<label id="clearhistoryerrors"></label>
+								</div>
+							</div>
+						</div>
+						<div role="tabpanel" class="tab-pane row" id="contact">
+							<div class="col-xs-12">
+								<p>What problems are you facing?</p>
+								<textarea id="supportrequesttext" type="text" class="form-control" rows="5"></textarea>
+								<br>
+								<button id="supportrequestbtn" type="button" class="btn btn-info">Submit</button>
+								<label id="supportrequesterrors"></label>
+							</div>
+						</div>
+					</div>
+				</div>
+	    	</div> 
+        </div>
+        <script src="settings.js"></script>
+    </body>
+</html>

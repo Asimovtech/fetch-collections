@@ -6,7 +6,8 @@ var pageActive = true;
 var popupTimer = 120;
 var curFavIconUrl = "";
 var pauseFetch = false;
-var serverUrl = "http://52.89.35.176:80/";
+var serverUrl = "https://getfetch.net/";
+//var serverUrl = "http://52.32.10.180:80/";
 //var serverUrl = "http://localhost:9082/";
 
 
@@ -25,6 +26,7 @@ chrome.runtime.onMessage.addListener(
             pauseFetch = !pauseFetch;
         }
         if (request.message == "queryState") {
+            console.log("I am here");
             sendResponse({
                 state: pauseFetch
             });
@@ -103,11 +105,14 @@ function getPopupDetail() {
 
 
 function getPopUpLink(userId) {
-    var getUrl = serverUrl + "fetch/user/" + userId + "/notify";
+    var getUrl = serverUrl + "fetch/v2/notify";
 
     var data = $.ajax({
         type: "GET",
         async: false,
+        data: {
+            "user":userId
+        },
         crossDomain: "true",
         url: getUrl
     })
@@ -193,7 +198,7 @@ function updateTimer(curUrl, pageTitle, timer, uniqueId, favIconUrl) {
             cumulative_time: timer
         },
 
-        url: serverUrl + "fetch/update/"
+        url: serverUrl + "fetch/v2/update/"
 
 
     }).done(function(msg) {

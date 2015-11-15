@@ -1,23 +1,51 @@
+// Load Google Analytics
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-69577643-1']);
+_gaq.push(['_trackPageview']);
+
+(function() {
+  var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+  ga.src = 'https://ssl.google-analytics.com/ga.js';
+  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();
+
 var i = 0;
 var count = 1;
 var userId;
 var doSearch = false;
-var serverUrl = "http://52.89.35.176:80/";
+var serverUrl = "https://getfetch.net/";
+//var serverUrl = "http://52.32.10.180:80/";
 //var serverUrl = "http://localhost:9082/";
 var baseUrls = {};
 var loadedBaseUrls = {};
 var collated = false;
+var settingsWindowId=-1;
 
+// Login the user if userId is present
+/*
+chrome.storage.sync.get("userId", function(items) {
+    console.log("UPDATED once more! checking if user exists");
+    if (userId == undefined || userId == "") {
+        console.log("user info not found");
+	return;
+    }    
+    
+    console.log("user found");
+    $('#register-signin-panel').hide();
+    $('#extension-main-content').show();
+    getUsersPages("");
+});
+
+
+*/
 
 function isEmail(email) {
   var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
   return regex.test(email);
 }
 
-
-
 function getUsersPages(baseUrl) {
-
+  _gaq.push(['_trackEvent', "front-page", 'viewed']);
   chrome.storage.sync.get('userId', function(items) {
     userId = items.userId;
     if (userId == undefined || userId == "") {
@@ -37,35 +65,18 @@ function getUsersPages(baseUrl) {
 
 
 
-function deleteLink(user, page, option) {
-  var removeUrl = serverUrl + "fetch/" + option + "/page/";
-  /*var removeUrl = "http://localhost:9082/TimerWidget/api/" + option + "/page/";*/
+function blacklistLink(user, page) {
+  var removeUrl = serverUrl + "fetch/v2/blacklist/";
   var data = $.ajax({
     type: "PUT",
     async: true,
     crossDomain: "true",
     data: {
-      user_id: userId,
-      base_url: page
+      user: userId,
+      sites: page
     },
     url: removeUrl
 
-  });
-}
-
-
-
-function deleteAllLinks(user) {
-  var removeUrl = serverUrl + "fetch/user/" + userId + "/clear/";
-  /*var removeUrl = "http://localhost:9082/TimerWidget/api/remove/page/all";*/
-  var data = $.ajax({
-    type: "PUT",
-    async: true,
-    crossDomain: "true",
-    data: {
-      user_id: userId
-    },
-    url: removeUrl
   });
 }
 
@@ -76,12 +87,17 @@ function searchLinks(userId) {
   baseUrl = "";
   doSearch = true;
   var searchText = $('#search-text-input').val();
-  var getUrl = serverUrl + "fetch/user/" + userId + "/sphinx/" + searchText + "/page/" + i++;
-  /*var getUrl = "http://localhost:9082/TimerWidget/api/view/userId/" + userId + "/search/" + searchText + "/page/" + i++;*/
+  _gaq.push(['_trackEvent', searchText, 'searched']);
+  var getUrl = serverUrl + "fetch/v2/sphinxsearch/"; 
   var data = $.ajax({
-    type: "GET",
+    type: "POST",
     async: true,
     crossDomain: "true",
+    data: {
+       user: userId,
+       query: searchText,
+       page: i++
+    },
     url: getUrl,
     success: function(data) {
       if (data) {
@@ -116,15 +132,20 @@ function populateList(userId, baseUrl) {
   $('div#loadmoreajaxloader').show();
   var getUrl = "";
   if (baseUrl == "") {
-    getUrl = serverUrl + "fetch/user/" + userId + "/page/" + i++;
+    getUrl = serverUrl + "fetch/v2/frontpage/"
   } else {
-    getUrl = serverUrl + "fetch/user/" + userId + "/base/" + baseUrl;
+    getUrl = serverUrl + "fetch/v2/domainlist/"
   }
   var data = $.ajax({
-    type: "GET",
+    type: "POST",
     async: true,
     crossDomain: "true",
     url: getUrl,
+    data: {
+       user: userId,
+       domain: baseUrl,
+       page: i++
+    },
     success: function(data) {
       if (data) {
         data = $.parseJSON(data);
@@ -154,8 +175,8 @@ function createListView(jsonData, baseUrl) {
 
   if (baseUrl != "" && baseUrl != undefined) {
     var favIconUrl = list[0].iconUrl;
-    var link = $().add(" <div class=\'col-xs-10\'> <div id=\'favicon-btn\'  class=\'col-xs-1\'><span style=\'position:relative; top:10px !important\' id=\'collapse-links\' > <i class=\'fa fa-chevron-left fa-2\'></i></span></div><div class=\'col-xs-6 \'> <img class=\'favicon-btn\'' src=\'" + favIconUrl + "\'' /><a href=\' http://" + baseUrl + "\'>  " + baseUrl + "</a></div> <button id=\'blacklist-btn\' type=\'button\' class=\'btn btn-default black-list col-xs-5\'>Don't run on this domain</button></div>");
-    var section = $().add("<div id = \'top-section\'></div>").addClass("col-xs-12").addClass("del").addClass("list-item");
+    var link = $().add(" <div><div class=\'col-xs-4\'><span class=\"clickable\" style=\"vertical-align: middle\" id=\'collapse-links\' ><i class=\'fa fa-chevron-left fa-2\'></i></span>&nbsp;&nbsp;&nbsp;<img class=\'favicon-btn\'' src=\'" + favIconUrl + "\'' /><a href=\' http://" + baseUrl + "\'>  " + baseUrl + "</a></div> <button id=\'blacklist-btn\' type=\'button\' class=\'btn btn-default black-list col-xs-5\'>Don't run on this domain</button></div>");
+    var section = $().add("<div id = \'top-section\'></div>").addClass("row").addClass("del").addClass("list-item");
 
     $('#page-list').append(section[0]);
 
@@ -164,6 +185,7 @@ function createListView(jsonData, baseUrl) {
 
 
     $('#collapse-links').on('click', function() {
+      console.log("clicked!");
       i = 0;
       loadedBaseUrls = {};
 
@@ -175,7 +197,7 @@ function createListView(jsonData, baseUrl) {
     $('#blacklist-btn').on('click', function() {
       i = 0;
       var option = 'blacklist';
-      deleteLink(userId, baseUrl, option);
+      blacklistLink(userId, baseUrl);
       $('#page-list').empty();
       getUsersPages("");
     });
@@ -192,19 +214,19 @@ function createListView(jsonData, baseUrl) {
     var minutes = Math.floor(timeSpent / 60);
     var seconds = timeSpent % 60;
     var pageTitle = item.pageTitle;
-    if (pageTitle.length >= 45) {
-      pageTitle = pageTitle.substr(0, 35);
+    if (pageTitle.length >= 40) {
+      pageTitle = pageTitle.substr(0, 40);
       pageTitle = pageTitle.concat('...');
     }
 
-    var section = $().add("<div id = section-" + count + "></div>").addClass("col-xs-12").addClass("list-item");
-    var link = $().add("<div id = link-" + count + "><span class=\'time-container col-xs-3\'><span class=\'time\'>" + minutes + "<span class=\'time-mins\'>m </span>" + seconds + "<span class=\'time-mins\'>s </span>" + " </span></span><div style='position:relative;left:-20px' class=\'col-xs-9\'><span id=\'favicon-btn-" + count + "\' class=\'favIcon-container\'  ><img class=\'favicon-btn\'' src=\'" + item.iconUrl + "\'' /></span><span class=\'link-text\'><a href=\'" + item.pageId + "\'>  " + pageTitle + "</a><span></div></div>").addClass("col-xs-10");
+    var section = $().add("<div id = section-" + count + "></div>").addClass("row").addClass("list-item");
+    var link = $().add("<div id = link-" + count + "><span class=\'time-container col-xs-3\'><span class=\'time\'>" + minutes + "<span class=\'time-mins\'>m </span>" + seconds + "<span class=\'time-mins\'>s </span>" + " </span></span><div style='position:relative;left:-20px' class=\'col-xs-9\'><span id=\'favicon-btn-" + count + "\' class=\'favIcon-container\'  ><img class=\'favicon-btn\'' src=\'" + item.iconUrl + "\'' /></span><span class=\'link-text\'><a target=\"_blank\" href=\'" + item.pageId + "\'>  " + pageTitle + "</a><span></div></div>").addClass("col-xs-10");
     /*    var delButton = $().add("<button type=\'button\' id=\'delete-link" + count + "\''>Delete</button>").addClass('btn').addClass('btn-danger').addClass('col-xs-1');*/
     var favIcon = $().add("<div id=\'favicon-btn-" + count + "\'  class=\'favIcon-container\'><img class=\'favicon-btn\'' src=\'" + item.iconUrl + "\'' /></div>")
-    var fbshare = $().add("<a id=\'fb-share-btn-" + count + "\'  class=\'btn azm-social azm-size-32 azm-circle azm-gradient azm-facebook \'><i class=\'fa fa-facebook\''></i></a>")
-    var tweet = $().add("<a id=\'tweet-btn-" + count + "\'  class=\'btn azm-social azm-size-32 azm-circle azm-gradient azm-twitter\'><i class=\'fa fa-twitter\''></i></a>")
+    var fbshare = $().add("<a target=\"blank\" href=\""+serverUrl+"fetch/s/"+item.id+"\" id=\'snapshot-btn-" + count + "\'><img src=\"icons/snapshot.png\"/> </a>")
+    var tweet = $().add("<a target=\"blank\" href=\""+serverUrl+"fetch/t/"+item.id+"\" id=\'text-btn-" + count + "\'><img src=\"icons/text.png\"/> &nbsp;</a>")
 
-    var expand = $().add("<span id=\'expand-links-" + count + "\' class=\'expand-links\'> <i class=\'fa fa-chevron-right fa-2\'></i></span>");
+    var expand = $().add("<span id=\'expand-links-" + count + "\' style=\"display: inline-block ; vertical-align: middle ; margin-top: 10px\" class=\'clickable expand-links\'> <i class=\'fa fa-chevron-right fa-2\'></i></span>");
 
     /*    var blackList = $().add("<button id=\'blacklist-btn-" + count + "\' type=\'button\' class=\'btn btn-default black-list col-xs-1\'>Block</button>")*/
 
@@ -231,19 +253,18 @@ function createListView(jsonData, baseUrl) {
     $('#blacklist-btn-' + count).on('click', function() {
       i = 0;
       var option = 'blacklist';
-      deleteLink(userId, item.pageId, option);
+      blacklistLink(userId, item.pageId);
       $('#page-list').empty();
       getUsersPages("");
     });
 
-    /*    $('#delete-link' + count).on('click', function() {
-          i = 0;
-          var option = 'remove';
-          deleteLink(userId, item.pageId, option);
-          $('#page-list').empty();
-          getUsersPages("");
-        });
-    */
+    /*$('#delete-link' + count).on('click', function() {
+       i = 0;
+       var option = 'remove';
+       deleteLink(userId, item.pageId, option);
+       $('#page-list').empty();
+       getUsersPages("");
+    });*/
     $('#expand-links-' + count).on('click', function() {
       i = 0;
       loadedBaseUrls = {};
@@ -255,32 +276,14 @@ function createListView(jsonData, baseUrl) {
 
     });
 
-
-    $('#fb-share-btn-' + count).on('click', function() {
-      window.open('http://www.facebook.com/sharer.php?s=100&p[url]=' + encodeURIComponent(item.pageId) + '&p[title]=Whatsup NIGGA&p[summary]=assnigga');
-
-    });
-
-
-
-    $('#tweet-btn-' + count).on('click', function() {
-      window.open(
-        'https://www.twitter.com/intent/tweet?text=' + encodeURIComponent("Spent " + minutes + " mins " + seconds + " secs on ") +
-        '&hashtags=fetchExtension' +
-        '&url=' + encodeURIComponent(item.pageId) +
-        '&width=326,height=236,top=200,left=450');
+	$('#secion-'+count+' a').on('click', function(event) {
+      _gaq.push(['_trackEvent', event.currentTarget.href, 'url-opened']);
     });
 
     count++;
   });
-  $('a').on('click', function(event) {
-    console.log("CLICK");
-    chrome.tabs.create({
-      url: event.currentTarget.href
-    });
-  });
 
-
+  
 
 }
 
@@ -295,7 +298,7 @@ document.addEventListener('DOMContentLoaded', function() {
   chrome.storage.sync.get('userId', function(items) {
     userId = items.userId;
 
-    autoComplete = new Bloodhound({
+/*    autoComplete = new Bloodhound({
       limit: 5,
       datumTokenizer: function(datum) {
         return Bloodhound.tokenizers.whitespace(datum.value);
@@ -324,7 +327,7 @@ document.addEventListener('DOMContentLoaded', function() {
     $('.typeahead').typeahead(null, {
       displayKey: 'value',
       source: autoComplete.ttAdapter()
-    });
+    }); */
   });
 
   $('.typeahead').bind('typeahead:cursorchange', function(ev, suggestion) {
@@ -415,21 +418,16 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 
-  $("#toggler-panel").hover(
-    function() {
-      console.log("enter");
-      $(".toggler").css("background-color", "#C0C0C0");
-      $(".theme-options").stop(true, true).delay(250).slideDown(); /*.css("display","block");*/
-    },
-    function() {
-      $(".toggler").css("background-color", "#FFF");
-      $(".theme-options").stop(true, true).delay(100).slideUp();
-      console.log("exit");
-    }
-  );
+  $("#settings").on('click', function() {
+     var myleft = (screen.width/2)-(550/2);
+     var mytop = (screen.height/2)-(300/2); 
+     console.log("left is "+myleft+", top is "+mytop);
+
+     chrome.windows.create({url: "settings.html", type: "panel", width: 550, height: 300, "left": myleft, "top": mytop})
+  });
 
 
-  $("#fetch-signin-btn").on('click', function() {
+  $("#signingroup").on('click', function() {
     var email = $('#signin-inputEmail').val();
     var password = $('#signin-inputPassword').val();
     var validPassword = true;
@@ -444,15 +442,15 @@ document.addEventListener('DOMContentLoaded', function() {
       return false;
     }
 
-
+    passhash=CryptoJS.MD5(password);
     var data = $.ajax({
       type: "PUT",
       async: true,
-      url: serverUrl + "fetch/login/",
+      url: serverUrl + "fetch/v2/login/",
       crossDomain: "true",
       data: {
         email: email,
-        password: password
+        password: passhash.toString()
       },
 
       success: function(data) {
@@ -480,31 +478,32 @@ document.addEventListener('DOMContentLoaded', function() {
 
   });
 
-  $("#fetch-signup-btn").on('click', function() {
-    var email = $('#signup-inputEmail').val();
-    var password = $('#signup-inputPassword').val();
+  $("#signupgroup").on('click', function() {
+    var email = $('#signin-inputEmail').val();
+    var password = $('#signin-inputPassword').val();
     var confirmPassword = $('#signup-confirmInputPassword').val();
     if (!isEmail(email)) {
-      $('#signup-inputEmail').parent().addClass('has-error');
+      $('#signin-inputEmail').parent().addClass('has-error');
       return false;
     }
     if (password.length < 6) {
-      $('#signup-inputPassword').parent().addClass('has-error');
+      $('#signin-inputPassword').parent().addClass('has-error');
       return false;
     }
     if (password != confirmPassword) {
       $('#signup-confirmInputPassword').parent().addClass('has-error');
-      $('#signup-inputPassword').parent().addClass('has-error');
+      $('#signin-inputPassword').parent().addClass('has-error');
       return false;
     }
+    passhash=CryptoJS.MD5(password);
     var data = $.ajax({
       type: "POST",
       async: false,
-      url: serverUrl + "fetch/register/",
+      url: serverUrl + "fetch/v2/register/",
       crossDomain: "true",
       data: {
         email: email,
-        password: password
+        password: passhash.toString()
       },
 
       success: function(data) {
@@ -537,15 +536,17 @@ document.addEventListener('DOMContentLoaded', function() {
     }, function() {});
 
     $('#extension-main-content').hide();
-    $("#mytabs").remove();
+    /*$("#mytabs").remove();
     var tabs = "<ul id='mytabs' class='nav nav-tabs' role='tablist'>  <li id='fetch-signin' role='presentation' class='active'><a role='tab' data-toggle='tab'  aria-expanded='false'>Signin</a></li>  <li id='fetch-register' role='presentation' class=''>    <a role='tab' data-toggle='tab'  aria-expanded='true'>Signup</a></li>  </ul>"
     $("#register-signin-panel").prepend(tabs);
       $('#mytabs li#fetch-register').click(function(e) {
     e.preventDefault()
-    $("#fetch-register-form").show()
-    $("#fetch-signin-form").hide()
+    $("#fetch-register-form").show()*/
+	$('#register-signin-panel').show();
+    //$("#fetch-signin-form").hide()
   })
 
+/*
   $('#mytabs li#fetch-signin').click(function(e) {
     e.preventDefault()
     $("#fetch-register-form").hide()
@@ -569,5 +570,33 @@ document.addEventListener('DOMContentLoaded', function() {
     $("#fetch-register-form").hide()
     $("#fetch-signin-form").show()
   })
+*/
 
+  $("#supportrequestlink").click(function(e) {
+    console.log("here");
+    var myleft = (screen.width/2)-(550/2);
+    var mytop = (screen.height/2)-(300/2); 
+    console.log("left is "+myleft+", top is "+mytop);
+    chrome.windows.create({url: "settings.html#contact", type: "panel", width: 550, height: 300, "left": myleft, "top": mytop})
+  });
+
+  $('#newuser').change(function(e) {
+    console.log("hello");
+    if($('#newuser').is(":checked")) {
+      $('#confirmpasswordgroup').show();
+      $('#signingroup').hide();
+      $('#signupgroup').show();
+    } else {
+      $('#confirmpasswordgroup').hide();
+      $('#signingroup').show();
+      $('#signupgroup').hide();
+    }   
+  });
+
+
+  $('#confirmpasswordgroup').hide();
+  $('#signingroup').show();
+  $('#signupgroup').hide();
 });
+
+

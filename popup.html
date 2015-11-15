@@ -7,24 +7,17 @@
              width: 540px !important;
         }        */
 
-        .logout-btn{
-            background: url("./icons/logout.png") center no-repeat  #FFF !important;
-            height: 35px;
-            width: 35px;
-        }
-        .input-group-btn {
-            left:-10px;
-        }
         .typeahead,
         .tt-query,
         .tt-hint {
-          width: 500px !important;
+          padding-left: 10px;
+/*          width: 500px !important;
           height: 30px !important;
           padding: 8px 12px  !important;
           font-size: 14pt  !important;
           line-height: 30px !important;
           outline: none !important;
-          color: black !important;
+          color: black !important;*/
         }
 
         .typeahead {
@@ -111,17 +104,6 @@
               border-bottom: 1px solid #BBB;
               outline: none;
               color: #555;
-              padding: 3px;
-              padding-right: 60px;
-              width: 0px;
-              position: absolute;
-              top: 0;
-              right: 0;
-              background: none;
-              z-index: 3;
-          /*    transition: width .4s cubic-bezier(0.000, 0.795, 0.000, 1.000);*/
-              
-              width: 100%;
             }
 
             input[type="text"]:focus:hover {
@@ -158,13 +140,6 @@
         }
         .top-links-view{
             top: 45px;
-        }
-        .search-box{
-            position: absolute;
-            /*width: 360px;*/
-            /*top: 42px;*/
-            left: 21px;
-            
         }
         .search-box-textarea{
             background-color: #cbcbcb !important;
@@ -309,139 +284,116 @@
                 left: 100px;
 
             }
+			.clickable {
+				cursor: pointer;
+			}
+			.button-gradient {
+				background: #f1247b; /* Old browsers */
+				background: -moz-linear-gradient(left, #f1247b 0%, #943c94 100%); /* FF3.6-15 */
+				background: -webkit-linear-gradient(left, #f1247b 0%,#943c94 100%); /* Chrome10-25,Safari5.1-6 */
+				background: linear-gradient(to right, #f1247b 0%,#943c94 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+				filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f1247b', endColorstr='#943c94',GradientType=1 );
+			}
     </style>
-
+<!-- end Mixpanel -->
     </head>
     <body class="body">
-
         <link href="http://fonts.googleapis.com/css?family=Bree+Serif" rel="stylesheet" type="text/css">
-       <!-- <script id="facebook-jssdk" src="https://connect.facebook.net/en_IN/sdk.js#xfbml=1&version=v2.4&appId=603739439768329" type="text/javascript"></script> -->
-            <link href="http://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css">
-                <link rel="stylesheet" href="bootstrap.min.css">
-                    <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css">
-                        <link rel="stylesheet" type="text/css" href="style.css">
-                            <link rel="stylesheet" type="text/css" href="scrollbar.css">
-                                <script src="md5.js"></script>
-                                <script type="text/javascript" src="uuid.js"></script>
-                                <script src="jquery.js"></script>
-                                <script src="typeahead.bundle.js"></script>
-                                <script src="core.js"></script>
-                                <script src="scrollbar.js"></script>
-                                <script src="popup.js"></script>
-                                <script src="bootstrap.js"></script>
-<!-- Login -->
-                            <div id="register-signin-panel">
-                                <ul id="mytabs" class="nav nav-tabs" role="tablist">
-                                      <li id="fetch-signin" role="presentation" class="active"><a role="tab" data-toggle="tab"  aria-expanded="false">Signin</a></li>
-                                      <li id="fetch-register" role="presentation" class="">
-                                        <a role="tab" data-toggle="tab"  aria-expanded="true">Signup</a></li>
-                                      
-                                </ul>
-                                <div id="alert-container"></div>
-                           
-                               <div id = "fetch-signin-form" class="form-signin">
+        <link href="http://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css">
+        <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+        <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="style.css">
+        <link rel="stylesheet" type="text/css" href="scrollbar.css">
+        <script src="utils/md5.js"></script>
+        <script type="text/javascript" src="utils/uuid.js"></script>
+        <script src="utils/jquery.js"></script>
+        <script src="utils/core.js"></script>
+        <script src="typeahead/typeahead.bundle.js"></script>
+        <script src="scrollbar.js"></script>
+        <script src="popup.js"></script>
+        <script src="bootstrap/js/bootstrap.js"></script>
 
-                                    <h2 style="text-align:center" class="form-signin-heading">Sign In</h2>
-                                
-                                    <div class="form-group sign-in col-xs-8">
+        <div class="container">
+            <div id="register-signin-panel" class="row">
+				<center>
+					<img src="icon.png" style="width: 60px"/><br>
+                   	<span style="font-size: xx-large; color: black; font-weight: 900">Fetch</span><br>
+					<span><small>Never bookmark Again!</small></span>
+				</center>
 
-                                    <label for=" inputEmail" class="sr-only">Email address</label>
+               <div id="alert-container"></div>
 
-                                    <input type="email" id="signin-inputEmail" required= "required" class="form-control" placeholder="Email address" required="" autofocus="">
-                                    </div>
-                 
-                                    <div class="form-group sign-in col-xs-8">
-                                    <label for="inputPassword" class="sr-only">Password</label>
-                                    <input type="password" id="signin-inputPassword" required= "required" class="form-control" placeholder="Password" required="">
-                                </div>
-                                <br>
-                                <div style="left:290px" class="sign-in col-xs-5">
-                                    <button id="fetch-signin-btn"  class="btn btn-primary" type="submit">Sign in</button>
-                                    </div>
-                                  </div>
-<!-- Login -->
-<!-- register -->
-                               <div style="display:none" id = "fetch-register-form" class="form-signin">
+                <div id = "fetch-signin-form" class="form-signin">
+					<div id="newusergroup" class="col-xs-8 sign-in form-group">
+						<div style="line-height: 20px" class="checkbox">
+							<label>
+								<input type="checkbox" name="newuser" id="newuser" value="accepted">
+								I'm a new user
+							</label>
+						</div>
+					</div>
 
-                                    <h2 style="text-align:center" class="form-signin-heading">Sign Up</h2>
-                                
-                                    <div class="form-group sign-in col-xs-8">
-
-                                    <label for="inputEmail" class="sr-only">Email address</label>
-
-                                    <input type="email" id="signup-inputEmail" required= "required" class="form-control" placeholder="Email address" required="" autofocus="">
-                                    </div>
-                                   
-                                    <div class="form-group sign-in col-xs-8">
-                                    <label for="inputPassword" class="sr-only">Password</label>
-                                    <input type="password" id="signup-inputPassword" required= "required" class="form-control" placeholder="Password" required="">
-                                </div>
-                                <div class="form-group sign-in col-xs-8">
-                                    <label for="inputPassword" class="sr-only">Confirm Password</label>
-                                    <input type="password" id="signup-confirmInputPassword" required= "required" class="form-control" placeholder="Confirm Password" required="">
-                                </div>
-                                <div style="left:290px" class="sign-in col-xs-5">
-                                    <button id="fetch-signup-btn"  class="btn btn-primary" type="submit">Sign Up</button>
-                                    </div>
-                                  </div>
-                                  </div>
-<!-- register -->
-
-
-                                <div id="extension-main-content" class="row">
-                        
-                                    <div class="col-xs-12">
-
-
-
-                                        
-                                            <div class="col-xs-10">
-                                                <div class="input-group search-box">
-                                                <input type="text" class="typeahead" id="search-text-input"  placeholder="Search for...">
-                                                    <span class="input-group-btn ">
-                                                        <button id="search-btn"  class="btn btn-default search-button-icon" type="button"></button>
-                                                    </span>
-                                                    </div>
-                                                </div>
-                                            <div class="col-xs-1">
-                                                     <button id="logout-btn"  class="btn logout-btn" type="button"></button>
-                                            </div>
-                                            <div id="toggler-panel" class="col-xs-1 toggler-panel">
-                                                <div class="toggler" style="display: block;"></div>
-                                                <div class="theme-options" >
-                                                    <div id='delete-link-all' class="theme-option">
-                                                        <span>Clear Data </span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    
-                    
-                                    <div id="top-links-view" class="row top-links-view">
-                                        <div class="col-xs-12" id="page-list"></div>
-                                        
-                                        <div id="loadmoreajaxloader" style="display:none;">
-                                            <center>
-                                                <img src="ajax-loader.gif" />
-                                            </center>
-                                        </div>
-                                    </div>
-                                    <div id="empty-result" style="display:none; position:relative;">
-                                            <center>No posts to show.</center>
-                                    </div>
-
-                            
-
-                                    <footer>
-                                        <div class="col-xs-9">
-                                 <div class="g-signin2" data-width="300" data-height="200" data-longtitle="true" data-onsuccess="onSignIn" data-theme="dark"></div>
-                                        </div>
-                                        <div class="col-xs-2 pause-fetch-container">
-                                            <button id='toggle-fetch-btn' type='button' class='btn btn-default black-list'>Pause Fetch</button>
-                                        </div>
-                                    </footer>
-
-                                    </div>
-
-                                </body>
-                            </html>
+                    <div class="form-group sign-in col-xs-8">
+                        <label for=" inputEmail" class="sr-only">Email address</label>
+                        <input type="email" id="signin-inputEmail" required= "required" class="form-control" placeholder="Email address" required="" autofocus="">
+                    </div>
+                    <div class="form-group sign-in col-xs-8">
+                        <label for="inputPassword" class="sr-only">Password</label>
+                        <input type="password" id="signin-inputPassword" required= "required" class="form-control" placeholder="Password" required="">
+                    </div>
+				
+                  	<div id="confirmpasswordgroup" class="form-group sign-in col-xs-8">
+                        <label for="inputPassword" class="sr-only">Confirm Password</label>
+                        <input type="password" id="signup-confirmInputPassword" required= "required" class="form-control" placeholder="Confirm Password" required="">
+                    </div>
+                    <div id="signingroup" style="cursor: pointer; line-height: 40px; height: 40px" class="button-gradient sign-in col-xs-8">
+                        <center><span style="color: #ffffff" id="fetch-signin-btn">SIGN IN</span>
+                    </div>
+					<br>
+                    <div id="signupgroup" style="cursor: pointer; line-height: 40px; height: 40px" class="button-gradient sign-in col-xs-8">
+                        <center><span style="color: #ffffff" id="fetch-signin-btn">SIGN UP</span>
+                    </div>
+                </div>
+           </div>
+            <div id="extension-main-content">
+                <div class="row">
+                    <div class="col-xs-11">
+                        <div class="input-group search-box">
+                            <input type="text" class="typeahead" id="search-text-input"  placeholder="Search for...">
+                            <span class="input-group-btn ">
+                                <button id="search-btn"  class="btn btn-default search-button-icon" type="button"></button>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-xs-1" style="padding: 0">
+                        <span id="logout-btn" class="clickable" style="color: #a00"><i class="fa fa-power-off fa-lg"></i></span>
+          	        	<span id="settings" class="clickable" style="padding-left: 5px"> <i class="fa fa-gear fa-lg"></i></span>
+					</div>
+            	</div>
+                <div id="top-links-view" class="row top-links-view">
+                    <div class="col-xs-12" id="page-list"></div>
+                    <div id="loadmoreajaxloader" style="display:none;">
+                        <center>
+                            <i class="fa fa-refresh fa-spin fa-lg"></i>
+                        </center>
+                    </div>
+               </div>
+               <div id="empty-result" style="display:none; position:relative;">
+                   <center>No posts to show.</center>
+               </div>
+			   <div class="navbar navbar-default navbar-fixed-bottom">
+					<div class="container">
+						<div class="row">
+							<div class="col-xs-9">
+								<p align="right">Facing an issue? <a href="#" id="supportrequestlink">Contact Support</a></p>
+							</div>
+							<div class="col-xs-2 pause-fetch-container">
+								<button id='toggle-fetch-btn' type='button' class='btn btn-default black-list'>Pause Fetch</button>
+							</div>
+						</div>
+					</div>
+			   </div>
+           </div>
+        </div>
+    </body>
+</html>

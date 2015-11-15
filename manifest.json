@@ -2,12 +2,11 @@
   "manifest_version": 2,
 
   "name": "Fetch",
-  "description": "This extension shows time spent on each page",
-  "version": "1.1",
+  "description": "Fetch saves your browser history on the cloud, and helps you find useful links from your history easily",
+  "version": "1.5",
   "background": {
     "page": "background.html"
   },
-
   "browser_action": {
     "default_icon": "icon.png",
     "default_popup": "popup.html"
@@ -31,11 +30,11 @@
     "icon.png"
   ],
 
-  "content_security_policy": "script-src 'self'  https://platform.twitter.com/widgets.js 'unsafe-eval' ; object-src 'self'",
+  "content_security_policy": "script-src 'self' https://platform.twitter.com/widgets.js https://ssl.google-analytics.com; 'unsafe-eval' ; object-src 'self'",
 
   "content_scripts": [{
     "matches": ["http://*/*", "https://*/*"],
-    "js": ["jquery.js", "msgs.js"]  
+    "js": ["utils/jquery.js", "msgs.js"]  
 
   }],
   "oauth2" : {
