@@ -15,7 +15,6 @@ var userId;
 var doSearch = false;
 var serverUrl = "https://getfetch.net/";
 //var serverUrl = "http://52.32.10.180:80/";
-//var serverUrl = "http://localhost:9082/";
 var baseUrls = {};
 var loadedBaseUrls = {};
 var collated = false;
@@ -73,7 +72,8 @@ function blacklistLink(user, page) {
     crossDomain: "true",
     data: {
       user: userId,
-      sites: page
+      sites: page,
+      append: true
     },
     url: removeUrl
 
@@ -172,6 +172,7 @@ function createListView(jsonData, baseUrl) {
 
 
   var list = jsonData.lPageItems;
+  console.log("list length is "+list.length);
 
   if (baseUrl != "" && baseUrl != undefined) {
     var favIconUrl = list[0].iconUrl;
@@ -206,6 +207,7 @@ function createListView(jsonData, baseUrl) {
   $.each(list, function(index, item) {
 
     if (!doSearch && loadedBaseUrls[item.baseUrl] && (baseUrl == "" || baseUrl == undefined)) {
+      console.log("IGNORE: "+item.pageId);
       return true;
     }
     loadedBaseUrls[item.baseUrl] = true;
@@ -220,7 +222,13 @@ function createListView(jsonData, baseUrl) {
     }
 
     var section = $().add("<div id = section-" + count + "></div>").addClass("row").addClass("list-item");
-    var link = $().add("<div id = link-" + count + "><span class=\'time-container col-xs-3\'><span class=\'time\'>" + minutes + "<span class=\'time-mins\'>m </span>" + seconds + "<span class=\'time-mins\'>s </span>" + " </span></span><div style='position:relative;left:-20px' class=\'col-xs-9\'><span id=\'favicon-btn-" + count + "\' class=\'favIcon-container\'  ><img class=\'favicon-btn\'' src=\'" + item.iconUrl + "\'' /></span><span class=\'link-text\'><a target=\"_blank\" href=\'" + item.pageId + "\'>  " + pageTitle + "</a><span></div></div>").addClass("col-xs-10");
+    var link = $().add('<div id = link-'+count+'>'
+		+'<div class="time-container col-xs-3"><span class="time">'+minutes+'m '+seconds+'s</div>'
+		// +'</span></span>'
+		+'<div style="position:relative;left:-20px" class="col-xs-9">'
+			+'<span id="favicon-btn-'+count+'" class="favIcon-container"><img class="favicon-btn" src="'+item.iconUrl+'"/></span>'
+			+'<span class="link-text"><a target="_blank" href="'+item.pageId+'" id="openlink-'+count+'">'+pageTitle+'</a><span>'
+		+"</div></div>").addClass("col-xs-10");
     /*    var delButton = $().add("<button type=\'button\' id=\'delete-link" + count + "\''>Delete</button>").addClass('btn').addClass('btn-danger').addClass('col-xs-1');*/
     var favIcon = $().add("<div id=\'favicon-btn-" + count + "\'  class=\'favIcon-container\'><img class=\'favicon-btn\'' src=\'" + item.iconUrl + "\'' /></div>")
     var fbshare = $().add("<a target=\"blank\" href=\""+serverUrl+"fetch/s/"+item.id+"\" id=\'snapshot-btn-" + count + "\'><img src=\"icons/snapshot.png\"/> </a>")
@@ -276,8 +284,16 @@ function createListView(jsonData, baseUrl) {
 
     });
 
-	$('#secion-'+count+' a').on('click', function(event) {
+	$('#openlink-'+count).on('click', function(event) {
       _gaq.push(['_trackEvent', event.currentTarget.href, 'url-opened']);
+    });
+
+	$('#snapshot-btn-'+count).on('click', function(event) {
+      _gaq.push(['_trackEvent', event.currentTarget.href, 'snapshot-opened']);
+    });
+
+	$('#text-btn-'+count).on('click', function(event) {
+      _gaq.push(['_trackEvent', event.currentTarget.href, 'text-version-opened']);
     });
 
     count++;
@@ -427,7 +443,7 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
 
-  $("#signingroup").on('click', function() {
+  $("#fetch-signin-btn").on('click', function() {
     var email = $('#signin-inputEmail').val();
     var password = $('#signin-inputPassword').val();
     var validPassword = true;
@@ -470,15 +486,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
       }
     }).fail(function(data) {
-      $("#alert-container").append("<div id='alert-body' class='alert alert-warning alert-dismissible' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label=''Close'><span aria-hidden='true'>&times;</span></button> <span id='alert-text'>" + data.responseText + "</span></div>");
-
+	  $('#resetpassworderrors').addClass('text-danger');
+      $('#resetpassworderrors').html("Login failed, "+JSON.parse(data.responseText));
       return false;
     });
 
 
   });
 
-  $("#signupgroup").on('click', function() {
+  $("#fetch-signup-btn").on('click', function() {
     var email = $('#signin-inputEmail').val();
     var password = $('#signin-inputPassword').val();
     var confirmPassword = $('#signup-confirmInputPassword').val();
@@ -521,10 +537,42 @@ document.addEventListener('DOMContentLoaded', function() {
       }
 
     }).fail(function(data) {
-
-      $("#alert-container").append("<div id='alert-body' class='alert alert-warning alert-dismissible' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label=''Close'><span aria-hidden='true'>&times;</span></button> <span id='alert-text'>" + data.responseText + "</span></div>");
-
+	  $('#resetpassworderrors').addClass('text-danger');
+      $('#resetpassworderrors').html("Sign up failed, "+JSON.parse(data.responseText));
       return false;
+    });
+  });
+
+
+  $('#resetpasswordlink').click(function() {
+    $('.signupgroup').hide();
+    $('.signingroup').hide();
+    $('.resetpasswordgroup').show();
+  });
+
+  $('#reset-password-btn').click(function() {
+    console.log("I am here");
+    var email = $('#signin-inputEmail').val();
+    if (!isEmail(email)) {
+      $('#signin-inputEmail').parent().addClass('has-error');
+      return false;
+    }
+    var data = $.ajax({
+      type: "POST",
+      async: false,
+      url: serverUrl + "fetch/v2/forgotpassword/",
+      crossDomain: "true",
+      data: {
+        email: email,
+      },
+      success: function(data) {
+		$('#resetpassworderrors').addClass('text-success');
+        $('#resetpassworderrors').html(data);
+      },
+      error: function(data) {
+		$('#resetpassworderrors').addClass('text-danger');
+        $('#resetpassworderrors').html("Unable to reset password");
+      }
     });
   });
 
@@ -583,20 +631,20 @@ document.addEventListener('DOMContentLoaded', function() {
   $('#newuser').change(function(e) {
     console.log("hello");
     if($('#newuser').is(":checked")) {
-      $('#confirmpasswordgroup').show();
-      $('#signingroup').hide();
-      $('#signupgroup').show();
+      $('.resetpasswordgroup').hide();
+      $('.signingroup').hide();
+      $('.signupgroup').show();
     } else {
-      $('#confirmpasswordgroup').hide();
-      $('#signingroup').show();
-      $('#signupgroup').hide();
+      $('.resetpasswordgroup').hide();
+      $('.signupgroup').hide();
+      $('.signingroup').show();
     }   
   });
 
 
-  $('#confirmpasswordgroup').hide();
-  $('#signingroup').show();
-  $('#signupgroup').hide();
+  $('.resetpasswordgroup').hide();
+  $('.signupgroup').hide();
+  $('.signingroup').show();
 });
 
 

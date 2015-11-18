@@ -8,7 +8,6 @@ var curFavIconUrl = "";
 var pauseFetch = false;
 var serverUrl = "https://getfetch.net/";
 //var serverUrl = "http://52.32.10.180:80/";
-//var serverUrl = "http://localhost:9082/";
 
 
 chrome.runtime.onMessage.addListener(

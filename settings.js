@@ -75,7 +75,7 @@ $(document).ready(function (e) {
 			},
 			success: function(data) {
 				var sites=JSON.parse(data);
-				console.log(sites);
+
 				$('#blocked-sites').textext({
 					plugins : 'tags prompt',
 					prompt : 'Click to add',
@@ -85,7 +85,7 @@ $(document).ready(function (e) {
 					}
 				}).bind('isTagAllowed', function(e, data) {
 					if(data.tag=="") {
-						data.result=false;
+						data.result=true;
 						return;
 					}
 					if(/^[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9](?:\.[a-zA-Z]{2,})+$/.test(data.tag)) {
@@ -108,6 +108,7 @@ $(document).ready(function (e) {
 $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
 	var target = $(e.target).attr("data-target") // activated tab
 	if(target=="#blocked-websites") {
+        console.log("attempting textext hack");
 		$('#blocked-sites').textext()[0].tags().onEnterKeyPress();
 		$('#blocked-sites').blur();
 	}
