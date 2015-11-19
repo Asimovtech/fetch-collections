@@ -3,7 +3,7 @@
 
   "name": "Fetch",
   "description": "Fetch saves your browser history on the cloud, and helps you find useful links from your history easily",
-  "version": "1.7",
+  "version": "1.8",
   "background": {
     "page": "background.html"
   },

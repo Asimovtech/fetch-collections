@@ -25,7 +25,6 @@ chrome.runtime.onMessage.addListener(
             pauseFetch = !pauseFetch;
         }
         if (request.message == "queryState") {
-            console.log("I am here");
             sendResponse({
                 state: pauseFetch
             });
@@ -38,7 +37,6 @@ function createUserId() {
     chrome.storage.sync.set({
         'userId': randomId
     }, function() {
-        console.log('user created');
     });
     return randomId;
 }
@@ -181,7 +179,6 @@ function getCurTab() {
 }
 
 function updateTimer(curUrl, pageTitle, timer, uniqueId, favIconUrl) {
-    console.log("update trigerred");
     curUrl = curUrl.replace(/'/g, "\\\'");
     pageTitle = pageTitle.replace(/'/g, "\\\'");
     favIconUrl = favIconUrl.replace(/'/g, "\\\'");
@@ -199,9 +196,6 @@ function updateTimer(curUrl, pageTitle, timer, uniqueId, favIconUrl) {
 
         url: serverUrl + "fetch/v2/update/"
 
-
-    }).done(function(msg) {
-        console.log("Timer Updated");
 
     });
 }
@@ -222,7 +216,6 @@ $(document).ready(function() {
                 //var pageTitle = tab.title;
                 var pageTitle = "";
                 var favIconUrl = encodeURIComponent(url);
-                console.log("URL =" + favIconUrl);
 
                 chrome.tabs.sendMessage(tabs[0].id, {
                     greeting: "poll"
@@ -230,7 +223,6 @@ $(document).ready(function() {
                     pageTitle = response.pageTitle;
 
 
-                    console.log("title " + pageTitle);
                     console.assert(typeof url == 'string', 'tab.url should be a string');
                     console.assert(typeof pageTitle == 'string', 'tab.title should be a string');
                     if (curUrl != url) {
@@ -245,20 +237,16 @@ $(document).ready(function() {
                             if (pageActive == true && timer == 15) {
                                 updateUserTimer(curUrl, curPageTitle, timer, curFavIconUrl);
                                 timer = 0;
-                                console.log("interval update");
                             }
                         }
-                        console.log("active time" + timer);
                     }
                 });
             });
 
-            console.log("popup " + popupTimer);
             if (pageActive == false) {
                 return;
             } else {
                 pageActiveTimeout--;
-                console.log(pageActiveTimeout);
                 if (pageActiveTimeout == 0) {
                     pageActive = false;
                     updateUserTimer(curUrl, curPageTitle, timer, favIconUrl);

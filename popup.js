@@ -172,7 +172,6 @@ function createListView(jsonData, baseUrl) {
 
 
   var list = jsonData.lPageItems;
-  console.log("list length is "+list.length);
 
   if (baseUrl != "" && baseUrl != undefined) {
     var favIconUrl = list[0].iconUrl;
@@ -186,7 +185,6 @@ function createListView(jsonData, baseUrl) {
 
 
     $('#collapse-links').on('click', function() {
-      console.log("clicked!");
       i = 0;
       loadedBaseUrls = {};
 
@@ -207,11 +205,9 @@ function createListView(jsonData, baseUrl) {
   $.each(list, function(index, item) {
 
     if (!doSearch && loadedBaseUrls[item.baseUrl] && (baseUrl == "" || baseUrl == undefined)) {
-      console.log("IGNORE: "+item.pageId);
       return true;
     }
     loadedBaseUrls[item.baseUrl] = true;
-    console.log(item.pageId);
     var timeSpent = item.duration;
     var minutes = Math.floor(timeSpent / 60);
     var seconds = timeSpent % 60;
@@ -277,7 +273,6 @@ function createListView(jsonData, baseUrl) {
       i = 0;
       loadedBaseUrls = {};
       collated = true;
-      console.log("expand");
       $('#page-list').empty();
       //  $('#page-list').css("display", "none");
       getUsersPages(baseUrls[this.id]);
@@ -347,7 +342,6 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   $('.typeahead').bind('typeahead:cursorchange', function(ev, suggestion) {
-    console.log('Selection: ' + suggestion.value);
   });
 
   $('#delete-link-all').on('click', function() {
@@ -366,7 +360,6 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   $('.typeahead').bind('typeahead:select', function(ev, suggestion) {
-    console.log('Selection: ' + suggestion.value);
     $('#page-list').empty();
     i = 0;
     count = 1;
@@ -437,7 +430,6 @@ document.addEventListener('DOMContentLoaded', function() {
   $("#settings").on('click', function() {
      var myleft = (screen.width/2)-(550/2);
      var mytop = (screen.height/2)-(300/2); 
-     console.log("left is "+myleft+", top is "+mytop);
 
      chrome.windows.create({url: "settings.html", type: "panel", width: 550, height: 300, "left": myleft, "top": mytop})
   });
@@ -551,7 +543,6 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   $('#reset-password-btn').click(function() {
-    console.log("I am here");
     var email = $('#signin-inputEmail').val();
     if (!isEmail(email)) {
       $('#signin-inputEmail').parent().addClass('has-error');
@@ -621,15 +612,12 @@ document.addEventListener('DOMContentLoaded', function() {
 */
 
   $("#supportrequestlink").click(function(e) {
-    console.log("here");
     var myleft = (screen.width/2)-(550/2);
     var mytop = (screen.height/2)-(300/2); 
-    console.log("left is "+myleft+", top is "+mytop);
     chrome.windows.create({url: "settings.html#contact", type: "panel", width: 550, height: 300, "left": myleft, "top": mytop})
   });
 
   $('#newuser').change(function(e) {
-    console.log("hello");
     if($('#newuser').is(":checked")) {
       $('.resetpasswordgroup').hide();
       $('.signingroup').hide();

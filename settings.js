@@ -108,7 +108,6 @@ $(document).ready(function (e) {
 $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
 	var target = $(e.target).attr("data-target") // activated tab
 	if(target=="#blocked-websites") {
-        console.log("attempting textext hack");
 		$('#blocked-sites').textext()[0].tags().onEnterKeyPress();
 		$('#blocked-sites').blur();
 	}
@@ -149,7 +148,6 @@ $('#clearhistorybtn').on('click', function() {
 
 	period=$("input:radio[name=duration]:checked").val();
 	accepted=$("input:checkbox[name=acceptcontract]:checked").val();
-	console.log("accepted is "+accepted);
 	if(accepted!="accepted") {
 		$('#contractgroup').addClass("has-error");
 		return;
