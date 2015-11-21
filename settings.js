@@ -1,6 +1,3 @@
-//var serverUrl = "http://52.32.10.180:80/";
-var serverUrl = "https://getfetch.net/";
-
 $('#changepasswordbtn').on('click', function() {
 	$('#oldpasswordgroup').removeClass('has-error');	
 	$('#newpassword1group').removeClass('has-error');	

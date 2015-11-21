@@ -6,9 +6,6 @@ var pageActive = true;
 var popupTimer = 120;
 var curFavIconUrl = "";
 var pauseFetch = false;
-var serverUrl = "https://getfetch.net/";
-//var serverUrl = "http://52.32.10.180:80/";
-
 
 chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {

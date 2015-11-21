@@ -1,6 +1,6 @@
 <html>
     <head>
-        <title>Bandit Popup</title>
+        <title>Fetch Search</title>
         <style>
 
         /*.auto-complete{
@@ -22,10 +22,6 @@
 
         .typeahead {
           background-color: #fff;
-        }
-
-        tt-suggestion:hover{
-            
         }
 
         .tt-query {
@@ -65,13 +61,11 @@
          background-color: #CCCCCC;
         }
 
-
         .tt-suggestion.tt-cursor {
          font-weight: bolder;
          background-color: #CCCCCC;
          }
         
-
         .tt-suggestion p {
           margin: 0;
         }
@@ -272,8 +266,9 @@
 			}
     </style>
     <script>
-  $("#top-links-view").scroll(function() {
-    $('body').hide();
+
+  $("window").scroll(function() {
+    console.log("hello");
     if (!collated) {
 
       if ($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight) {
@@ -300,6 +295,7 @@
         <script src="utils/md5.js"></script>
         <script type="text/javascript" src="utils/uuid.js"></script>
         <script src="utils/jquery.js"></script>
+        <script src="globals.js"></script>
         <script src="utils/core.js"></script>
         <script src="typeahead/typeahead.bundle.js"></script>
         <script src="scrollbar.js"></script>

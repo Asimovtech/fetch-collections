@@ -13,8 +13,6 @@ var i = 0;
 var count = 1;
 var userId;
 var doSearch = false;
-var serverUrl = "https://getfetch.net/";
-//var serverUrl = "http://52.32.10.180:80/";
 var baseUrls = {};
 var loadedBaseUrls = {};
 var collated = false;
