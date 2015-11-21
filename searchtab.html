@@ -225,12 +225,12 @@
         }
 
         #top-links-view{
-          min-height: 50px;
+          /*min-height: 50px;*/
           /*max-height: 370px;*/
           /*width :678;*/ 
-          overflow : auto;
+          /*overflow : auto;*/
           /*overflow-y: scroll !important; */
-          overflow-x: hidden !important; 
+          /*overflow-x: hidden !important;*/
             }
             ::-webkit-scrollbar {
                 top: 10px;
@@ -265,26 +265,7 @@
 				filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f1247b', endColorstr='#943c94',GradientType=1 );
 			}
     </style>
-    <script>
-
-  $("window").scroll(function() {
-    console.log("hello");
-    if (!collated) {
-
-      if ($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight) {
-
-        $('div#loadmoreajaxloader').show();
-        if (doSearch == true) {
-          searchLinks(userId)
-        } else {
-          populateList(userId, "");
-        }
-
-      }
-    }
-  });
-    </script>
-    </head>
+   </head>
     <body class="body">
         <link href="http://fonts.googleapis.com/css?family=Bree+Serif" rel="stylesheet" type="text/css">
         <link href="http://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css">
@@ -300,6 +281,7 @@
         <script src="typeahead/typeahead.bundle.js"></script>
         <script src="scrollbar.js"></script>
         <script src="popup.js"></script>
+        <script src="searchtab.js"></script>
         <script src="bootstrap/js/bootstrap.js"></script>
 
         <div class="container">
@@ -357,7 +339,7 @@
 				<center>
 					<img src="icon.png"/>
 					<h1>Search Your Knowledge Base</h1>
-				</center>
+			   </center>
                 <div class="row">
                     <div class="col-xs-12">
                         <div class="form-group has-info">

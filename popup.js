@@ -17,6 +17,8 @@ var baseUrls = {};
 var loadedBaseUrls = {};
 var collated = false;
 var settingsWindowId=-1;
+var ladingNewPage=false;
+var linkLength=40;
 
 // Login the user if userId is present
 /*
@@ -87,6 +89,7 @@ function searchLinks(userId) {
   var searchText = $('#search-text-input').val();
   _gaq.push(['_trackEvent', searchText, 'searched']);
   var getUrl = serverUrl + "fetch/v2/sphinxsearch/"; 
+  loadingNewPage=true;
   var data = $.ajax({
     type: "POST",
     async: true,
@@ -103,17 +106,17 @@ function searchLinks(userId) {
         if (!$.isEmptyObject(data.lPageItems)) {
           createListView(data, baseUrl);
         } else {
-
           $('div#empty-result').show();
         }
-
       } else {
-
         $('div#empty-result').show();
       }
       $('div#loadmoreajaxloader').hide();
+      loadingNewPage=false;
+    }, 
+    error: function(data) {
+      loadingNewPage=false;
     }
-
   });
 
   /*
@@ -125,7 +128,7 @@ function searchLinks(userId) {
 
 
 function populateList(userId, baseUrl) {
-
+  loadingNewPage=true;
   $('div#empty-result').hide();
   $('div#loadmoreajaxloader').show();
   var getUrl = "";
@@ -149,19 +152,19 @@ function populateList(userId, baseUrl) {
         data = $.parseJSON(data);
         if (!$.isEmptyObject(data.lPageItems)) {
           createListView(data, baseUrl);
+          loadingNewPage=false;
         } else {
 
           $('div#empty-result').show();
         }
-
-
       } else {
-
         $('div#empty-result').show();
       }
       $('div#loadmoreajaxloader').hide();
+    },
+    error: function(data) {
+      loadingNewPage=false;
     }
-
   });
 
 }
@@ -210,8 +213,8 @@ function createListView(jsonData, baseUrl) {
     var minutes = Math.floor(timeSpent / 60);
     var seconds = timeSpent % 60;
     var pageTitle = item.pageTitle;
-    if (pageTitle.length >= 40) {
-      pageTitle = pageTitle.substr(0, 40);
+    if (pageTitle.length >= linkLength) {
+      pageTitle = pageTitle.substr(0, linkLength);
       pageTitle = pageTitle.concat('...');
     }
 
@@ -291,9 +294,6 @@ function createListView(jsonData, baseUrl) {
 
     count++;
   });
-
-  
-
 }
 
 
@@ -410,10 +410,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
   $("#top-links-view").scroll(function() {
     $('div#empty-result').hide();
+    if(loadingNewPage)
+      return;
     if (!collated) {
-
-      if ($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight) {
-
+      if (($(this).scrollTop() + $(this).innerHeight()) >= $(this)[0].scrollHeight) {
         $('div#loadmoreajaxloader').show();
         if (doSearch == true) {
           searchLinks(userId)
