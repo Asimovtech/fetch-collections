@@ -29,6 +29,14 @@
         <script src="textext/src/js/textext.core.js"></script>
         <script src="textext/src/js/textext.plugin.tags.js"></script>
         <script src="textext/src/js/textext.plugin.prompt.js"></script>
+        <script src="framework/stapes.min.js"></script>
+        <script src="framework/mustache.min.js"></script>
+        <script src="components/widgets.js"></script>
+        <script src="components/auth.js"></script>
+        <script src="components/support.js"></script>
+        <script src="components/clearhistory.js"></script>
+        <script src="components/blockedsites.js"></script>
+        <script src="settings.js"></script>
 
 	<div class="container">
 		<div class="row">
@@ -48,42 +56,58 @@
 							<div class="col-xs-12">
 						    	<p>Enter your old and new passwords and click Update to save</p>
 							</div>
-							<!-- <form onsubmit="return apiChangePassword()"> -->
-								<div class="col-xs-8 form-group" id="oldpasswordgroup">
-									<input type="password" class="form-control input-sm" id="oldpassword" placeholder="Current Password">
+							<div id="change-password-form">
+								<div class="old-password-group col-xs-8 form-group">
+									<input type="password" class="form-control input-sm" name="old-password" placeholder="Current Password">
 								</div>
-								<div class="col-xs-8 form-group" id="newpassword1group">
-									<input type="password" class="form-control input-sm" id="newpassword1" placeholder="New Password">
+								<div class="new-password-group col-xs-8 form-group">
+									<input type="password" class="form-control input-sm" name="new-password" placeholder="New Password">
 								</div>
-								<div class="col-xs-8 form-group" id="newpassword2group">
-									<input type="password" class="form-control input-sm" id="newpassword2" placeholder="Re-enter New Password">
+								<div class="confirm-password-group col-xs-8 form-group">
+									<input type="password" class="form-control input-sm" name="confirm-password" placeholder="Re-enter New Password">
 								</div>
 								<div class="col-xs-8 form-group">
-									<button type="submit" class="btn btn-info" id="changepasswordbtn">Update</button>
-									<label id="changepassworderrors"></label>
+									<button type="submit" class="btn btn-info">Update</button>
+									&nbsp;
+									<span class="status">
+										<i class="fa fa-refresh fa-spin fa-lg"></i>
+										<label></label>
+									</span>
 								</div>
-							<!-- </form> -->
+							</div>
 						</div>
 						<div role="tabpanel" class="tab-pane row" id="blocked-websites">
-							<div class="col-xs-12" style="height: 170px">
-								<p>Blacklist sites by typing in the full site name(e.g. google.co.uk) and pressing Enter,<br>
-								Remove sites from blacklist by clicking on the delete icon</p>
-								<textarea id="blocked-sites" style="width: 500px" rows="8"></textarea>
-							</div>
-							<div class="col-xs-12 form-group">
-								<button type="button" id="blocksitesbtn" class="btn btn-info">Update</button>
-								<label id="blocksiteserrors"></label>
+							<div id="blocked-sites-form">
+								<div class="blocked-sites-group col-xs-12" style="height: 170px">
+									<p>Blacklist sites by typing in the full site name(e.g. google.co.uk) and pressing Enter,<br>
+									Remove sites from blacklist by clicking on the delete icon</p>
+									<textarea name="blocked-sites" style="width: 500px" rows="8"></textarea>
+								</div>
+								<div class="col-xs-12 form-group">
+									<button type="button" class="btn btn-info">Update</button>
+									&nbsp;
+									<span class="status">
+										<i class="fa fa-refresh fa-spin fa-lg"></i>
+										<label></label>
+									</span>
+								</div>
 							</div>
 						</div>
 						<div role="tabpanel" class="tab-pane row" id="upgrade">
-							<div class="col-xs-12">
+							<div id="paid-feature-form" class="col-xs-12">
 								<center>
 									<h3>Coming Soon</h3>
 									<p>Is there a feature you'd like to pay for? Let us know</p>
-									<textarea type="text" id="paidfeaturetext" class="form-control"></textarea>
+									<div class="text-group form-group">
+										<textarea type="text" name="text" class="form-control"></textarea>
+									</div>
 									<br>
-									<button id="paidfeaturebtn" type="button" class="btn btn-info">Send</button>
-									<label id="paidfeatureerrors"></label>
+									<button type="button" class="btn btn-info">Send</button>
+									&nbsp;
+									<span class="status">
+										<i class="fa fa-refresh fa-spin fa-lg"></i>
+										<label></label>
+									</span>
 								</center>
 							</div>
 						</div>
@@ -91,72 +115,81 @@
 							<div class="col-xs-12">
 								<p>Clear history by choosing a period and pressing Update</p>
 							</div>
-							<div class="col-xs-12 form-horizontal">
+							<div id="clear-history-form" class="col-xs-12 form-horizontal">
 								<div class="form-group">
 									<div class="radio col-xs-4">
 										<label>
-											<input type="radio" name="duration" id="durationhour" value="0" checked>
+											<input type="radio" name="duration" value="0" checked>
 											Last Hour
 										</label>
 									</div>
 									<div class="radio col-xs-4">
 										<label>
-											<input type="radio" name="duration" id="durationday" value="1">
+											<input type="radio" name="duration" value="1">
 											Last Day
 										</label>
 									</div>
 									<div class="radio col-xs-4">
 										<label>
-											<input type="radio" name="duration" id="durationweek" value="7">
+											<input type="radio" name="duration" value="7">
 											Last Week
 										</label>
 									</div>
 									<div class="radio col-xs-4">
 										<label>
-											<input type="radio" name="duration" id="durationmonth" value="31">
+											<input type="radio" name="duration" value="31">
 											Last Month
 										</label>
 									</div>
 									<div class="radio col-xs-4">
 										<label>
-											<input type="radio" name="duration" id="durationyear" value="365">
+											<input type="radio" name="duration" value="365">
 											Last Year
 										</label>
 									</div>
 									<div class="radio col-xs-12">
 										<label>
-											<input type="radio" name="duration" id="durationall" value="all">
+											<input type="radio" name="duration" value="all">
 											All History
 										</label>
 									</div>
 								</div>
-								<div id="contractgroup" class="form-group">
+								<div class="accept-contract-group form-group">
 									<div class="checkbox col-xs-12">
 										<label>
-											<input type="checkbox" name="acceptcontract" id="contract" value="accepted">
+											<input type="checkbox" name="accept-contract">
 											I'm sure I'll never need this period of browsing history ever again
 										</label>
 									</div>
 								</div>
 								<div class="form-group col-xs-12">
-									<button id="clearhistorybtn" type="submit" class="btn btn-info">Update</button>
-									<label id="clearhistoryerrors"></label>
+									<button type="submit" class="btn btn-info">Update</button>
+									&nbsp;
+									<span class="status">
+										<i class="fa fa-refresh fa-spin fa-lg"></i>
+										<label></label>
+									</span>
 								</div>
 							</div>
 						</div>
 						<div role="tabpanel" class="tab-pane row" id="contact">
-							<div class="col-xs-12">
+							<div id="support-form" class="col-xs-12">
 								<p>What problems are you facing?</p>
-								<textarea id="supportrequesttext" type="text" class="form-control" rows="5"></textarea>
+								<div class="text-group form-group">
+									<textarea name="text" type="text" class="form-control" rows="5"></textarea>
+								</div>
 								<br>
-								<button id="supportrequestbtn" type="button" class="btn btn-info">Submit</button>
-								<label id="supportrequesterrors"></label>
+								<button type="button" class="btn btn-info">Submit</button>
+								&nbsp;
+								<span class="status">
+									<i class="fa fa-refresh fa-spin fa-lg"></i>
+									<label></label>
+								</span>
 							</div>
 						</div>
 					</div>
 				</div>
 	    	</div> 
         </div>
-        <script src="settings.js"></script>
     </body>
 </html>
