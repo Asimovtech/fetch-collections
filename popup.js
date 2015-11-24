@@ -227,8 +227,8 @@ function createListView(jsonData, baseUrl) {
 		+"</div></div>").addClass("col-xs-10");
     /*    var delButton = $().add("<button type=\'button\' id=\'delete-link" + count + "\''>Delete</button>").addClass('btn').addClass('btn-danger').addClass('col-xs-1');*/
     var favIcon = $().add("<div id=\'favicon-btn-" + count + "\'  class=\'favIcon-container\'><img class=\'favicon-btn\'' src=\'" + item.iconUrl + "\'' /></div>")
-    var fbshare = $().add("<a target=\"blank\" href=\""+serverUrl+"fetch/s/"+item.id+"\" id=\'snapshot-btn-" + count + "\'><img src=\"icons/snapshot.png\"/> </a>")
-    var tweet = $().add("<a target=\"blank\" href=\""+serverUrl+"fetch/t/"+item.id+"\" id=\'text-btn-" + count + "\'><img src=\"icons/text.png\"/> &nbsp;</a>")
+    var fbshare = $().add("<a target=\"blank\" href=\""+serverUrl+"fetch/s/"+item.id+"/\" id=\'snapshot-btn-" + count + "\'><img src=\"icons/snapshot.png\"/> </a>")
+    var tweet = $().add("<a target=\"blank\" href=\""+serverUrl+"fetch/t/"+item.id+"/\" id=\'text-btn-" + count + "\'><img src=\"icons/text.png\"/> &nbsp;</a>")
 
     var expand = $().add("<span id=\'expand-links-" + count + "\' style=\"display: inline-block ; vertical-align: middle ; margin-top: 10px\" class=\'clickable expand-links\'> <i class=\'fa fa-chevron-right fa-2\'></i></span>");
 
