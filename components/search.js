@@ -21,7 +21,7 @@ fetch.Stapes.DomainHeader=Stapes.subclass({
 	}, 
 	blacklist: function() {
 		var user=fetch.user.get("userId");
-		var removeUrl = serverUrl + "fetch/v2/blacklist/";
+		var removeUrl = fetch.conf.server + "/fetch/v2/blacklist/";
 		var self=this;
 		var data = $.ajax({
 			type: "PUT",
@@ -43,18 +43,17 @@ fetch.Stapes.SearchResult=Stapes.subclass({
 		this.set("item", item);	
 		var linkLength=40;
 		
-		item.count=count;
 		var timeSpent = item.duration;
 		item.minutes = Math.floor(timeSpent / 60);
 		item.seconds = timeSpent % 60;
-		var pageTitle = item.pageTitle;
+/*		var pageTitle = item.pageTitle;
 		if (pageTitle.length >= linkLength) {
 			pageTitle = pageTitle.substr(0, linkLength);
 			pageTitle = pageTitle.concat('...');
 		}
-		item.pageTitle=pageTitle;
-		item.snapshotUrl=serverUrl+"fetch/s/"+item.id;
-		item.textUrl=serverUrl+"fetch/s/"+item.id;
+		item.pageTitle=pageTitle;*/
+		item.snapshotUrl=fetch.conf.server+"/fetch/s/"+item.id+"/";
+		item.textUrl=fetch.conf.server+"/fetch/t/"+item.id+"/";
 		
 		var template=$("#search-result").html();
 		Mustache.parse(template);
@@ -63,6 +62,14 @@ fetch.Stapes.SearchResult=Stapes.subclass({
 		var self=this;
 		this.$el.find(".expand-links").on("click", function() {
 			self.emit("expand_links", item);
+		});
+
+		this.$el.find(".snapshot-button").on("click", function() {
+			fetch.analytics.pushEvent("snapshot-opened");
+		});
+
+		this.$el.find(".text-button").on("click", function() {
+			fetch.analytics.pushEvent("text-version-opened");
 		});
 		
 		$parent.append(this.$el);	
@@ -89,7 +96,7 @@ fetch.Stapes.FrontPage=Stapes.subclass({
 			type: "POST",
 			async: true,
 			crossDomain: "true",
-			url: serverUrl + "fetch/v2/frontpage/",
+			url: fetch.conf.server + "/fetch/v2/frontpage/",
 			data: {
 				user: user,
 				page: page
@@ -138,7 +145,7 @@ fetch.Stapes.SearchPage=Stapes.subclass({
 			type: "POST",
 			async: true,
 			crossDomain: "true",
-			url: serverUrl + "fetch/v2/sphinxsearch/",
+			url: fetch.conf.server + "/fetch/v2/sphinxsearch/",
 			data: {
 				user: user,
 				query: self.get("search_query"),
@@ -189,7 +196,7 @@ fetch.Stapes.DomainPage=Stapes.subclass({
 			type: "POST",
 			async: true,
 			crossDomain: "true",
-			url: serverUrl + "fetch/v2/domainlist/",
+			url: fetch.conf.server + "/fetch/v2/domainlist/",
 			data: {
 				user: user,
 				domain: self.get("base_url"),

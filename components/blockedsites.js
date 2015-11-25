@@ -15,7 +15,7 @@ fetch.Stapes.BlockedSites=Stapes.subclass({
 		// LOAD BLOCKED SITES INTO TAG INPUT
 		$.ajax({
 			type: "POST",
-			url: serverUrl+"fetch/v2/blacklist/",
+			url: fetch.conf.server+"/fetch/v2/blacklist/",
 			data: { 
 				user: user,
 			},
@@ -67,7 +67,7 @@ fetch.Stapes.BlockedSites=Stapes.subclass({
 			self.$status.working();
 			$.ajax({
 				type: "PUT",
-				url: serverUrl+"fetch/v2/blacklist/",
+				url: fetch.conf.server+"/fetch/v2/blacklist/",
 				data: { 
 					user: user,
 					sites: tagString

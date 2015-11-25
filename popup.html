@@ -1,30 +1,20 @@
 <html>
     <head>
         <title>Fetch</title>
-        <link rel="stylesheet" type="text/css" href="popup.css"> 
-    </head>
-    <body class="body">
         <link href="http://fonts.googleapis.com/css?family=Bree+Serif" rel="stylesheet" type="text/css">
         <link href="http://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css">
+        <link rel="stylesheet" type="text/css" href="popup.css"> 
         <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
         <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css">
         <link rel="stylesheet" type="text/css" href="style.css">
         <link rel="stylesheet" type="text/css" href="scrollbar.css">
-        <script src="utils/md5.js"></script>
-        <script type="text/javascript" src="utils/uuid.js"></script>
         <script src="utils/jquery.js"></script>
-        <script src="globals.js"></script>
-        <script src="utils/core.js"></script>
-        <script src="typeahead/typeahead.bundle.js"></script>
-        <script src="scrollbar.js"></script>
+        <script src="bootstrap/js/bootstrap.js"></script>
         <script src="framework/stapes.min.js"></script>
         <script src="framework/mustache.min.js"></script>
-        <script src="components/widgets.js"></script>
-        <script src="components/auth.js"></script>
-        <script src="components/search.js"></script>
-        <script src="popup.js"></script>
-        <script src="bootstrap/js/bootstrap.js"></script>
-        <div class="container">
+    </head>
+    <body class="body">
+       <div class="container">
             <div id="authentication-panel" class="row">
 				<center>
 					<img src="icon.png" style="width: 60px"/><br>
@@ -32,8 +22,8 @@
 					<span><small>Never bookmark Again!</small></span>
 				</center>
 
-                <div id = "signin-form" class="form-signin">
-					<div class="signin-group signup-group col-xs-8 sign-in form-group">
+                <div class="form-signin">
+					<div class="new-user-group signin-group signup-group col-xs-8 sign-in form-group">
 						<div style="line-height: 20px" class="checkbox">
 							<label>
 								<input type="checkbox" name="new-user" id="newuser" value="accepted">
@@ -55,7 +45,7 @@
                         <label for="inputPassword" class="sr-only">Confirm Password</label>
                         <input type="password" name="confirm-password" class="form-control" placeholder="Confirm Password"/>
                     </div>
-                    <div style="cursor: pointer; line-height: 40px; height: 40px" class="signin-button signin-group button-gradient col-xs-8">
+                    <div style="cursor: pointer; line-height: 40px; height: 40px" class="signin-button signin-group button-gradient sign-in col-xs-8">
                         <center><span style="color: #ffffff">SIGN IN</span>
                     </div>
 					<br>
@@ -68,11 +58,14 @@
                   	<div style="cursor: pointer" class="signin-group form-group sign-in col-xs-8">
 						<center><p>Forgot your password? <a class="reset-password-link">Reset it</a></center>
 					</div>
-					&nbsp;
-					<span class="status">
-						<i class="fa fa-refresh fa-spin fa-lg"></i>
-						<label></label>
-					</span>
+					<div class="form-group sign-in col-xs-8">
+						<center>
+							<span class="status">
+								<i class="fa fa-refresh fa-spin fa-lg"></i>
+								<label></label>
+							</span>
+						</center>
+					</div>
                 </div>
            </div>
             <div id="extension-main-content">
@@ -86,7 +79,7 @@
                         </div>
                     </div>
                     <div class="col-xs-1" style="padding: 0">
-                        <span id="logout-btn" class="clickable" style="color: #a00"><i class="fa fa-power-off fa-lg"></i></span>
+                        <span class="logout clickable" style="color: #a00"><i class="fa fa-power-off fa-lg"></i></span>
           	        	<span id="settings" class="clickable" style="padding-left: 5px"> <i class="fa fa-gear fa-lg"></i></span>
 					</div>
             	</div>
@@ -109,22 +102,22 @@
 					</div>
 					</script>
 					<script id="search-result" type="x-tmpl-mustache">
-					<div id="section-{{ item.count }}" class="row list-item">
+					<div id="section-{{ count }}" class="row list-item">
 						<div id="link">
 							<div class="time-container col-xs-2">
 								<span class="time">{{ minutes }}m {{ seconds }}s</span>
 							</div>
-							<div class="col-xs-7">
+							<div class="col-xs-7" style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap">
 								<span class="favIcon-container"><img class="favicon-btn" src="{{ iconUrl }}"/></span>
 								<span class="link-text">
 									<a target="_blank" href="{{ pageId }}">{{ pageTitle }}</a>
 								</span>
 							</div>
 							<div class="col-xs-3" style="text-align: right;">
-								<a target="_blank" class="snapshot-btn" href="{{ snapshotUrl }}">
+								<a target="_blank" class="snapshot-button" href="{{ snapshotUrl }}">
 									<img src="icons/snapshot.png"/>
 								</a>
-								<a target="_blank" class="text-btn" href="{{ textUrl }}">
+								<a target="_blank" class="text-button" href="{{ textUrl }}">
 									<img src="icons/text.png"/>
 								</a>
 								<span id="expand-links" class="clickable expand-links" style="display: inline-block; vertical-align: middle; margin-top: 10px">
@@ -159,5 +152,18 @@
 			   </div>
            </div>
         </div>
+        <script src="utils/md5.js"></script>
+        <script type="text/javascript" src="utils/uuid.js"></script>
+        <script src="globals.js"></script>
+        <script src="utils/core.js"></script>
+        <script src="typeahead/typeahead.bundle.js"></script>
+        <script src="scrollbar.js"></script>
+        <script src="components/meta.js"></script>
+        <script src="components/widgets.js"></script>
+        <script src="components/auth.js"></script>
+        <script src="components/search.js"></script>
+        <script src="components/popup.js"></script>
+        <script src="popup_assembly.js"></script>
+ 
     </body>
 </html>

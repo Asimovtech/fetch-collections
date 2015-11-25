@@ -32,7 +32,7 @@ fetch.Stapes.ClearHistory=Stapes.subclass({
 			self.$status.working("clearing history, this may take several minutes");
 			$.ajax({
 				type: "PUT",
-				url: serverUrl+"fetch/v2/clear/",
+				url: fetch.conf.server+"/fetch/v2/clear/",
 				data: { 
 					user: user,
 					period: period

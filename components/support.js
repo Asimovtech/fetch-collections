@@ -20,7 +20,7 @@ fetch.Stapes.Support=Stapes.subclass({
 			self.$status.working();
 			$.ajax({
 				type: "POST",
-				url: serverUrl+"fetch/supportrequest/",
+				url: fetch.conf.server+"/fetch/supportrequest/",
 				data: { 
 					user: userId,
 					requestinfo: text
@@ -55,7 +55,7 @@ fetch.Stapes.PaidFeature=Stapes.subclass({
 			self.$status.working();
 			$.ajax({
 				type: "POST",
-				url: serverUrl+"fetch/paidfeature/",
+				url: fetch.conf.server+"/fetch/paidfeature/",
 				data: { 
 					user: userId,
 					feature: text

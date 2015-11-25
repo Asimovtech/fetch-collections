@@ -1,367 +1,202 @@
 <html>
     <head>
-        <title>Fetch Search</title>
-        <style>
-
-        /*.auto-complete{
-             width: 540px !important;
-        }        */
-
-        .typeahead,
-        .tt-query,
-        .tt-hint {
-          padding-left: 10px;
-/*          width: 500px !important;
-          height: 30px !important;
-          padding: 8px 12px  !important;
-          font-size: 14pt  !important;
-          line-height: 30px !important;
-          outline: none !important;
-          color: black !important;*/
-        }
-
-        .typeahead {
-          background-color: #fff;
-        }
-
-        .tt-query {
-          -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-             -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-                  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-        }
-
-        .tt-hint {
-           color: #999;
-          z-index: -3 !important;
-        }
-
-        .tt-menu {
-            display: none !important;
-        cursor: hand;
-        background-color: #FFF;
-        border: 1px solid rgba(0, 0, 0, 0.2);
-        /*border-radius: 8px 8px 8px 8px;*/
-        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-        margin-top: 0px;
-        padding: 8px 0;
-        width: 500px !important;
-        text-overflow: ellipsis; 
-        }
-
-        .tt-suggestion {
-        text-overflow: ellipsis; 
-          color: black !important;
-          padding: 3px 20px;
-          font-size: 18px !important;
-          line-height: 20px !important;
-        }
-
-        .tt-suggestion:hover {
-            font-weight: bolder;
-         background-color: #CCCCCC;
-        }
-
-        .tt-suggestion.tt-cursor {
-         font-weight: bolder;
-         background-color: #CCCCCC;
-         }
-        
-        .tt-suggestion p {
-          margin: 0;
-        }
-        .tt-highlight{
-            color:red;
-        }
-
-        .expand-links{
-            top: -5px;
-            position: relative;
-        }
-        .azm-circle{
-            top: -5px;  
-        }
-
-        span.link-text{
-            padding-top: 3px;
-        }
-
-        span.time-mins{
-            font-weight: normal;
-        }
-
-        @import url(http://fonts.googleapis.com/css?family=Lato:100,300,400,700);
-        .time-container{
-            padding-right: 8px;
-        }
-        .favIcon-container{
-            padding-right: 8px;
-        }
-        .pause-fetch-container{
-            position: relative;
-            top: 5px;
-            height: 45px;
-            
-        }
-        .list-item{
-            padding: 7px !important;
-            padding-bottom: 3px !important;
-            left: 15px;
-            border-bottom:1px solid rgba(102, 102, 102, 0.15) ;
-        }
-        .top-links-view{
-            top: 45px;
-        }
-        .search-box-textarea{
-            background-color: #cbcbcb !important;
-            
-        }
-        button.search-button-icon{
-            z-index: 3;
-            height: 35px;
-            border:none;
-            background: url("./icons/search.png") center no-repeat  #FFF !important;
-        }
-        body {
-            font-family: "Segoe UI", "Lucida Grande", Tahoma, sans-serif;
-            font-size: 100%;
-            /*background-color: #ECEAE0;*/
-            color: #63AA9C;
-            min-width: 680px;
-            /*height: 480px;*/
-        }
-        html {  
-            /*height: 480px;*/
-        }
-        #status {
-                        
-            white-space: pre;
-            text-overflow: ellipsis;
-            overflow: hidden;
-            max-width: 400px;
-        }
-        a {
-            font-family: 'Open Sans', Verdana, Helvetica, sans-serif;
-            color: #00aeef !important;
-            text-decoration: none;
-        }
-        a:link {
-            color: #00aeef;
-            text-decoration: none;
-        }
-        /* visited link */
-        
-        a:visited {
-            color: :#00aeef;
-            text-decoration: none;
-        }
-        /* mouse over link */
-        
-        a:hover {
-            color: #00aeef;
-            text-decoration: underline;
-        }
-        /* selected link */
-        
-        a:active {
-            color: #00aeef;
-            text-decoration: none;
-        }
-        a.azm-circle{
-            color: #fff !important;
-        }
-        .del {
-            padding: 5pt !important;
-        }
-        button.black-list {
-            background-color: #555 !important;
-            color: #fff !important;
-            font-weight: bolder;
-        }
-
-        #view-heading {
-            
-            cursor: hand;
-        }
-
-        li {
-            cursor: hand;
-        }
-        .time {
-            font-size: 22px;
-            font-weight: bolder;
-            color: black;
-            text-decoration: none;
-        }
-        .favicon-btn {
-            margin-top: 1px;
-            height: 20px;
-            width: 20px;
-        }
-        .toggler {
-            top: -10px;
-            right: -20px;
-            padding: 15px;
-            cursor: pointer;
-            position: absolute;
-            background: #FFF  url(./icons/gear.png) center no-repeat;
-        }
-        .toggler-panel{
-            right: 30px;
-            top: 15px;
-        }
-      
-        .theme-options {
-            min-width: 100px;
-            top: 21px;
-            right: -20px;
-            cursor: pointer;
-            text-align: center;
-            display: none;
-            position: absolute;
-            background: #C0C0C0 ;
-            z-index: 10;
-            color: white;
-            font-weight:bold
-        }
-
-        #top-links-view{
-          /*min-height: 50px;*/
-          /*max-height: 370px;*/
-          /*width :678;*/ 
-          /*overflow : auto;*/
-          /*overflow-y: scroll !important; */
-          /*overflow-x: hidden !important;*/
-            }
-            ::-webkit-scrollbar {
-                top: 10px;
-                right: 10px;
-                width: 12px;
-            }
-             
-            ::-webkit-scrollbar-track {
-               /* -webkit-box-shadow: inset 0 0 0px rgba(0,0,0,0.3); */
-                background: #F0F0F0  ; 
-               /* border-radius: 10px;*/
-            }
-             
-            ::-webkit-scrollbar-thumb {
-                /*border-radius: 10px;*/
-                /*-webkit-box-shadow: inset 0 0 0px rgba(0,0,0,0.5); */
-                 background: #D3D3D3; 
-            }
-            .sign-in{
-                position: relative;
-                left: 100px;
-
-            }
-			.clickable {
-				cursor: pointer;
-			}
-			.button-gradient {
-				background: #f1247b; /* Old browsers */
-				background: -moz-linear-gradient(left, #f1247b 0%, #943c94 100%); /* FF3.6-15 */
-				background: -webkit-linear-gradient(left, #f1247b 0%,#943c94 100%); /* Chrome10-25,Safari5.1-6 */
-				background: linear-gradient(to right, #f1247b 0%,#943c94 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-				filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f1247b', endColorstr='#943c94',GradientType=1 );
-			}
-    </style>
-   </head>
-    <body class="body">
+        <title>Fetch</title>
         <link href="http://fonts.googleapis.com/css?family=Bree+Serif" rel="stylesheet" type="text/css">
         <link href="http://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css">
+        <link rel="stylesheet" type="text/css" href="searchtab.css"> 
         <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
         <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css">
         <link rel="stylesheet" type="text/css" href="style.css">
         <link rel="stylesheet" type="text/css" href="scrollbar.css">
-        <script src="utils/md5.js"></script>
-        <script type="text/javascript" src="utils/uuid.js"></script>
         <script src="utils/jquery.js"></script>
-        <script src="globals.js"></script>
-        <script src="utils/core.js"></script>
-        <script src="typeahead/typeahead.bundle.js"></script>
-        <script src="scrollbar.js"></script>
-        <script src="popup.js"></script>
-        <script src="searchtab.js"></script>
         <script src="bootstrap/js/bootstrap.js"></script>
-
-        <div class="container">
-            <div id="register-signin-panel" class="row">
+        <script src="framework/stapes.min.js"></script>
+        <script src="framework/mustache.min.js"></script>
+    </head>
+    <body class="body">
+       <div class="container" style="width: 100%">
+            <div id="authentication-panel" style="display: none" class="row">
 				<center>
 					<img src="icon.png" style="width: 60px"/><br>
                    	<span style="font-size: xx-large; color: black; font-weight: 900">Fetch</span><br>
 					<span><small>Never bookmark Again!</small></span>
 				</center>
 
-               <div id="alert-container"></div>
-
-                <div id = "fetch-signin-form" class="form-signin">
-					<div id="newusergroup" class="signingroup signupgroup col-xs-8 sign-in form-group">
+                <div class="form-signin">
+					<div class="new-user-group signin-group signup-group col-xs-8 sign-in form-group">
 						<div style="line-height: 20px" class="checkbox">
 							<label>
-								<input type="checkbox" name="newuser" id="newuser" value="accepted">
+								<input type="checkbox" name="new-user" id="newuser" value="accepted">
 								I'm a new user
 							</label>
 						</div>
 					</div>
 
-                    <div class="signingroup signupgroup resetpasswordgroup form-group sign-in col-xs-8">
-                        <label for=" inputEmail" class="sr-only">Email address</label>
-                        <input type="email" id="signin-inputEmail" required= "required" class="form-control" placeholder="Email address" required="" autofocus="">
+                    <div class="email-group signin-group signup-group reset-password-group form-group sign-in col-xs-8">
+                        <label for="inputEmail" class="sr-only">Email address</label>
+                        <input type="email" name="email" class="form-control" placeholder="Email address"/>
                     </div>
-                    <div class="signingroup signupgroup form-group sign-in col-xs-8">
+                    <div class="password-group signin-group signup-group form-group sign-in col-xs-8">
                         <label for="inputPassword" class="sr-only">Password</label>
-                        <input type="password" id="signin-inputPassword" required= "required" class="form-control" placeholder="Password" required="">
+                        <input type="password" name="password" class="form-control" placeholder="Password"/>
                     </div>
 				
-                  	<div id="confirmpasswordgroup" class="signupgroup form-group sign-in col-xs-8">
+                  	<div class="confirm-password-group signup-group form-group sign-in col-xs-8">
                         <label for="inputPassword" class="sr-only">Confirm Password</label>
-                        <input type="password" id="signup-confirmInputPassword" required= "required" class="form-control" placeholder="Confirm Password" required="">
+                        <input type="password" name="confirm-password" class="form-control" placeholder="Confirm Password"/>
                     </div>
-                    <div id="fetch-signin-btn" style="cursor: pointer; line-height: 40px; height: 40px" class="signingroup button-gradient sign-in col-xs-8">
+                    <div style="cursor: pointer; line-height: 40px; height: 40px" class="signin-button signin-group button-gradient sign-in col-xs-8">
                         <center><span style="color: #ffffff">SIGN IN</span>
                     </div>
 					<br>
-                    <div id="fetch-signup-btn" style="cursor: pointer; line-height: 40px; height: 40px" class="signupgroup button-gradient sign-in col-xs-8">
+                    <div style="cursor: pointer; line-height: 40px; height: 40px" class="signup-button signup-group button-gradient sign-in col-xs-8">
                         <center><span style="color: #ffffff">SIGN UP</span>
                     </div>
-                    <div id="reset-password-btn" style="cursor: pointer; line-height: 40px; height: 40px" class="resetpasswordgroup button-gradient sign-in col-xs-8">
+                    <div style="cursor: pointer; line-height: 40px; height: 40px" class="reset-password-button reset-password-group button-gradient sign-in col-xs-8">
                         <center><span style="color: #ffffff">RESET PASSWORD</span>
                     </div>
-                  	<div style="cursor: pointer" class="signingroup form-group sign-in col-xs-8">
-						<center><p>Forgot your password? <a id="resetpasswordlink">Reset it</a></center>
+                  	<div style="cursor: pointer" class="signin-group form-group sign-in col-xs-8">
+						<center><p>Forgot your password? <a class="reset-password-link">Reset it</a></center>
 					</div>
-                  	<div class="form-group sign-in col-xs-8">
-						<center><label id="resetpassworderrors"></label></center>
+					<div class="form-group sign-in col-xs-8">
+						<center>
+							<span class="status">
+								<i class="fa fa-refresh fa-spin fa-lg"></i>
+								<label></label>
+							</span>
+						</center>
 					</div>
                 </div>
            </div>
             <div id="extension-main-content">
-				<center>
-					<img src="icon.png"/>
-					<h1>Search Your Knowledge Base</h1>
-			   </center>
+				<div class="row">
+					<div class="col-xs-11"></div>
+					<div class="col-xs-1">
+						<span style="text-align: right; padding-left: 45px; padding-top: 10px">
+                        	<span class="logout clickable" style="color: #a00; "><i class="fa fa-power-off fa-lg"></i></span> 
+          	        		<span id="settings" class="clickable" style="padding-left: 2px"><i class="fa fa-gear fa-lg"></i></span>
+						</span>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12">
+						<center>
+							<img src="icon.png" style="width: 80px"/>
+						</center>
+					</div>
+				</div>
                 <div class="row">
-                    <div class="col-xs-12">
-                        <div class="form-group has-info">
-							 <div class="input-group">
-								<span class="input-group-addon"><i class="fa fa-search"></i></span>
-                            	<input type="text" class="form-control" id="search-text-input"  placeholder="Search for...">
+					<div class="col-xs-2"></div>
+                    <div class="col-xs-8" style="padding-top: 20px">
+                        <div class="row form-group search-box">
+							 <div class="col-xs-11">
+                            	<input type="text" class="form-control" name="search-query" placeholder="Search for...">
+							</div>
+							<div class="col-xs-1" style="background-color: #f1247b ; margin-left: -20px; height: 34px ; line-height: 34px">
+								<center>
+									<i class="fa fa-search fa-lg" style="color: white ; line-height: 34px"></i>
+								</center>
 							</div>
                         </div>
-                    </div>
+                   </div>
+					<!--
+                    	<div class="col-xs-1" style="text-align: right">
+                        	span class="logout clickable" style="color: #a00"><i class="fa fa-power-off fa-lg"></i></span> 
+						</div>
+					-->
             	</div>
                 <div id="top-links-view" class="row top-links-view">
-                    <div class="col-xs-12" id="page-list"></div>
-                    <div id="loadmoreajaxloader" style="display:none;">
+					<div class="col-xs-2"></div>
+                    <div class="col-xs-6" id="page-list"></div>
+					<script id="domain-header" type="x-tmpl-mustache">
+					<div class="row del list-item">
+						<div class="col-xs-4">
+							<span class="clickable collapse-links" style="vertical-align: middle">
+								<i class="fa fa-chevron-left"></i>
+							</span>
+							&nbsp;&nbsp;&nbsp;
+							<img class="favicon-btn" src="{{ iconUrl }}"/>
+							<a href="http://{{ baseUrl }}">{{ baseUrl }}</a>
+						</div>
+						<button id="blacklist-button" name="blacklist" type="button" 
+								class="btn btn-default black-list col-xs-5">
+							Dont Run On This Domain
+						</button>
+					</div>
+					</script>
+					<script id="search-result" type="x-tmpl-mustache">
+					<div id="section-{{ count }}" class="row list-item">
+						<div id="link">
+<!--
+							<div class="time-container col-xs-2">
+								<span class="time">{{ minutes }}m {{ seconds }}s</span>
+							</div>
+-->
+							<div class="col-xs-1">
+								<span class="favIcon-container"><img class="favicon-btn" width="32" src="{{ iconUrl }}"/></span>
+							</div>
+							<div class="col-xs-11">
+								<span class="link-text" style="line-height: 20px">
+									<a target="_blank" href="{{ pageId }}">{{ pageTitle }}</a>
+									(<a href="{{ snapshotUrl }}" class="snapshot-button" style="color: #f39c12!important">Cached Version</a>, 
+									 <a href="{{ textUrl }}" class="text-button" style="color: #343633!important">Text Version</a>)
+								</span>
+							</div>
+<!--
+							<div class="col-xs-3" style="text-align: right;">
+								<a target="_blank" class="snapshot-btn" href="{{ snapshotUrl }}">
+									<img src="icons/snapshot.png"/>
+								</a>
+								<a target="_blank" class="text-btn" href="{{ textUrl }}">
+									<img src="icons/text.png"/>
+								</a>
+								<span id="expand-links" class="clickable expand-links" style="display: inline-block; vertical-align: middle; margin-top: 10px">
+									<i class="fa fa-chevron-right"></i>
+								</span>	
+							</div>
+-->
+						</div>
+					</div>	
+					</script>
+                    <div id="loadmoreajaxloader">
                         <center>
                             <i class="fa fa-refresh fa-spin fa-lg"></i>
                         </center>
                     </div>
                </div>
+<!--
                <div id="empty-result">
                    <center>No posts to show.</center>
                </div>
+-->
+<!--
+			   <div class="navbar navbar-default navbar-fixed-bottom" >
+					<div class="container">
+						<div class="row">
+							<div class="col-xs-9">
+								<p align="right">Facing an issue? <a href="#" id="support">Contact Support</a></p>
+							</div>
+							<div class="col-xs-2 pause-fetch-container">
+								<button id='toggle-fetch-btn' type='button' class='btn btn-default black-list'>Pause Fetch</button>
+							</div>
+						</div>
+					</div>
+			   </div>
            </div>
         </div>
+-->
+        <script src="utils/md5.js"></script>
+        <script type="text/javascript" src="utils/uuid.js"></script>
+        <script src="globals.js"></script>
+        <script src="utils/core.js"></script>
+        <script src="typeahead/typeahead.bundle.js"></script>
+        <script src="scrollbar.js"></script>
+        <script src="components/meta.js"></script>
+        <script src="components/widgets.js"></script>
+        <script src="components/auth.js"></script>
+        <script src="components/search.js"></script>
+        <script src="components/popup.js"></script>
+        <script src="searchtab_assembly.js"></script>
+ 
     </body>
 </html>

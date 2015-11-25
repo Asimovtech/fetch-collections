@@ -98,7 +98,7 @@ function getPopupDetail() {
 
 
 function getPopUpLink(userId) {
-	var getUrl = serverUrl + "fetch/v2/notify";
+	var getUrl = fetch.conf.server + "/fetch/v2/notify";
 
 	var data = $.ajax({
 		type: "GET",
@@ -190,7 +190,7 @@ function updateTimer(curUrl, pageTitle, timer, uniqueId, favIconUrl) {
 			cumulative_time: timer
 		},
 
-		url: serverUrl + "fetch/v2/update/"
+		url: fetch.conf.server + "/fetch/v2/update/"
 
 
 	});
