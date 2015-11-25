@@ -22,7 +22,6 @@ fetch.Stapes.ClearHistory=Stapes.subclass({
 
 			period=self.get("duration");
 			accepted=self.$contract.input().is(":checked");
-			console.log("period is "+period+", accepted is "+accepted);
 
 			if(accepted!=true) {
 				self.$contract.error();
