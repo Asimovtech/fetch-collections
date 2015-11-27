@@ -25,7 +25,6 @@ fetch.Stapes.Analytics=Stapes.subclass({
 		// Load Google Analytics
 		_gaq.push(['_setAccount', 'UA-69577643-1']);
 		_gaq.push(['_trackPageview']);
-		this._gaq=_gaq;
 
 		(function() {
 			var ga = document.createElement('script');
@@ -40,7 +39,7 @@ fetch.Stapes.Analytics=Stapes.subclass({
 		if(fetch.conf.mode=="debug")
 			console.log("Tracking Event: "+category+", "+label);
 		if(fetch.conf.analytics)
-			this._gaq.push(['_trackEvent', category, label]);
+			_gaq.push(['_trackEvent', category, label]);
 	},
 });
 
