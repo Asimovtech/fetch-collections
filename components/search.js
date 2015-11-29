@@ -40,7 +40,7 @@ fetch.Stapes.DomainHeader=Stapes.subclass({
 
 fetch.Stapes.SearchResult=Stapes.subclass({
 	constructor: function($parent, item) {
-		this.set("item", item);	
+		this.item=item;
 		var linkLength=40;
 		
 		var timeSpent = item.duration;
@@ -64,12 +64,16 @@ fetch.Stapes.SearchResult=Stapes.subclass({
 			self.emit("expand_links", item);
 		});
 
+		this.$el.find(".search-link").on("click", function() {
+			fetch.analytics.pushEvent("url-opened", self.item.pageId);
+		});
+
 		this.$el.find(".snapshot-button").on("click", function() {
-			fetch.analytics.pushEvent("snapshot-opened");
+			fetch.analytics.pushEvent("snapshot-opened", self.item.snapshotUrl);
 		});
 
 		this.$el.find(".text-button").on("click", function() {
-			fetch.analytics.pushEvent("text-version-opened");
+			fetch.analytics.pushEvent("text-version-opened", self.item.textUrl);
 		});
 		
 		$parent.append(this.$el);	
