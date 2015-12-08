@@ -279,3 +279,12 @@ li {
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f1247b', endColorstr='#943c94',GradientType=1 );
 }
 
+#service-tab li.active a {
+	background-color: #f1247b;
+	color: white!important; 
+}
+
+#service-tab li a {
+	background-color: LightGray; 
+	color: Gray!important; 
+}

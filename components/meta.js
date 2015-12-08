@@ -9,15 +9,17 @@ fetch.Stapes.Config=Stapes.subclass({
 			console.log("-- DEBUG MODE --");
 			this.server = "http://52.32.10.180";
 			this.analytics=false;
+			this.debug=true;
 		} else {
 			this.server = "https://getfetch.net";
 			this.analytics=true;
+			this.debug=false;
 		}
 	}
 });
 
 //// GLOBAL CONFIG
-fetch.conf=new fetch.Stapes.Config("release");
+fetch.conf=new fetch.Stapes.Config("debug");
 //// 
 
 fetch.Stapes.Analytics=Stapes.subclass({

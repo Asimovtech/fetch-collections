@@ -7,6 +7,11 @@ fetch.Stapes.User=Stapes.subclass({
 		chrome.storage.sync.get('userId', function(items) {
 			self.setUserId(items.userId);
 		});
+
+		chrome.storage.onChanged.addListener(function(changes, areaName) {
+			if(areaName=="sync" && changes.userId!=undefined && changes.userId.newValue!=undefined)
+				self.setUserId(changes.userId.newValue);
+		});
 	},
 	setUserId: function(userId) {
 		if(userId==undefined || userId=="") {
@@ -139,7 +144,7 @@ fetch.Stapes.Signin=Stapes.subclass({
 					chrome.storage.sync.set({
 						'userId': userId
 					}, function() {
-						fetch.user.setUserId(userId);
+						//fetch.user.setUserId(userId);
 					});
 				} else {
 					return false;

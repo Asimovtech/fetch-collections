@@ -38,3 +38,4 @@ chrome.runtime.onMessage.addListener(
 			pageTitle: title
 		});
 	});
+});

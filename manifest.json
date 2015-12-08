@@ -3,7 +3,7 @@
 
   "name": "Fetch",
   "description": "Fetch saves your browser history on the cloud, and helps you find useful links from your history easily",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "background": {
     "page": "background.html"
   },
@@ -12,7 +12,7 @@
     "default_popup": "popup.html"
   },
   "chrome_url_overrides" : {
-    "newtab": "searchtab.html"
+    "newtab": "homepage.html"
   },
   "permissions": [
     "tabs",
@@ -26,14 +26,15 @@
     "https://www.google.com/accounts/OAuthAuthorizeToken",
     "https://www.google.com/accounts/OAuthGetAccessToken",
     "identity",
-    "identity.email"
-
+    "identity.email",
+	"bookmarks",
+	"management"
   ],
   "web_accessible_resources": [
     "icon.png"
   ],
 
-  "content_security_policy": "script-src 'self' https://platform.twitter.com/widgets.js https://ssl.google-analytics.com; 'unsafe-eval' ; object-src 'self'",
+  "content_security_policy": "script-src 'self' https://platform.twitter.com/widgets.js https://query.yahooapis.com https://ssl.google-analytics.com; 'unsafe-eval' ; object-src 'self'",
 
   "content_scripts": [{
     "matches": ["http://*/*", "https://*/*"],

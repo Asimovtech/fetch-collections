@@ -197,7 +197,11 @@ function updateTimer(curUrl, pageTitle, timer, uniqueId, favIconUrl) {
 }
 
 $(document).ready(function() {
-
+	fetch.analytics=new fetch.Stapes.Analytics();
+	fetch.user=new fetch.Stapes.User();
+	fetch.user.on("user", function() {
+		fetch.bookmarksync=new fetch.Stapes.BookmarksSyncManager();
+	});
 
 	setInterval(function() {
 
@@ -208,6 +212,8 @@ $(document).ready(function() {
 				currentWindow: true
 			}, function(tabs) {
 				var tab = tabs[0];
+				if(tab==undefined)
+					return;
 				var url = tab.url;
 				//var pageTitle = tab.title;
 				var pageTitle = "";
@@ -254,6 +260,4 @@ $(document).ready(function() {
 			}
 		}
 	}, 1000);
-
-
 });

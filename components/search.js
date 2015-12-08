@@ -232,4 +232,43 @@ fetch.Stapes.DomainPage=Stapes.subclass({
 	}
 });
 
+fetch.Stapes.RecentSearches=Stapes.subclass({
+	constructor: function($element) {
+		this.$el=$element;
 
+		this.updateRecentSearches();		
+	},
+	updateRecentSearches: function() {
+		var self=this;
+		chrome.storage.local.get("recentSearches", function(items) {
+			var searches=items.recentSearches;
+			if(searches==undefined || searches.length==0) 
+				return;
+			else {
+				var html="Recent Searches: "
+				for(var i=0;i<searches.length;i++) {
+					html=html+'<a href="/searchtab.html?q='+searches[i]+'">'+searches[i]+'</a> ';
+				}	
+				self.$el.html(html);
+			}		
+		});	
+	},
+	addSearch: function(search_query) {
+		chrome.storage.local.get("recentSearches", function(items) {
+			var searches=items.recentSearches;
+			if(searches==undefined || searches.length==0) 
+				searches=[search_query];	
+			else {
+				for(var i=0;i<searches.length;i++)
+					if(searches[i]==search_query)
+						break;
+				if(i==searches.length)
+					searches.push(search_query);
+			}		
+			if(searches.length>5)
+				searches.shift();
+
+			chrome.storage.local.set({"recentSearches":searches});
+		});	
+	}	
+});
