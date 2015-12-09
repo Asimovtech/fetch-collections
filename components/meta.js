@@ -14,6 +14,7 @@ fetch.Stapes.Config=Stapes.subclass({
 			this.server = "https://getfetch.net";
 			this.analytics=true;
 			this.debug=false;
+			console.log=function() {};
 		}
 	}
 });

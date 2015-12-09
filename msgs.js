@@ -29,13 +29,11 @@ $(document).scroll(function() {
 	activeMessage("scroll");
 });
 
-chrome.runtime.onMessage.addListener(
-	function(request, sender, sendResponse) {
-		if (request.greeting == "poll") {
-			var title = $('title').text();
-		}
-		sendResponse({
-			pageTitle: title
-		});
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+	if (request.greeting == "poll") {
+		var title = $('title').text();
+	}
+	sendResponse({
+		pageTitle: title
 	});
 });
