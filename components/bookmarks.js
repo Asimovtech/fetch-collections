@@ -69,6 +69,7 @@ fetch.Stapes.BookmarksSyncManager=Stapes.subclass({
         		self.processNode(item);
     		});
 
+			fetch.analytics.pushEvent("bookmarks-import", self.synclist.length);
 			self.bulkUpdate(self.synclist);
 		});
 	},
