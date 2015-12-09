@@ -12,7 +12,7 @@ fetch.Stapes.BookmarksSyncManager=Stapes.subclass({
 				self.enabled=false;
 				self.syncOld=true;
 				chrome.storage.onChanged.addListener(function(items, area) {
-					if(area=="local" && items.bookmarksSync.newValue==true) {
+					if(area=="local" && items.bookmarksSync!=undefined && items.bookmarksSync.newValue==true) {
 						if(fetch.conf.debug)
 							console.log("Detected sync enable, enabling bookmarks sync");
 
@@ -123,8 +123,6 @@ fetch.Stapes.BookmarksOptInHeader=Stapes.subclass({
 		$parent.append(this.$header);		
 
 		chrome.runtime.onMessage.addListener(function(message) {
-			console.log("Message:");
-			console.log(message);
 			if(message.task!=undefined)
 				var header=new fetch.Stapes.BookmarksProgressHeader($parent, message.task);
 		});
@@ -134,14 +132,16 @@ fetch.Stapes.BookmarksOptInHeader=Stapes.subclass({
 fetch.Stapes.BookmarksProgressHeader=Stapes.subclass({
 	constructor: function($parent, task) {
 		this.task=task;
-		this.$header=$('<div class="alert alert-warning"><center>Your bookmarks are being imported, searches may not be accurate</center></div>');
+		var template=$("#bookmark-progress-header").html();
+		Mustache.parse(template);
+		this.$header=$(Mustache.render(template, {}));
 		this.updateStatus();
 		var self=this;
-		setInterval(function() {
+		this.statusTimer=setInterval(function() {
 			self.updateStatus();
-		}, 10*1000); // 1 minute per update
+		}, 3000); // 1 minute per update
 
-		$parent.append(this.$header);		
+		$parent.prepend(this.$header);		
 	},
 	updateStatus: function() {
 		var self=this;
@@ -157,13 +157,22 @@ fetch.Stapes.BookmarksProgressHeader=Stapes.subclass({
 				data=JSON.parse(data);
 				if(data.state=="SUCCESS") {
 					self.$header.hide();
+					clearInterval(self.statusTimer);
 					chrome.storage.local.remove("bookmarksSyncTask");
 				} 
 				if(data.state=="PROGRESS") {
 					var pending=data.total-data.current;
-					var mins=(pending*10)/60;
-					console.log("sync "+Math.ceil(mins)+" mins");
-					self.$header.find("center").html("<div>Bookmarks will be imported in approximately <strong>"+Math.ceil(mins)+" minutes</strong>, searches may not be accurate</center></div>");
+					var secs=pending*3;
+					var timeinfo="";
+					if(secs<60)
+						timeinfo=secs+" seconds"
+					else
+						timeinfo=Math.ceil(secs/60.0)+" minutes"
+					self.$header.find(".message").html("Your bookmarks will be imported in approximately <strong>"+timeinfo+"</strong>");
+					var percentage=Math.ceil(data.current/data.total*100.0);
+					self.$header.find(".progress-bar").css("width", percentage+"%");
+					self.$header.find(".progress-bar").attr("aria-valuenow", percentage);
+					self.$header.find(".progress-bar").html(percentage+"%");
 				}
 			},
 			error: function(data) {

@@ -222,6 +222,8 @@ $(document).ready(function() {
 				chrome.tabs.sendMessage(tabs[0].id, {
 					greeting: "poll"
 				}, function(response) {
+					if(response==undefined)
+						return;
 					pageTitle = response.pageTitle;
 
 
