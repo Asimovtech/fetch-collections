@@ -9,18 +9,16 @@ fetch.Stapes.BlockedSites=Stapes.subclass({
 		this.$taginput=new fetch.Stapes.FormInput(this.$el.find(".blocked-sites-group"), "blocked-sites");
 		this.$status=new fetch.Stapes.StatusMessage(this.$el.find(".status"));
 		this.$submit=this.$el.find('button');
-		var user=fetch.user.get("userId");
 
 		var self=this;
 		// LOAD BLOCKED SITES INTO TAG INPUT
 		$.ajax({
-			type: "POST",
-			url: fetch.conf.server+"/fetch/v2/blacklist/",
-			data: { 
-				user: user,
-			},
+			type: "GET",
+			url: fetch.conf.server+"/fetch/blacklist/",
 			success: function(data) {
-				var sites=JSON.parse(data);
+				var sites=[]
+				for(var i=0;i<data.length;i++)
+					sites.push(data[i].base_url);
 
 				self.$taginput.input().textext({
 					plugins : 'tags prompt',
@@ -66,10 +64,9 @@ fetch.Stapes.BlockedSites=Stapes.subclass({
 			}
 			self.$status.working();
 			$.ajax({
-				type: "PUT",
-				url: fetch.conf.server+"/fetch/v2/blacklist/",
+				type: "POST",
+				url: fetch.conf.server+"/fetch/blacklist/",
 				data: { 
-					user: user,
 					sites: tagString
 				},
 				success: function(data) {

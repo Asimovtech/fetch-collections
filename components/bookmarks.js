@@ -41,20 +41,21 @@ fetch.Stapes.BookmarksSyncManager=Stapes.subclass({
 	bulkUpdate: function(pagelist) {
 		console.log("page list contains "+pagelist.length+" objects");
 		var user=fetch.user.get("userId");
-		var obj=JSON.stringify({user:user, service: "BOOKMARKS", pages: pagelist});
+		var obj=JSON.stringify({service: "BOOKMARKS", pages: pagelist});
 		var data = $.ajax({
 			type: "POST",
 			async: true,
 			crossDomain: "true",
-			url: fetch.conf.server + "/fetch/v2/bulkupdate/",
+			url: fetch.conf.server + "/fetch/history/",
 			contentType: "application/json",
 			dataType: 'json',
 			data: obj,
 			success: function(data) {
-				var obj=JSON.parse(data);
-				console.log(obj.task);
-				chrome.storage.local.set({"bookmarksSyncTask":obj.task});
-				chrome.runtime.sendMessage({task: obj.task});
+				if(pagelist.length>1) {
+					console.log(data.task);
+					chrome.storage.local.set({"bookmarksSyncTask":data.task});
+					chrome.runtime.sendMessage({task: data.task});
+				}
 			},
 			error: function(data) {
 				console.log("error "+data);
@@ -147,15 +148,14 @@ fetch.Stapes.BookmarksProgressHeader=Stapes.subclass({
 	updateStatus: function() {
 		var self=this;
 		$.ajax({
-			type: "POST",
+			type: "GET",
 			async: true,
 			crossDomain: "true",
-			url: fetch.conf.server + "/fetch/v2/taskstatus/",
+			url: fetch.conf.server + "/fetch/tasks/",
 			data: {
 				task: this.task,
 			},
 			success: function(data) {
-				data=JSON.parse(data);
 				if(data.state=="SUCCESS") {
 					self.$header.hide();
 					clearInterval(self.statusTimer);
@@ -197,29 +197,22 @@ fetch.Stapes.BookmarksPage=Stapes.subclass({
 		if(this.get("loading"))
 			return;
 		this.set("loading", true);
-		var user=fetch.user.get("userId");
 
 		fetch.activity.show();
 		var self=this;
 		var data = $.ajax({
-			type: "POST",
+			type: "GET",
 			async: true,
 			crossDomain: "true",
-			url: fetch.conf.server + "/fetch/v2/sphinxsearch/",
+			url: fetch.conf.server + "/fetch/search/",
 			data: {
-				user: user,
 				query: self.get("search_query"),
 				page: page,
 				service: "BOOKMARKS"
 			},
 			success: function(data) {
-				if (data) {
-					data = $.parseJSON(data);
-					if (!$.isEmptyObject(data.lPageItems)) {
-						self.emit("items", data.lPageItems);
-					} else {
-						self.emit("items", []);
-					}
+				if (!$.isEmptyObject(data.objects)) {
+					self.emit("items", data.objects);
 				} else {
 					self.emit("items", []);
 				}

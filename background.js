@@ -179,20 +179,24 @@ function updateTimer(curUrl, pageTitle, timer, uniqueId, favIconUrl) {
 	pageTitle = pageTitle.replace(/'/g, "\\\'");
 	favIconUrl = favIconUrl.replace(/'/g, "\\\'");
 
-	$.ajax({
+	var page={
+		url: curUrl,
+		title: pageTitle,
+		icon_url: favIconUrl,
+		cumulative_time: timer
+	}
+
+	var pagelist=[page]
+	var obj=JSON.stringify({pages: pagelist});
+	var data = $.ajax({
 		type: "POST",
+		async: true,
 		crossDomain: "true",
-		data: {
-			page_id: curUrl,
-			page_title: pageTitle,
-			user_id: uniqueId,
-			icon_url: favIconUrl,
-			cumulative_time: timer
-		},
-
-		url: fetch.conf.server + "/fetch/v2/update/"
-
-
+		headers: {"Authorization": uniqueId},
+		url: fetch.conf.server + "/fetch/history/",
+		contentType: "application/json",
+		dataType: 'json',
+		data: obj,
 	});
 }
 
@@ -201,6 +205,7 @@ $(document).ready(function() {
 	fetch.user=new fetch.Stapes.User();
 	fetch.user.on("user", function() {
 		fetch.bookmarksync=new fetch.Stapes.BookmarksSyncManager();
+		fetch.collectionmenu=new fetch.Stapes.CollectionContextMenu();
 	});
 
 	setInterval(function() {

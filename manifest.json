@@ -28,7 +28,8 @@
     "identity",
     "identity.email",
 	"bookmarks",
-	"management"
+	"management",
+    "contextMenus"
   ],
   "web_accessible_resources": [
     "icon.png"

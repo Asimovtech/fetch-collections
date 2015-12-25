@@ -96,3 +96,96 @@ input[name="search-query"]::-moz-placeholder {
 	color: white!important;
 	text-decoration: underline!important;
 }
+
+.collection {
+	margin-left: 20px;
+	margin-bottom: 20px;
+	height: 20%;
+	background-color: white;
+	color: #707070;
+}
+
+.new-collection {
+	margin-left: 20px;
+	margin-bottom: 20px;
+	height: 20%;
+	background-color: white;
+	color: #707070;
+}
+
+.new-collection center {
+	font-size: small;
+	font-weight: bold;
+	padding-top: 10px;
+}
+
+
+.collection center {
+	font-size: small;
+	font-weight: bold;
+	padding-top: 10px;
+}
+
+.collection .title {
+	font-size: small;
+	font-weight: bold;
+	padding-top: 5px;
+	float: left;
+}
+
+.collection .badge {
+	float: right;
+	margin-top: 5px;
+	margin-right: -10px;
+}
+
+.collection .links {
+	clear: both;	
+	font-size: small;
+	font-weight: 300;
+}
+
+.collection .modified {
+	font-size: x-small;
+	position: absolute;
+	bottom: 5px;
+	right: 5px;
+	font-weight: 300;
+}
+
+.create-collection .title {
+	font-size: small;
+	font-weight: bold;
+}
+
+.actions {
+	font-size: small;
+	color: #707070;
+}
+
+.collection-link {
+	height: 35px;	
+	padding-left: 30px;
+	line-height: 35px;
+}
+
+.link-text {
+	height: 35px;
+	border-bottom: 1px #eeeeee solid;
+}
+
+.collection-details .modal-header {
+	height: 50px;
+}
+
+.collection-details .modal-body {
+	max-height: 415px;
+	overflow-x: hidden;
+	overflow-y: auto;
+}
+
+.collection-details .actions {
+	padding-left: 50px;
+}
+
+

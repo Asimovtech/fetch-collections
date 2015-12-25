@@ -92,27 +92,20 @@ fetch.Stapes.FrontPage=Stapes.subclass({
 		if(this.get("loading"))
 			return;
 		this.set("loading", true);
-		var user=fetch.user.get("userId");
 
 		fetch.activity.show();
 		var self=this;
 		var data = $.ajax({
-			type: "POST",
+			type: "GET",
 			async: true,
 			crossDomain: "true",
-			url: fetch.conf.server + "/fetch/v2/frontpage/",
+			url: fetch.conf.server + "/fetch/history/",
 			data: {
-				user: user,
 				page: page
 			},
 			success: function(data) {
-				if (data) {
-					data = $.parseJSON(data);
-					if (!$.isEmptyObject(data.lPageItems)) {
-						self.emit("items", data.lPageItems);
-					} else {
-						self.emit("items", []);
-					}
+				if (!$.isEmptyObject(data.objects)) {
+					self.emit("items", data.objects);
 				} else {
 					self.emit("items", []);
 				}
@@ -141,28 +134,21 @@ fetch.Stapes.SearchPage=Stapes.subclass({
 		if(this.get("loading"))
 			return;
 		this.set("loading", true);
-		var user=fetch.user.get("userId");
 
 		fetch.activity.show();
 		var self=this;
 		var data = $.ajax({
-			type: "POST",
+			type: "GET",
 			async: true,
 			crossDomain: "true",
-			url: fetch.conf.server + "/fetch/v2/sphinxsearch/",
+			url: fetch.conf.server + "/fetch/search/",
 			data: {
-				user: user,
 				query: self.get("search_query"),
 				page: page
 			},
 			success: function(data) {
-				if (data) {
-					data = $.parseJSON(data);
-					if (!$.isEmptyObject(data.lPageItems)) {
-						self.emit("items", data.lPageItems);
-					} else {
-						self.emit("items", []);
-					}
+				if (!$.isEmptyObject(data.objects)) {
+					self.emit("items", data.objects);
 				} else {
 					self.emit("items", []);
 				}
@@ -192,28 +178,21 @@ fetch.Stapes.DomainPage=Stapes.subclass({
 		if(this.get("loading"))
 			return;
 		this.set("loading", true);
-		var user=fetch.user.get("userId");
 
 		fetch.activity.show();
 		var self=this;
 		var data = $.ajax({
-			type: "POST",
+			type: "GET",
 			async: true,
 			crossDomain: "true",
-			url: fetch.conf.server + "/fetch/v2/domainlist/",
+			url: fetch.conf.server + "/fetch/history/",
 			data: {
-				user: user,
 				domain: self.get("base_url"),
 				page: page
 			},
 			success: function(data) {
-				if (data) {
-					data = $.parseJSON(data);
-					if (!$.isEmptyObject(data.lPageItems)) {
-						self.emit("items", data.lPageItems);
-					} else {
-						self.emit("items", []);
-					}
+				if (!$.isEmptyObject(data.objects)) {
+					self.emit("items", data.objects);
 				} else {
 					self.emit("items", []);
 				}

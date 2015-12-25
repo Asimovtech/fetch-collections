@@ -3,7 +3,7 @@
         <title>Fetch</title>
         <link href="http://fonts.googleapis.com/css?family=Bree+Serif" rel="stylesheet" type="text/css">
         <link href="http://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css">
-        <link rel="stylesheet" type="text/css" href="searchtab.css"> 
+        <link rel="stylesheet" type="text/css" href="searchtab.css">
         <link rel="stylesheet" type="text/css" href="homepage.css"> 
         <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
         <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css">
@@ -118,6 +118,156 @@
 						</div>
                    </div>
             	</div>
+				<div class="row collection-manager-container">
+					<div class="col-xs-1"></div>
+					<div class="col-xs-10">
+						<div class="row">
+							<div class="col-xs-1"></div>
+							<div class="collection-container col-xs-10">
+								<button class="new-collection col-xs-2" data-toggle="modal" data-target=".bs-example-modal-sm">
+									<center>Create Collection</center>
+									<center><i class="fa fa-plus fa-3x"></i></center>
+								</button>
+								<div class="create-collection modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+									<div class="modal-dialog modal-sm">
+										<div class="modal-content">
+											<div class="modal-header">
+        										<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        										<div class="title">Create Collection</div>
+     										 </div>
+											<div class="modal-body">
+												<div class="form-group">
+													<label for="collectionName">Name</label>
+													<input type="email" class="form-control" name="name" id="collectionName" placeholder="pizza joints, favorite shows etc.">
+												</div>
+												<div class="row">
+													<div class="col-xs-7">
+														<div class="row">
+															<div class="col-xs-2">
+																<span class="badge" style="background-color: #73d1fd">&nbsp;</span>
+															</div>
+															<div class="col-xs-2">
+																<span class="badge" style="background-color: #fcd60c">&nbsp;</span>
+															</div>
+															<div class="col-xs-2">
+																<span class="badge" style="background-color: #f7543a">&nbsp;</span>
+															</div>
+															<div class="col-xs-2">
+																<span class="badge" style="background-color: #9fa0a4">&nbsp;</span>
+															</div>
+															<div class="col-xs-2">
+																<span class="badge" style="background-color: #6b68e2">&nbsp;</span>
+															</div>
+														</div>
+														<div class="row" style="margin-top: 10px">
+															<div class="col-xs-2">
+																<span class="badge" style="background-color: #2b8afe">&nbsp;</span>
+															</div>
+															<div class="col-xs-2">
+																<span class="badge" style="background-color: #f64468">&nbsp;</span>
+															</div>
+															<div class="col-xs-2">
+																<span class="badge" style="background-color: #f9a810">&nbsp;</span>
+															</div>
+															<div class="col-xs-2">
+																<span class="badge" style="background-color: #64e071">&nbsp;</span>
+															</div>
+															<div class="col-xs-2">
+																<span class="badge" style="background-color: #8b3fad">&nbsp;</span>
+															</div>
+														</div>
+													</div>
+													<div class="col-xs-4">
+														<button class="create btn btn-success">CREATE</button>
+													</div>
+												</div>
+												<div class="row">
+													<div class="col-xs-12">
+														<center>
+															<span class="status">
+																<i class="fa fa-refresh fa-spin fa-lg"></i>
+																<label></label>
+															</span>
+														</center>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<script id="collection-details-template" type="x-tmpl-mustache">
+							<div class="collection-details modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+								<div class="modal-dialog modal-lg">
+									<div class="modal-content">
+										<div class="modal-header">
+       										<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+       										<div class="title col-xs-10">
+												<span class="collection-view">
+													{{ name }}
+												</span>
+												<span class="collection-edit input-group">
+													<input type="text" class="form-control input-sm" name="name" value="{{ name }}"/>
+													<span class="input-group-btn">
+														<button class="collection-save btn btn-sm btn-success">SAVE</button>
+													</span>
+												</span>
+												<span class="actions">
+													<span class="clickable edit">Edit Name</span> | 
+													<span class="clickable delete">Delete Collection</span>
+												</span>
+											</div>
+   										</div>
+										<div class="modal-body">
+											<div class="row">
+												<div class="collection-link-container col-xs-12"></div>
+												<div class="col-xs-12">
+													<center>
+														<span class="status">
+															<i class="fa fa-refresh fa-spin fa-lg"></i>
+															<label></label>
+														</span>
+													</center>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>		
+							</script>
+							<script id="collection-link-template" type="x-tmpl-mustache">
+							<div class="collection-link row">
+								<div class="col-xs-10 link-text">
+									<span class="link-view">
+										<img src="{{ favicon_url }}"/>&nbsp;&nbsp;
+										<a class="link-view-title target="_blank" href="{{ url }}">{{ display_title }}</a>
+									</span>
+									<div class="link-edit input-group">
+										<input type="text" class="form-control input-sm" name="title" id="link-title" value="{{ title }}"/>
+										<span class="input-group-btn">
+											<button class="link-save btn btn-sm btn-success">SAVE</i></button>
+										</span>
+									</div>
+								</div>
+								<div class="actions col-xs-2">
+									<span class="clickable edit">Edit</span> | 
+									<span class="clickable delete">Delete</span>
+								</div>
+							</div>
+							</script>
+							<script id="collection-template" type="x-tmpl-mustache">
+							<div class="collection clickable col-xs-2">
+								<div class="title">{{ name }}</div>
+								<div class="badge" style="background-color: {{ color }}">&nbsp;</div>
+								<div class="links"><b>{{ links }}</b> links</div>
+								<div class="modified">Last edit: {{ modification_time }}</div>
+							</div>
+							</script>
+							<div class="col-xs-1"></div>
+						</div>
+					</div>
+					<div class="col-xs-1"></div>
+				</div>
 				<div class="footer row">
 					<div class="col-xs-6"><p>Fetch helps you search links from history and bookmarks</p></div>
 					<div class="real-time-info col-xs-6">
@@ -134,6 +284,7 @@
         <script src="globals.js"></script>
         <script src="utils/core.js"></script>
         <script src="utils/jquery.simpleWeather.min.js"></script>
+        <script src="utils/moment.min.js"></script>
         <script src="typeahead/typeahead.bundle.js"></script>
         <script src="scrollbar.js"></script>
         <script src="components/meta.js"></script>
@@ -143,6 +294,7 @@
         <script src="components/search.js"></script>
         <script src="components/bookmarks.js"></script>
         <script src="components/searchtab.js"></script>
+        <script src="components/collections.js"></script>
         <script src="homepage_assembly.js"></script>
  
     </body>

@@ -20,7 +20,7 @@ fetch.Stapes.Config=Stapes.subclass({
 });
 
 //// GLOBAL CONFIG
-fetch.conf=new fetch.Stapes.Config("release");
+fetch.conf=new fetch.Stapes.Config("debug");
 //// 
 
 fetch.Stapes.Analytics=Stapes.subclass({

@@ -5,9 +5,10 @@ $(document).ready(function() {
 	fetch.auth=new fetch.Stapes.Authentication($("#authentication-panel"), $("#extension-main-content"));
 	fetch.chromeapps=new fetch.Stapes.AppMenu($('#app-list'));
 	fetch.searchbar=new fetch.Stapes.RedirectSearchBar($("#extension-main-content"));
-	/*fetch.user.on("user", function() {
-		fetch.popup=new fetch.Stapes.SearchTabManager($("#extension-main-content"));
-	});*/
+	fetch.user.on("user", function() {
+		fetch.collectioncreator=new fetch.Stapes.CollectionCreator($(".create-collection"));
+		fetch.collections=new fetch.Stapes.CollectionManager($(".collection-manager-container"), fetch.collectioncreator);
+	});
 	//fetch.togglefetch=new fetch.Stapes.ToggleFetch($("#toggle-fetch-btn"));
 	fetch.settings=new fetch.Stapes.Settings($("#settings"), "");
 	//fetch.support=new fetch.Stapes.Settings($("#support"), "#contact");

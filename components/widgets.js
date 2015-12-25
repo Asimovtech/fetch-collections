@@ -42,6 +42,12 @@ fetch.Stapes.StatusMessage=Stapes.subclass({
 		this.$status.html(message);
 		this.$activity.hide();
 	},
+	info: function(message) {
+		this.$status.addClass("text-info");
+		this.$status.html(message);
+		this.$activity.hide();
+	},
+
 });
 
 fetch.Stapes.FormInput=Stapes.subclass({

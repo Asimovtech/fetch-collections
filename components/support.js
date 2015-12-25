@@ -10,7 +10,6 @@ fetch.Stapes.Support=Stapes.subclass({
 
 		var self=this;
 		this.$submit.on('click', function() {
-			var user=fetch.user.get("userId");
 			var text=self.$text.input().val();
 			if(text==undefined || text=="") {
 				self.$text.error();
@@ -20,9 +19,8 @@ fetch.Stapes.Support=Stapes.subclass({
 			self.$status.working();
 			$.ajax({
 				type: "POST",
-				url: fetch.conf.server+"/fetch/supportrequest/",
+				url: fetch.conf.server+"/fetch/supportrequests/",
 				data: { 
-					user: userId,
 					requestinfo: text
 				},
 				success: function(data) {
@@ -45,7 +43,6 @@ fetch.Stapes.PaidFeature=Stapes.subclass({
 
 		var self=this;
 		this.$submit.on('click', function() {
-			var user=fetch.user.get("userId");
 			var text=self.$text.input().val();
 			if(text==undefined || text=="") {
 				self.$text.error();
@@ -55,9 +52,8 @@ fetch.Stapes.PaidFeature=Stapes.subclass({
 			self.$status.working();
 			$.ajax({
 				type: "POST",
-				url: fetch.conf.server+"/fetch/paidfeature/",
+				url: fetch.conf.server+"/fetch/paidfeatures/",
 				data: { 
-					user: userId,
 					feature: text
 				},
 				success: function(data) {

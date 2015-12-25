@@ -16,7 +16,6 @@ fetch.Stapes.ClearHistory=Stapes.subclass({
 		});
 
 		this.$submit.on("click", function() {
-			var user=fetch.user.get("userId");
 			self.$contract.reset();
 			self.$status.reset();
 
@@ -30,10 +29,9 @@ fetch.Stapes.ClearHistory=Stapes.subclass({
 			
 			self.$status.working("clearing history, this may take several minutes");
 			$.ajax({
-				type: "PUT",
-				url: fetch.conf.server+"/fetch/v2/clear/",
+				type: "DELETE",
+				url: fetch.conf.server+"/fetch/history/",
 				data: { 
-					user: user,
 					period: period
 				},
 				success: function(data) {

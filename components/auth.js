@@ -18,7 +18,11 @@ fetch.Stapes.User=Stapes.subclass({
 			this.emit("no_user");
 			return;
 		}
+		console.log("User id is "+userId);
 
+		$.ajaxSetup({
+			headers: { 'Authorization': userId }
+		});
 		this.set("userId", userId);
 		this.emit("user", userId);
 	},
@@ -35,7 +39,6 @@ fetch.Stapes.ChangePassword=Stapes.subclass({
 
 		var self=this;
 		this.$submit.on("click", function() {
-			var user=fetch.user.get("userId");
 			self.$oldpassword.reset();
 			self.$newpassword.reset();
 			self.$confirmpassword.reset();
@@ -68,10 +71,9 @@ fetch.Stapes.ChangePassword=Stapes.subclass({
 				var newpasshash=CryptoJS.MD5(newpassword).toString();
 				self.$status.working();
 				$.ajax({
-					type: "POST",
-					url: fetch.conf.server+"/fetch/v2/password/",
+					type: "PUT",
+					url: fetch.conf.server+"/fetch/passwords/",
 					data: { 
-						user: user,
 						oldpassword: oldpasshash,
 						newpassword: newpasshash
 					},
@@ -129,29 +131,24 @@ fetch.Stapes.Signin=Stapes.subclass({
 		passhash = CryptoJS.MD5(password);
 		this.$status.working();
 		var data = $.ajax({
-			type: "PUT",
+			type: "POST",
 			async: true,
-			url: fetch.conf.server + "/fetch/v2/login/",
+			url: fetch.conf.server + "/fetch/sessions/",
 			crossDomain: "true",
 			data: {
 				email: email,
 				password: passhash.toString()
 			},
 			success: function(data) {
-				if (data) {
-					data = $.parseJSON(data);
-					userId = data['userId'];
-					chrome.storage.sync.set({
-						'userId': userId
-					}, function() {
-						//fetch.user.setUserId(userId);
-					});
-				} else {
-					return false;
-				}
+				userId = data.user_id;
+				chrome.storage.sync.set({
+					'userId': userId
+				}, function() {
+					//fetch.user.setUserId(userId);
+				});
 			}
 		}).fail(function(data) {
-			self.$status.error("login failed, "+JSON.parse(data.responseText));
+			self.$status.error("login failed, "+JSON.parse(data.responseText).detail);
 			return false;
 		});
 	}
@@ -211,24 +208,19 @@ fetch.Stapes.Signup=Stapes.subclass({
 		var data = $.ajax({
 			type: "POST",
 			async: true,
-			url: fetch.conf.server + "/fetch/v2/register/",
+			url: fetch.conf.server + "/fetch/users/",
 			crossDomain: "true",
 			data: {
 				email: email,
 				password: passhash.toString()
 			},
 			success: function(data) {
-				if (data) {
-					data = $.parseJSON(data);
-					userId = data['userId'];
-					chrome.storage.sync.set({
-						'userId': userId
-					}, function() {
-						fetch.user.setUserId(userId);
-					});
-				} else {
-					return false;
-				}
+				userId = data.user_id;
+				chrome.storage.sync.set({
+					'userId': userId
+				}, function() {
+					fetch.user.setUserId(userId);
+				});
 			}
 		}).fail(function(data) {
 			self.$status.error("signup failed, "+JSON.parse(data.responseText));
@@ -270,9 +262,9 @@ fetch.Stapes.ResetPassword=Stapes.subclass({
 		var self=this;
 		this.$status.working();
 		var data = $.ajax({
-			type: "POST",
+			type: "DELETE",
 			async: false,
-			url: fetch.conf.server + "/fetch/v2/forgotpassword/",
+			url: fetch.conf.server + "/fetch/passwords/",
 			crossDomain: "true",
 			data: {
 				email: email,
