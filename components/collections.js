@@ -87,6 +87,7 @@ fetch.Stapes.CollectionView=Stapes.subclass({
 		this.$list=this.$el.find(".collection-link-container");
 		this.$collectionview=this.$el.find(".collection-view");
 		this.$collectionedit=this.$el.find(".collection-edit");
+		this.$collectionsettings=this.$el.find(".collection-settings");
 		this.$collectionactions=this.$el.find(".actions");
 		this.$collectionname=this.$el.find('input[name="name"]');
 		this.$collectionsave=this.$el.find(".collection-save");
@@ -96,12 +97,17 @@ fetch.Stapes.CollectionView=Stapes.subclass({
 		console.log(this.$scroll);
 	
 		var self=this;
+		this.$collectionactions.hide();
 		this.$collectionedit.hide();
 
 		this.$scroll.on("scroll", function() {
 			if((self.$scroll.scrollTop()+self.$scroll.innerHeight())>=self.$scroll[0].scrollHeight) {
 				self.loadCollectionItems();
 			}
+		});
+
+		this.$collectionsettings.on("click", function() {
+			self.$collectionactions.toggle();
 		});
 
 
@@ -162,12 +168,12 @@ fetch.Stapes.CollectionView=Stapes.subclass({
 				} 
 				self.set("loading", false);
 				self.set("offset", self.get("offset")+20);
-				self.$status.info("No links to show");
+				self.$status.info("");
 			},
 			error: function(data) {
 				self.emit("error", data);
 				self.set("loading", false);
-				self.$status.info("No links to show");
+				self.$status.info("");
 			}
 		});
 	},

@@ -101,19 +101,19 @@
 					</div>
 				</div>
                 <div class="row">
-					<div class="col-xs-2"></div>
-                    <div class="col-xs-8" style="padding-top: 20px">
+					<div class="col-xs-3"></div>
+                    <div class="col-xs-6" style="padding-top: 20px">
                         <div class="row form-group search-box">
-							 <div class="col-xs-11">
+							 <div class="col-xs-10">
                             	<input type="text" class="form-control" name="search-query" placeholder="Search your history and bookmarks">
 							</div>
-							<div class="col-xs-1 search-button">
+							<div class="col-xs-2 search-button">
 								<center>
 									<i class="fa fa-search fa-lg"></i>
 								</center>
 							</div>
                         </div>
-						<div class="row" align="right">
+						<div class="row" align="right" style="margin-top: -10px; margin-bottom: 35px">
 							<span id="recent-searches"></span>
 						</div>
                    </div>
@@ -124,10 +124,10 @@
 						<div class="row">
 							<div class="col-xs-1"></div>
 							<div class="collection-container col-xs-10">
-								<button class="new-collection col-xs-2" data-toggle="modal" data-target=".bs-example-modal-sm">
+								<div class="new-collection clickable col-xs-2" data-toggle="modal" data-target=".bs-example-modal-sm">
 									<center>Create Collection</center>
-									<center><i class="fa fa-plus fa-3x"></i></center>
-								</button>
+									<center><img src="icons/create_collection.png" width="30" style="padding-top: 12px"/></center>
+								</div>
 								<div class="create-collection modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
 									<div class="modal-dialog modal-sm">
 										<div class="modal-content">
@@ -202,9 +202,10 @@
 									<div class="modal-content">
 										<div class="modal-header">
        										<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+       										<span class="collection-settings clickable pull-right"><i class="fa fa-gear"></i></span>
        										<div class="title col-xs-10">
 												<span class="collection-view">
-													{{ name }}
+													<b>{{ name }}</b>
 												</span>
 												<span class="collection-edit input-group">
 													<input type="text" class="form-control input-sm" name="name" value="{{ name }}"/>

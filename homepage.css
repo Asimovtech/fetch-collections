@@ -1,4 +1,15 @@
+body {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 14px;
+	overflow-y: hidden;
+}
+
+.container {
+	overflow-x: hidden;
+}
+
 #background {
+    font-family: 'Open Sans', sans-serif;
     width: 100%; 
     height: 100%; 
     position: absolute; 
@@ -16,6 +27,7 @@ input[name="search-query"] {
 	background-color: rgba(255,255,255,0.1);
 	border: none;
 	color: white;
+	height: 40px;
 }
 
 input[name="search-query"]::-webkit-input-placeholder {
@@ -51,13 +63,13 @@ input[name="search-query"]::-moz-placeholder {
 .search-button {
 	background-color: white ; 
 	margin-left: -20px; 
-	height: 34px ; 
-	line-height: 34px
+	height: 40px ; 
+	line-height: 40px
 }
 
 .search-button i {
 	color: black;
-	line-height: 34px
+	line-height: 40px
 }
 
 .footer {
@@ -116,7 +128,7 @@ input[name="search-query"]::-moz-placeholder {
 .new-collection center {
 	font-size: small;
 	font-weight: bold;
-	padding-top: 10px;
+	padding-top: 5px;
 }
 
 
@@ -127,6 +139,7 @@ input[name="search-query"]::-moz-placeholder {
 }
 
 .collection .title {
+	color: #707070;
 	font-size: small;
 	font-weight: bold;
 	padding-top: 5px;
@@ -140,12 +153,14 @@ input[name="search-query"]::-moz-placeholder {
 }
 
 .collection .links {
+	color: #898989;
 	clear: both;	
-	font-size: small;
-	font-weight: 300;
+	font-size: 9pt;
+	font-weight: 500;
 }
 
 .collection .modified {
+	color: #898989;
 	font-size: x-small;
 	position: absolute;
 	bottom: 5px;
@@ -154,13 +169,18 @@ input[name="search-query"]::-moz-placeholder {
 }
 
 .create-collection .title {
+	color: #707070;
 	font-size: small;
 	font-weight: bold;
 }
 
+.create-collection .form-group label {
+	color: #707070;
+}
+
 .actions {
 	font-size: small;
-	color: #707070;
+	color: #898989;
 }
 
 .collection-link {
@@ -179,7 +199,7 @@ input[name="search-query"]::-moz-placeholder {
 }
 
 .collection-details .modal-body {
-	max-height: 415px;
+	height: 415px;
 	overflow-x: hidden;
 	overflow-y: auto;
 }
@@ -188,4 +208,12 @@ input[name="search-query"]::-moz-placeholder {
 	padding-left: 50px;
 }
 
+.collection-view {
+	color: #707070;
+}
 
+.collection-settings {
+	color: #898989;
+	padding-top: 3px;
+	padding-right: 5px;
+}
