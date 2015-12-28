@@ -74,10 +74,84 @@ fetch.Stapes.CollectionItem=Stapes.subclass({
 	}
 })
 
+fetch.Stapes.AddLinkToCollection=Stapes.subclass({
+	constructor: function($element, item) {
+		this.item=item;
+		this.$el=$element;
+		this.$addlinkbutton=this.$el.find(".add-link-button");
+		this.$addlinkcancel=this.$el.find(".add-link-cancel");
+		this.$addlinkform=this.$el.find(".add-link-form");
+		this.$title=new fetch.Stapes.FormInput(this.$el.find(".title-group"), "title");
+		this.$url=new fetch.Stapes.FormInput(this.$el.find(".url-group"), "url");
+		this.$addlinksubmit=this.$el.find('button[type="submit"]');
+
+		var self=this;
+		this.$addlinkbutton.on("click", function() {
+			self.showForm();
+		});
+		
+		this.$addlinkcancel.on("click", function() {
+			self.showButton();
+		});
+
+		this.$addlinksubmit.on("click", function() {
+			var title=self.$title.input().val();
+			var url=self.$url.input().val();
+			
+			if(title==undefined || title=="") {
+				self.$title.error();
+				return;
+			}
+
+			if(url==undefined || url=="") {
+				self.$url.error();
+				return;
+			}
+
+			self.createItem(url, title);		
+		})
+
+		this.showNothing();
+	},
+	showForm: function() {
+		this.$addlinkform.show();
+		this.$addlinkbutton.hide();
+	},
+	showButton: function() {
+		this.$addlinkform.hide();
+		this.$addlinkbutton.show();
+	},
+	showNothing: function() {
+		this.$addlinkform.hide();
+		this.$addlinkbutton.hide();
+	},
+	createItem: function(url, title) {
+		var self=this;
+		var data = $.ajax({
+			type: "POST",
+			async: true,
+			crossDomain: "true",
+			url: fetch.conf.server + "/fetch/collections/"+this.item.id+"/items/",
+			data: {
+				url: url,
+				title: title
+			},
+			success: function(data) {
+				self.showNothing();
+				self.emit("collection.item.new", data);
+			},
+			error: function(data) {
+				console.log("Something went wrong");
+			}
+		});
+	}
+});
+
 fetch.Stapes.CollectionView=Stapes.subclass({
 	constructor: function($parent, manager, item) {
 		this.manager=manager;
 		this.set("loading", false);
+		this.set("all_loaded", false);
 		this.set("offset", 0);
 		this.id=item.id;
 		var template=$("#collection-details-template").html();
@@ -94,7 +168,7 @@ fetch.Stapes.CollectionView=Stapes.subclass({
 		this.$edit=this.$el.find(".edit");
 		this.$delete=this.$el.find(".delete");
 		this.$status=new fetch.Stapes.StatusMessage(this.$el.find(".status"));
-		console.log(this.$scroll);
+		this.addlinkform=new fetch.Stapes.AddLinkToCollection(this.$el.find(".add-link-container"), item);
 	
 		var self=this;
 		this.$collectionactions.hide();
@@ -131,6 +205,10 @@ fetch.Stapes.CollectionView=Stapes.subclass({
 			self.deleteCollection(self.id);
 		});
 
+		this.addlinkform.on("collection.item.new", function() {
+			self.refreshCollectionItems();
+		});
+
 		this.$el.on("hidden.bs.modal", function() {
 			self.$el.remove();
 		});
@@ -141,10 +219,20 @@ fetch.Stapes.CollectionView=Stapes.subclass({
 		this.loadCollectionItems();
 	},
 	refreshCollectionItems: function() {
+		this.set("offset", 0);
+		this.set("all_loaded", false);	
 		this.loadCollectionItems(true);	
+		this.$scroll.animate({scrollTop:0});
 	},
 	loadCollectionItems: function(refresh) {
+		if(this.get("loading")==true) 
+			return;
+		if(this.get("all_loaded")==true) {
+			this.addlinkform.showButton();
+			return;
+		}
 		var self=this;
+		this.set("loading", true);	
 		this.$status.working();
 		var data = $.ajax({
 			type: "GET",
@@ -166,6 +254,8 @@ fetch.Stapes.CollectionView=Stapes.subclass({
 						var view=new fetch.Stapes.CollectionItem(self.$list, self, links[i]);
 					}	
 				} 
+				if(data.next==null)
+					self.set("all_loaded", true);
 				self.set("loading", false);
 				self.set("offset", self.get("offset")+20);
 				self.$status.info("");
