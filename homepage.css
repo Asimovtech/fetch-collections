@@ -148,6 +148,7 @@ input[name="search-query"]::-moz-placeholder {
 
 .collection .badge {
 	float: right;
+	font-size: 7pt;
 	margin-top: 5px;
 	margin-right: -10px;
 }
@@ -210,6 +211,10 @@ input[name="search-query"]::-moz-placeholder {
 	overflow-y: auto;
 }
 
+.collection-details .badge {
+	font-size: 7pt;
+}
+
 .collection-details .actions {
 	padding-left: 50px;
 }
@@ -221,7 +226,7 @@ input[name="search-query"]::-moz-placeholder {
 .collection-settings {
 	color: #898989;
 	padding-top: 2px;
-	padding-right: 5px;
+	padding-right: 10px;
 }
 
 .modal-content {

@@ -3,7 +3,7 @@
 
   "name": "Fetch",
   "description": "Fetch saves your browser history on the cloud, and helps you find useful links from your history easily",
-  "version": "3.0.1",
+  "version": "3.0.5",
   "background": {
     "page": "background.html"
   },
@@ -31,6 +31,11 @@
 	"management",
     "contextMenus"
   ],
+  "icons": {
+    "16": "icon.png",
+    "48": "icon.png",
+    "128": "icon.png"
+  },
   "web_accessible_resources": [
     "icon.png"
   ],

@@ -167,10 +167,12 @@ fetch.Stapes.CollectionView=Stapes.subclass({
 		this.$collectionsave=this.$el.find(".collection-save");
 		this.$edit=this.$el.find(".edit");
 		this.$delete=this.$el.find(".delete");
+		this.$collectionwalkthrough=this.$el.find(".collection-walkthrough");
 		this.$status=new fetch.Stapes.StatusMessage(this.$el.find(".status"));
 		this.addlinkform=new fetch.Stapes.AddLinkToCollection(this.$el.find(".add-link-container"), item);
 	
 		var self=this;
+		this.$collectionwalkthrough.hide();
 		this.$collectionactions.hide();
 		this.$collectionedit.hide();
 
@@ -228,7 +230,6 @@ fetch.Stapes.CollectionView=Stapes.subclass({
 		if(this.get("loading")==true) 
 			return;
 		if(this.get("all_loaded")==true) {
-			this.addlinkform.showButton();
 			return;
 		}
 		var self=this;
@@ -253,9 +254,14 @@ fetch.Stapes.CollectionView=Stapes.subclass({
 					for(var i=0;i<links.length;i++) {
 						var view=new fetch.Stapes.CollectionItem(self.$list, self, links[i]);
 					}	
+				} else {
+					if(self.get("offset")==0)
+						self.$collectionwalkthrough.show();
 				} 
-				if(data.next==null)
+				if(data.next==null) {
+					self.addlinkform.showButton();
 					self.set("all_loaded", true);
+				}
 				self.set("loading", false);
 				self.set("offset", self.get("offset")+20);
 				self.$status.info("");
@@ -443,6 +449,7 @@ fetch.Stapes.CollectionCreator=Stapes.subclass({
 			success: function(data) {
 				self.emit("refresh");
 				self.$el.modal("toggle");
+				fetch.analytics.pushEvent("collection-created", name);
 			},
 			error: function(data) {
 				self.$status.error(data);
