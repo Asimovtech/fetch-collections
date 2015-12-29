@@ -117,6 +117,10 @@ input[name="search-query"]::-moz-placeholder {
 	color: #707070;
 }
 
+.collection-ghost {
+	opacity: 0.5;
+}
+
 .new-collection {
 	margin-left: 20px;
 	margin-bottom: 20px;

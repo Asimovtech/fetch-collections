@@ -341,13 +341,20 @@ fetch.Stapes.CollectionView=Stapes.subclass({
 fetch.Stapes.CollectionManager=Stapes.subclass({
 	constructor: function($element, collectioncreator) {
 		this.$el=$element;
-		this.$collectionlist=this.$el.find(".collection-container");
+		this.$collectionlist=this.$el.find(".collection-list");
 		this.collectioncreator=collectioncreator;
 		this.set("loading", false);
 
 		var self=this;
 		this.collectioncreator.on("refresh", function() {
 			self.loadCollections();
+		});
+
+		chrome.storage.local.get("collectionSortOrder", function(items) {
+			if(items.collectionSortOrder!=undefined) {
+				self.sortorder=items.collectionSortOrder;
+				console.log("got sort order from local store as "+self.sortorder);
+			}
 		});
 
 		chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
@@ -377,9 +384,29 @@ fetch.Stapes.CollectionManager=Stapes.subclass({
 				self.$el.find(".collection").remove();
 				if (!$.isEmptyObject(data)) {
 					collections=data;
+					if(self.$sortable!=undefined)
+							self.$sortable.destroy();
 					for(var i=0;i<collections.length;i++) {
 						var view=new fetch.Stapes.CollectionTile(self.$collectionlist, self, collections[i]);
 					}	
+					self.$sortable=Sortable.create(self.$collectionlist[0], {
+						ghostClass:"collection-ghost",
+						draggable:".collection",
+						sort:true,
+						store: {
+							get: function(sortable) {
+								var order = self.sortorder;
+								console.log("returning order "+order);
+								return order ? order.split('|') : [];
+							},
+							set: function(sortable) {
+								var order = sortable.toArray();
+								self.sortorder=order.join("|");
+								console.log("saving order "+self.sortorder);
+								chrome.storage.local.set({collectionSortOrder:self.sortorder});
+							}
+						}	
+					});
 				} 
 
 				self.set("loading", false);
@@ -389,6 +416,8 @@ fetch.Stapes.CollectionManager=Stapes.subclass({
 				this.set("loading", false);
 			}
 		});
+	},	
+	sortstore: {
 	},	
 	header: function($parent) {
 		return undefined;

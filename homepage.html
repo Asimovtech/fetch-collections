@@ -128,6 +128,7 @@
 									<center>Create Collection</center>
 									<center><img src="icons/create_collection.png" width="30" style="padding-top: 12px"/></center>
 								</div>
+								<div class="collection-list"></div>
 								<div class="create-collection modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
 									<div class="modal-dialog modal-sm">
 										<div class="modal-content">
@@ -278,7 +279,7 @@
 							</div>
 							</script>
 							<script id="collection-template" type="x-tmpl-mustache">
-							<div class="collection clickable col-xs-2">
+							<div class="collection clickable col-xs-2" data-id="col_{{ id }}">
 								<div class="title">{{ name }}</div>
 								<div class="badge" style="background-color: {{ color }}">&nbsp;</div>
 								<div class="links"><b>{{ links }}</b> links</div>
@@ -307,6 +308,7 @@
         <script src="utils/core.js"></script>
         <script src="utils/jquery.simpleWeather.min.js"></script>
         <script src="utils/moment.min.js"></script>
+        <script src="utils/sortable.min.js"></script>
         <script src="typeahead/typeahead.bundle.js"></script>
         <script src="scrollbar.js"></script>
         <script src="components/meta.js"></script>
