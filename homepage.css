@@ -233,6 +233,12 @@ input[name="search-query"]::-moz-placeholder {
 	padding-right: 10px;
 }
 
+.collection-share {
+	color: #898989;
+	padding-top: 2px;
+	padding-right: 10px;
+}
+
 .modal-content {
 	border-radius: 0px;
 }

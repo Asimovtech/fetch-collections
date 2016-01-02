@@ -150,6 +150,7 @@ fetch.Stapes.AddLinkToCollection=Stapes.subclass({
 fetch.Stapes.CollectionView=Stapes.subclass({
 	constructor: function($parent, manager, item) {
 		this.manager=manager;
+		this.item=item;
 		this.set("loading", false);
 		this.set("all_loaded", false);
 		this.set("offset", 0);
@@ -162,6 +163,7 @@ fetch.Stapes.CollectionView=Stapes.subclass({
 		this.$collectionview=this.$el.find(".collection-view");
 		this.$collectionedit=this.$el.find(".collection-edit");
 		this.$collectionsettings=this.$el.find(".collection-settings");
+		this.$collectionshare=this.$el.find(".collection-share");
 		this.$collectionactions=this.$el.find(".actions");
 		this.$collectionname=this.$el.find('input[name="name"]');
 		this.$collectionsave=this.$el.find(".collection-save");
@@ -184,6 +186,11 @@ fetch.Stapes.CollectionView=Stapes.subclass({
 
 		this.$collectionsettings.on("click", function() {
 			self.$collectionactions.toggle();
+		});
+
+		this.$collectionshare.on("click", function() {
+			self.$el.modal('toggle');	
+			var shareDialog=new fetch.Stapes.ShareCollection(self.item);
 		});
 
 
@@ -218,7 +225,21 @@ fetch.Stapes.CollectionView=Stapes.subclass({
 		$parent.append(this.$el);
 		this.$el.modal('toggle');	
 
+		this.updateLastSeenTimestamp();
 		this.loadCollectionItems();
+	},
+	updateLastSeenTimestamp: function() {
+		var self=this;
+		var now=new Date().toISOString();
+		var data = $.ajax({
+			type: "PATCH",
+			async: true,
+			crossDomain: "true",
+			url: fetch.conf.server + "/fetch/collections/"+this.id+"/owners/"+this.item.coowner_info.id+"/",
+			data: {
+				last_seen_timestamp: now
+			},
+		});
 	},
 	refreshCollectionItems: function() {
 		this.set("offset", 0);
@@ -338,6 +359,7 @@ fetch.Stapes.CollectionView=Stapes.subclass({
 	}
 });
 
+
 fetch.Stapes.CollectionManager=Stapes.subclass({
 	constructor: function($element, collectioncreator) {
 		this.$el=$element;
@@ -363,6 +385,7 @@ fetch.Stapes.CollectionManager=Stapes.subclass({
 			}
 		});
 		
+		this.processInvites();
 		this.loadCollections();
 	},
 	loadCollections: function() {
@@ -417,10 +440,125 @@ fetch.Stapes.CollectionManager=Stapes.subclass({
 			}
 		});
 	},	
-	sortstore: {
-	},	
+	processInvites: function() {
+		var self=this;
+		$.ajax({
+			type: "GET",
+			async: true,
+			crossDomain: "true",
+			url: fetch.conf.server + "/fetch/collectioninvites/",
+			success: function(data) {
+				if (!$.isEmptyObject(data)) {
+					console.log(data[0]);
+					var inviteDialog=new fetch.Stapes.ShareCollectionNotification(data[0]);
+					
+					inviteDialog.on("refresh", function() {
+						self.loadCollections();
+					});
+				} 
+			}
+		});
+	},
 	header: function($parent) {
 		return undefined;
+	}
+});
+
+
+fetch.Stapes.ShareCollectionNotification=Stapes.subclass({
+	constructor: function(invite) {
+		this.invite=invite;
+		var self=this;
+		$.get("templates/share-collection-notification.tmpl", function(template) {
+			self.$el=$(Mustache.render(template, self.invite)).first();
+			console.log(self.$el);
+			self.$status=new fetch.Stapes.StatusMessage(self.$el.find(".status"));
+			$('body').append(self.$el);
+			self.$el.modal("show");
+			self.setup();
+		});
+	},
+	setup: function() {
+		var self=this;
+		self.$el.find(".accept").on("click", function() {
+			self.updateInviteStatus(0);
+		});
+		self.$el.find(".reject").on("click", function() {
+			self.updateInviteStatus(1);
+		});
+		this.$el.on("hidden.bs.modal", function() {
+			self.$el.remove();
+		});
+	},
+	updateInviteStatus: function(invite_status) {
+		var self=this;
+		self.$status.working();
+		$.ajax({
+			type: "PATCH",
+			async: true,
+			crossDomain: "true",
+			url: fetch.conf.server + "/fetch/collections/"+this.invite.collection.id+"/owners/"+this.invite.id+"/",
+			data: {
+				invite_status: invite_status
+			},
+			success: function(data) {
+				self.$status.reset();
+				self.$el.modal("hide");
+				fetch.analytics.pushEvent("collection-invite-status", invite_status);
+				self.emit("refresh");
+			},
+			error: function(data) {
+				self.$status.error(data);
+			}
+		});
+
+	}
+});
+
+fetch.Stapes.ShareCollection=Stapes.subclass({
+	constructor: function(collection) {
+		this.collection=collection;
+		var self=this;
+		$.get("templates/share-collection.tmpl", function(template) {
+			self.$el=$(Mustache.render(template, self.collection));
+			self.$status=new fetch.Stapes.StatusMessage(self.$el.find(".status"));
+			$('body').append(self.$el);
+			self.$el.modal("toggle");
+			self.setup();
+		});
+	},
+	setup: function() {
+		var self=this;
+		self.$el.find(".share").on("click", function() {
+			var val=self.$el.find('input[name="email"]').val();
+
+			if(val!=undefined && val!="")
+				self.shareCollection(val);
+			else
+				self.$status.error("Enter an email address to share collection");
+		});
+	},
+	shareCollection: function(email) {
+		var self=this;
+		self.$status.working();
+		$.ajax({
+			type: "POST",
+			async: true,
+			crossDomain: "true",
+			url: fetch.conf.server + "/fetch/collections/"+this.collection.id+"/owners/",
+			data: {
+				email: email
+			},
+			success: function(data) {
+				self.$status.reset();
+				self.$el.modal("toggle");
+				fetch.analytics.pushEvent("collection-shared", email);
+			},
+			error: function(data) {
+				self.$status.error(data);
+			}
+		});
+
 	}
 });
 

@@ -1,0 +1,50 @@
+<div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="shareCollectionModal">
+	<style scoped>
+		.note {
+			color: #898989;
+			font-size: x-small;
+		}
+		.title {
+			color: #111111;
+			font-size: small;
+			font-weight: bold;
+			text-align: middle;
+		}
+		.badge {
+			font-size: 7pt;
+		}
+	</style>
+	<div class="modal-dialog modal-sm">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<div class="title">Share <div class="badge" style="background-color: {{ color }}">&nbsp;</div> {{ name }}</div>
+			</div>
+			<div class="modal-body">
+				<div class="form-group">
+					<label for="shareEmail">Email</label>
+					<input type="email" class="form-control" name="email" id="collectionName" placeholder="e.g. friend@emailservice.com">
+				</div>
+				<div class="row">
+					<div class="col-xs-8">&nbsp;</div>
+					<div class="col-xs-2">
+						<button class="share btn btn-sm btn-success">SHARE</button>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12">
+						<center>
+							<span class="status">
+								<i class="fa fa-refresh fa-spin fa-lg"></i>
+								<label></label>
+							</span>
+						</center>
+					</div>
+					<div class="note col-xs-12">
+						Note: By inviting other users you make them co-owners of this collection with all privileges
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
