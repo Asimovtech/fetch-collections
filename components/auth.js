@@ -278,3 +278,62 @@ fetch.Stapes.ResetPassword=Stapes.subclass({
 		});
 	}
 });
+
+fetch.Stapes.EditProfile=Stapes.subclass({
+	constructor: function($element) {
+		this.$el=$element;
+		this.$nickname=new fetch.Stapes.FormInput(this.$el.find(".nickname-group"), "nickname");
+		this.$profilepic=new fetch.Stapes.FormInput(this.$el.find(".profile-pic-group"), "profile-pic");
+		this.$status=new fetch.Stapes.StatusMessage(this.$el.find(".status"));
+		this.$submit=this.$el.find("button");
+
+		var self=this;
+		this.$submit.on("click", function() {
+			self.doEditProfile();
+		});
+	},
+	doEditProfile: function() {
+		this.$profilepic.reset();
+		this.$nickname.reset();
+
+		var nickname=this.$nickname.input().val();
+		if(nickname==undefined || nickname=="") {
+			this.$nickname.error();
+			return;
+		}
+
+		var files=this.$profilepic.input()[0].files;
+		if(files.length==0) {
+			this.$profilepic.error();
+			return;
+		}
+		
+		var data=new FormData();
+		data.append("nickname", nickname);
+		var filename=files[0].name;
+		var fileparts=filename.split(".");
+		
+		data.append("profilepic", files[0], fetch.user.get("userId")+"."+fileparts[fileparts.length-1]);
+
+		this.$status.working();
+		var self=this;
+		$.ajax({
+			url: fetch.conf.server + "/fetch/me/",
+			type: 'PATCH',
+			data: data,
+			cache: false,
+			dataType: 'json',
+			processData: false, // Don't process the files
+			contentType: false, // Set content type to false as jQuery will tell the server its a query string request
+			success: function(data, textStatus, jqXHR)
+			{
+				self.$status.success("Profile Updated!");	
+			},
+			error: function(jqXHR, textStatus, errorThrown)
+			{
+				self.$status.error("Profile Update failed!");	
+			}
+		});
+	}
+});
+

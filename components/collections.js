@@ -26,6 +26,10 @@ fetch.Stapes.CollectionTile=Stapes.subclass({
 fetch.Stapes.CollectionItem=Stapes.subclass({
 	constructor: function($parent, container, item) {
 		this.item=item;
+		if(this.item.userdetails.email!="")
+			this.item.initials=this.item.userdetails.email.substring(0,1).toUpperCase();
+		if(this.item.userdetails.profilepic!="")
+			this.item.userdetails.profilepic=fetch.conf.server+this.item.userdetails.profilepic;
 		if(this.item.title.length>100) {
 			console.log("truncating title");
 			this.item.display_title=this.item.title.substring(0, 100)+"..."

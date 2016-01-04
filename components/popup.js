@@ -91,13 +91,13 @@ fetch.Stapes.Settings=Stapes.subclass({
 		
 		var self=this;
 		this.$el.on('click', function() {
-			var myleft = (screen.width / 2) - (550 / 2);
+			var myleft = (screen.width / 2) - (750 / 2);
 			var mytop = (screen.height / 2) - (300 / 2);
 
 			chrome.windows.create({
 				url: "settings.html"+tab,
 				type: "panel",
-				width: 550,
+				width: 750,
 				height: 300,
 				"left": myleft,
 				"top": mytop

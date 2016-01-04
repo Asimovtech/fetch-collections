@@ -9,6 +9,7 @@ $(document).ready(function() {
 	fetch.user.on("user", function() {
 		fetch.blockedsites=new fetch.Stapes.BlockedSites($('a[data-toggle="tab"]'),
 			"#blocked-websites", $("#blocked-sites-form"));
+		fetch.editprofile=new fetch.Stapes.EditProfile($("#edit-profile-form"));
 	});
 	fetch.changepassword=new fetch.Stapes.ChangePassword($("#change-password-form"));
 	fetch.clearhistory=new fetch.Stapes.ClearHistory($("#clear-history-form"));

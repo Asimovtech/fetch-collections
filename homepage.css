@@ -109,6 +109,11 @@ input[name="search-query"]::-moz-placeholder {
 	text-decoration: underline!important;
 }
 
+.collection-manager-container {
+	max-height: 50%;
+	overflow-y: auto;	
+}
+
 .collection {
 	margin-left: 20px;
 	margin-bottom: 20px;
@@ -200,6 +205,20 @@ input[name="search-query"]::-moz-placeholder {
 	line-height: 35px;
 }
 
+.collection-link .initials {
+	display: inline-block;
+	background-color: #898989;
+	border-radius: 50%;
+	width: 30px;
+	height: 30px;
+	text-align: center;
+	font-size: large;
+	color: white;
+	line-height: 30px;
+	vertical-align: middle;
+	font-weight: 100;
+}
+
 .link-text {
 	height: 35px;
 	border-bottom: 1px #eeeeee solid;
@@ -250,3 +269,5 @@ input[name="search-query"]::-moz-placeholder {
 .form-control {
 	border-radius: 0px;
 }
+
+

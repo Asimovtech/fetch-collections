@@ -263,6 +263,12 @@
 							<div class="collection-link row">
 								<div class="col-xs-10 link-text">
 									<span class="link-view">
+										{{#userdetails.profilepic}}
+										<img src="{{ userdetails.profilepic }}" class="img-circle" width="30" height="30"/>
+										{{/userdetails.profilepic}}
+										{{^userdetails.profilepic}}
+										<span class="initials">{{ initials }}</span>
+										{{/userdetails.profilepic}}
 										<img src="{{ favicon_url }}"/>&nbsp;&nbsp;
 										<a class="link-view-title target="_blank" href="{{ url }}">{{ display_title }}</a>
 									</span>
