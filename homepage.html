@@ -287,6 +287,12 @@
 							</script>
 							<script id="collection-template" type="x-tmpl-mustache">
 							<div class="collection clickable col-xs-2" data-id="col_{{ id }}">
+								<style scoped>
+									.shared {
+										position: absolute;
+										right: -9px;
+									}
+								</style>
 								<div class="title">{{ name }}</div>
 								<div class="badge" style="background-color: {{ color }}">
 								{{#coowner_info.new_links}}
@@ -297,9 +303,9 @@
 								{{/coowner_info.new_links}}
 								</div>
 								<div class="links"><b>{{ links }}</b> links</div>
-								{{^coowner_info.creator}}
-								<div class="shared pull-right"><i class="fa fa-share-alt"></i></div>
-								{{/coowner_info.creator}}
+								{{#shared}}
+								<div class="shared"><img src="icons/share.png"/></div>
+								{{/shared}}
 								<div class="modified">Last edit: {{ modification_time }}</div>
 							</div>
 							</script>

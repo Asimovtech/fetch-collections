@@ -9,6 +9,7 @@ fetch.Stapes.CollectionTile=Stapes.subclass({
 		var linkLength=40;
 
 		item.modification_time=moment(item.modification_time).fromNow();
+		item.shared=(item.coowner_info.coowners>1)
 		
 		var template=$("#collection-template").html();
 		Mustache.parse(template);
@@ -28,8 +29,10 @@ fetch.Stapes.CollectionItem=Stapes.subclass({
 		this.item=item;
 		if(this.item.userdetails.email!="")
 			this.item.initials=this.item.userdetails.email.substring(0,1).toUpperCase();
-		if(this.item.userdetails.profilepic!="")
+		if(this.item.userdetails.profilepic!=null)
 			this.item.userdetails.profilepic=fetch.conf.server+this.item.userdetails.profilepic;
+		else
+			this.item.userdetails.profilepic=false;
 		if(this.item.title.length>100) {
 			console.log("truncating title");
 			this.item.display_title=this.item.title.substring(0, 100)+"..."
