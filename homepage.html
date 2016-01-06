@@ -93,6 +93,7 @@
 						</span>
 					</div>
 				</div>
+<!--
 				<div id="logo" class="row">
 					<div class="col-xs-12">
 						<center>
@@ -100,6 +101,7 @@
 						</center>
 					</div>
 				</div>
+-->
                 <div class="row">
 					<div class="col-xs-3"></div>
                     <div class="col-xs-6" style="padding-top: 20px">
@@ -123,7 +125,7 @@
 					<div class="col-xs-10">
 						<div class="row">
 							<div class="col-xs-1"></div>
-							<div class="collection-container col-xs-10">
+							<div class="collection-container col-xs-12">
 								<div class="new-collection clickable col-xs-2" data-toggle="modal" data-target=".bs-example-modal-sm">
 									<center>Create Collection</center>
 									<center><img src="icons/create_collection.png" width="30" style="padding-top: 12px"/></center>
@@ -260,28 +262,35 @@
 							</div>		
 							</script>
 							<script id="collection-link-template" type="x-tmpl-mustache">
-							<div class="collection-link row">
-								<div class="col-xs-10 link-text">
-									<span class="link-view">
-										{{#userdetails.profilepic}}
-										<img src="{{ userdetails.profilepic }}" class="img-circle" width="30" height="30"/>
-										{{/userdetails.profilepic}}
-										{{^userdetails.profilepic}}
-										<span class="initials">{{ initials }}</span>
-										{{/userdetails.profilepic}}
-										<img src="{{ favicon_url }}"/>&nbsp;&nbsp;
-										<a class="link-view-title target="_blank" href="{{ url }}">{{ display_title }}</a>
-									</span>
-									<div class="link-edit input-group">
-										<input type="text" class="form-control input-sm" name="title" id="link-title" value="{{ title }}"/>
-										<span class="input-group-btn">
-											<button class="link-save btn btn-sm btn-success">SAVE</i></button>
+							<div>
+								<style scoped>
+									.collection-link {
+										overflow: hidden;
+									}
+								</style>
+								<div class="collection-link row">
+									<div class="col-xs-10 link-text">
+										<span class="link-view">
+											{{#userdetails.profilepic}}
+											<img src="{{ userdetails.profilepic }}" class="img-circle" width="30" height="30"/>
+											{{/userdetails.profilepic}}
+											{{^userdetails.profilepic}}
+											<span class="initials">{{ initials }}</span>
+											{{/userdetails.profilepic}}
+											<img src="{{ favicon_url }}"/>&nbsp;&nbsp;
+											<a class="link-view-title target="_blank" href="{{ url }}">{{ title }}</a>
 										</span>
+										<div class="link-edit input-group">
+											<input type="text" class="form-control input-sm" name="title" id="link-title" value="{{ title }}"/>
+											<span class="input-group-btn">
+												<button class="link-save btn btn-sm btn-success">SAVE</i></button>
+											</span>
+										</div>
 									</div>
-								</div>
-								<div class="actions col-xs-2">
-									<span class="clickable edit">Edit</span> | 
-									<span class="clickable delete">Delete</span>
+									<div class="actions col-xs-2">
+										<span class="clickable edit">Edit</span> | 
+										<span class="clickable delete">Delete</span>
+									</div>
 								</div>
 							</div>
 							</script>

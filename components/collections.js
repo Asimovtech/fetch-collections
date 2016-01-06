@@ -33,12 +33,6 @@ fetch.Stapes.CollectionItem=Stapes.subclass({
 			this.item.userdetails.profilepic=fetch.conf.server+this.item.userdetails.profilepic;
 		else
 			this.item.userdetails.profilepic=false;
-		if(this.item.title.length>100) {
-			console.log("truncating title");
-			this.item.display_title=this.item.title.substring(0, 100)+"..."
-		} else {
-			this.item.display_title=this.item.title;
-		}
 		var template=$("#collection-link-template").html();
 		Mustache.parse(template);
 		this.$el=$(Mustache.render(template, this.item));

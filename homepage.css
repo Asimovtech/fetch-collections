@@ -110,7 +110,7 @@ input[name="search-query"]::-moz-placeholder {
 }
 
 .collection-manager-container {
-	max-height: 50%;
+	max-height: 70%;
 	overflow-y: auto;	
 }
 
@@ -120,6 +120,7 @@ input[name="search-query"]::-moz-placeholder {
 	height: 20%;
 	background-color: white;
 	color: #707070;
+	width: 12%;
 }
 
 .collection-ghost {
@@ -132,6 +133,7 @@ input[name="search-query"]::-moz-placeholder {
 	height: 20%;
 	background-color: white;
 	color: #707070;
+	width: 12%;
 }
 
 .new-collection center {
