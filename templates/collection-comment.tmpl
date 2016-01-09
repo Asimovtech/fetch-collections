@@ -1,0 +1,51 @@
+<div>
+	<style scoped>
+		.initials {
+			display: inline-block;
+			background-color: #898989;
+			border-radius: 50%;
+			width: 30px;
+			height: 30px;
+			text-align: center;
+			font-size: large;
+			color: white;
+			line-height: 30px;
+			vertical-align: middle;
+			font-weight: 100;
+		}
+		.username {
+			font-size: small;
+			font-weight: bold;
+			color: #111111;
+		}
+		.comment {
+			font-size: small;
+			color: #707070;
+		}
+	</style>
+	<div class="collection-comment row">
+		<div class="col-xs-2">
+			<span class="link-view">
+				{{#owner.profilepic}}
+				<img src="{{ userdetails.profilepic }}" class="img-circle" width="30" height="30"/>
+				{{/owner.profilepic}}
+				{{^owner.profilepic}}
+				<span class="initials">{{ initials }}</span>
+				{{/owner.profilepic}}
+			</span>
+		</div>
+		<div class="col-xs-10">
+			<span class="username">
+				{{#owner.nickname}}
+				{{owner.nickname}}
+				{{/owner.nickname}}
+				{{^owner.nickname}}
+				{{owner.email}}
+				{{/owner.nickname}}
+			</span>
+			<div class="clickable close pull-right">&times;</div>
+			<p class="comment">{{ message }}</p>
+		</div>
+	</div>
+</div>
+

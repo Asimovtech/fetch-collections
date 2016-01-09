@@ -182,6 +182,7 @@ fetch.Stapes.CollectionView=Stapes.subclass({
 		this.$scroll.on("scroll", function() {
 			if((self.$scroll.scrollTop()+self.$scroll.innerHeight())>=self.$scroll[0].scrollHeight) {
 				self.loadCollectionItems();
+				self.$comments.loadComments();
 			}
 		});
 
@@ -226,8 +227,9 @@ fetch.Stapes.CollectionView=Stapes.subclass({
 		$parent.append(this.$el);
 		this.$el.modal('toggle');	
 
-		this.updateLastSeenTimestamp();
 		this.loadCollectionItems();
+		self.$comments=new fetch.Stapes.CommentManager(self.$el.find(".collection-comment-container"), self.item); 
+		this.updateLastSeenTimestamp();
 	},
 	updateLastSeenTimestamp: function() {
 		var self=this;
@@ -698,5 +700,148 @@ fetch.Stapes.CollectionContextMenu=Stapes.subclass({
 			}
 		});
 
+	}
+});
+
+fetch.Stapes.CollectionComment=Stapes.subclass({
+	constructor: function($parent, manager, comment) {
+		this.comment=comment;
+		this.manager=manager;
+		if(this.comment.owner.email!="")
+			this.comment.initials=this.comment.owner.email.substring(0,1).toUpperCase();
+		if(this.comment.owner.profilepic!=null)
+			this.comment.owner.profilepic=fetch.conf.server+this.comment.owner.profilepic;
+		else
+			this.comment.owner.profilepic=false;
+		if(this.comment.owner.nickname==null)
+			this.comment.owner.nickname=false;
+
+		var self=this;
+		$.get("templates/collection-comment.tmpl", function(template) {
+			self.$el=$(Mustache.render(template, self.comment)).first();
+			self.$close=self.$el.find(".close");
+			self.$status=new fetch.Stapes.StatusMessage(self.$el.find(".status"));
+			$parent.append(self.$el);
+			self.setup();
+		});
+	},
+	setup: function() {
+		var self=this;
+		self.$close.hide();
+		self.$el.hover(function() { self.$close.show(); }, function() { self.$close.hide(); });
+
+		self.$close.on("click", function() {
+			self.$el.hide();
+			self.manager.deleteComment(self.comment.id, self);
+		});
+	},
+	hide: function() {
+		this.$el.hide();
+	}
+});
+
+fetch.Stapes.CommentManager=Stapes.subclass({
+	constructor: function($parent, collection) {
+		this.collection=collection;
+		this.set("loading", false);
+		this.set("all_loaded", false);
+		this.set("offset", 0);
+
+		var self=this;
+		$.get("templates/collection-comment-manager.tmpl", function(template) {
+			self.$el=$(Mustache.render(template)).first();
+			$parent.append(self.$el);
+			self.$list=self.$el.find(".collection-comment-list");
+			self.$form=self.$el.find(".new-comment-form");
+			self.$form.hide();
+
+			self.$el.find(".new-comment-button").on("click", function() {
+				self.$form.toggle();
+			});
+
+			self.$el.find(".save").on("click", function() {
+				self.addComment();
+			});
+
+			self.$el.find(".cancel").on("click", function() {
+				self.$form.hide();
+			});
+
+			self.loadComments();
+		});
+
+
+	},
+	addComment: function() {
+		var text=this.$el.find("textarea").val();
+	
+		var self=this;
+		if(text==undefined || text=="")
+			return;
+
+		var data = $.ajax({
+			type: "POST",
+			async: true,
+			crossDomain: "true",
+			url: fetch.conf.server + "/fetch/collections/"+this.collection.id+"/comments/",
+			data: {
+				message: text
+			},
+			success: function(data) {
+				self.$form.hide();
+				self.refreshComments();
+			}
+		});
+	},
+	deleteComment: function(id, commentWidget) {
+		var self=this;
+
+		var data = $.ajax({
+			type: "DELETE",
+			async: true,
+			crossDomain: "true",
+			url: fetch.conf.server + "/fetch/collections/"+this.collection.id+"/comments/"+id,
+			success: function(data) {
+				commentWidget.hide();
+			}
+		});
+
+	},
+	refreshComments: function() {
+		this.set("all_loaded", false);
+		this.set("offset", 0);
+
+		this.loadComments(true);
+	},
+	loadComments: function(refresh) {
+		if(this.get("all_loaded"))
+			return;
+		console.log("offset is "+this.get("offset"));
+		var self=this;
+		var data = $.ajax({
+			type: "GET",
+			async: true,
+			crossDomain: "true",
+			url: fetch.conf.server + "/fetch/collections/"+this.collection.id+"/comments/",
+			data: {
+				limit: 20,
+				offset: this.get("offset")
+			},
+			success: function(data) {
+				if(refresh==true) {
+					self.$list.empty();
+				}
+				self.set("offset", self.get("offset")+20);	
+				if (!$.isEmptyObject(data.results)) {
+					comments=data.results;
+					for(var i=0;i<comments.length;i++) {
+						var view=new fetch.Stapes.CollectionComment(self.$list, self, comments[i]);
+					}	
+				} 
+				if(data.next==null) {
+					self.set("all_loaded", true);
+				}	
+			}
+		});
 	}
 });
