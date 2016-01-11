@@ -21,10 +21,13 @@
 		.comment {
 			font-size: small;
 			color: #707070;
+			padding-left: 0px;
+			padding-right: 10px;
 		}
 	</style>
 	<div class="collection-comment row">
 		<div class="col-xs-2">
+			<center>
 			<span class="link-view">
 				{{#owner.profilepic}}
 				<img src="{{ userdetails.profilepic }}" class="img-circle" width="30" height="30"/>
@@ -33,8 +36,9 @@
 				<span class="initials">{{ initials }}</span>
 				{{/owner.profilepic}}
 			</span>
+			</center>
 		</div>
-		<div class="col-xs-10">
+		<div class="comment col-xs-10">
 			<span class="username">
 				{{#owner.nickname}}
 				{{owner.nickname}}

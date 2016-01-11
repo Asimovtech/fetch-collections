@@ -230,7 +230,7 @@ input[name="search-query"]::-moz-placeholder {
 	height: 50px;
 }
 
-.collection-details .modal-body {
+.collection-details .collection-link-container {
 	height: 415px;
 	overflow-x: hidden;
 	overflow-y: auto;
@@ -272,4 +272,6 @@ input[name="search-query"]::-moz-placeholder {
 	border-radius: 0px;
 }
 
-
+.collection-link-container {
+	background-color: #f7f7f7;
+}

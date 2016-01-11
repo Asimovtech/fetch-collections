@@ -159,7 +159,7 @@ fetch.Stapes.CollectionView=Stapes.subclass({
 		var template=$("#collection-details-template").html();
 		Mustache.parse(template);
 		this.$el=$(Mustache.render(template, item));
-		this.$scroll=this.$el.find(".modal-body");
+		this.$scroll=this.$el.find(".collection-link-container");
 		this.$list=this.$el.find(".collection-link-container");
 		this.$collectionview=this.$el.find(".collection-view");
 		this.$collectionedit=this.$el.find(".collection-edit");
@@ -182,7 +182,6 @@ fetch.Stapes.CollectionView=Stapes.subclass({
 		this.$scroll.on("scroll", function() {
 			if((self.$scroll.scrollTop()+self.$scroll.innerHeight())>=self.$scroll[0].scrollHeight) {
 				self.loadCollectionItems();
-				self.$comments.loadComments();
 			}
 		});
 
@@ -721,7 +720,7 @@ fetch.Stapes.CollectionComment=Stapes.subclass({
 			self.$el=$(Mustache.render(template, self.comment)).first();
 			self.$close=self.$el.find(".close");
 			self.$status=new fetch.Stapes.StatusMessage(self.$el.find(".status"));
-			$parent.append(self.$el);
+			$parent.prepend(self.$el);
 			self.setup();
 		});
 	},
@@ -745,6 +744,7 @@ fetch.Stapes.CommentManager=Stapes.subclass({
 		this.collection=collection;
 		this.set("loading", false);
 		this.set("all_loaded", false);
+		this.set("scroll_check", true);
 		this.set("offset", 0);
 
 		var self=this;
@@ -753,10 +753,21 @@ fetch.Stapes.CommentManager=Stapes.subclass({
 			$parent.append(self.$el);
 			self.$list=self.$el.find(".collection-comment-list");
 			self.$form=self.$el.find(".new-comment-form");
+			self.$scroll=self.$el.find(".collection-comment-body");
 			self.$form.hide();
 
 			self.$el.find(".new-comment-button").on("click", function() {
 				self.$form.toggle();
+			});
+
+			self.$scroll.on("scroll", function() {
+				if(self.$scroll.scrollTop()==0) {
+					if(!self.get("scroll_check"))
+						return;
+					self.set("old_height", self.$scroll[0].scrollHeight);
+					console.log("comment load triggered: scroll height: "+ self.$scroll.scrollTop());
+					self.loadComments();
+				}
 			});
 
 			self.$el.find(".save").on("click", function() {
@@ -816,7 +827,6 @@ fetch.Stapes.CommentManager=Stapes.subclass({
 	loadComments: function(refresh) {
 		if(this.get("all_loaded"))
 			return;
-		console.log("offset is "+this.get("offset"));
 		var self=this;
 		var data = $.ajax({
 			type: "GET",
@@ -828,10 +838,11 @@ fetch.Stapes.CommentManager=Stapes.subclass({
 				offset: this.get("offset")
 			},
 			success: function(data) {
+				self.set("scroll_check", false);
 				if(refresh==true) {
 					self.$list.empty();
+					console.log("Emptied list");
 				}
-				self.set("offset", self.get("offset")+20);	
 				if (!$.isEmptyObject(data.results)) {
 					comments=data.results;
 					for(var i=0;i<comments.length;i++) {
@@ -841,6 +852,18 @@ fetch.Stapes.CommentManager=Stapes.subclass({
 				if(data.next==null) {
 					self.set("all_loaded", true);
 				}	
+				if(self.get("offset")==0) {
+					setTimeout(function() {
+						self.$scroll.scrollTop(self.$scroll[0].scrollHeight);
+						self.set("scroll_check", true);
+					}, 100);
+				} else {
+					setTimeout(function() {
+						self.$scroll.scrollTop(self.$scroll[0].scrollHeight-self.get("old_height")-self.$scroll.height()/3.0);
+						self.set("scroll_check", true);
+					}, 100);
+				}
+				self.set("offset", self.get("offset")+20);	
 			}
 		});
 	}
