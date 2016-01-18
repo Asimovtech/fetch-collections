@@ -3,7 +3,6 @@ var pageActiveTimeout = 30;
 var curUrl = "";
 var curPageTitle = "";
 var pageActive = true;
-var popupTimer = 120;
 var curFavIconUrl = "";
 var pauseFetch = false;
 
@@ -12,11 +11,6 @@ chrome.runtime.onMessage.addListener(
 		if (request.status == "active") {
 			pageActive = true;
 			pageActiveTimeout = 30;
-			if (popupTimer == 0) {
-				getPopupDetail();
-				popupTimer = 120;
-			}
-
 		}
 		if (request.message == "toggle") {
 			pauseFetch = !pauseFetch;
@@ -219,9 +213,17 @@ $(document).ready(function() {
 				var tab = tabs[0];
 				if(tab==undefined)
 					return;
-				var url = tab.url;
-				//var pageTitle = tab.title;
+				var url="";
+				if("url" in tab) {
+					url=tab.url;
+				} else {
+					console.log("No url, aborting tab update")
+					return;
+				}
+
 				var pageTitle = "";
+				if("title" in tab)
+					pageTitle=tab.title
 				var favIconUrl = encodeURIComponent(url);
 
 				chrome.tabs.sendMessage(tabs[0].id, {
@@ -235,7 +237,7 @@ $(document).ready(function() {
 					console.assert(typeof url == 'string', 'tab.url should be a string');
 					console.assert(typeof pageTitle == 'string', 'tab.title should be a string');
 					if (curUrl != url) {
-						updateUserTimer(curUrl, curPageTitle, timer, curFavIconUrl);
+						updateUserTimer(url, pageTitle, timer, favIconUrl);
 						curUrl = url;
 						curPageTitle = pageTitle;
 						curFavIconUrl = favIconUrl;
@@ -243,7 +245,14 @@ $(document).ready(function() {
 					} else {
 						if (pageActive == true) {
 							timer = timer + 1;
-							if (pageActive == true && timer == 15) {
+							if (timer==15) {
+								updateUserTimer(curUrl, curPageTitle, timer, curFavIconUrl);
+								timer = 0;
+							}
+
+							pageActiveTimeout--;
+							if (pageActiveTimeout == 0) {
+								pageActive = false;
 								updateUserTimer(curUrl, curPageTitle, timer, curFavIconUrl);
 								timer = 0;
 							}
@@ -251,20 +260,6 @@ $(document).ready(function() {
 					}
 				});
 			});
-
-			if (pageActive == false) {
-				return;
-			} else {
-				pageActiveTimeout--;
-				if (pageActiveTimeout == 0) {
-					pageActive = false;
-					updateUserTimer(curUrl, curPageTitle, timer, favIconUrl);
-					timer = 0;
-				}
-			}
-			if (popupTimer != 0) {
-				popupTimer -= 1
-			}
 		}
 	}, 1000);
 });
