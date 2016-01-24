@@ -230,8 +230,12 @@ input[name="search-query"]::-moz-placeholder {
 	height: 50px;
 }
 
+.collection-details .modal-body {
+	padding-bottom: 0px;
+}
+
 .collection-details .collection-link-container {
-	height: 415px;
+	height: 395px;
 	overflow-x: hidden;
 	overflow-y: auto;
 }

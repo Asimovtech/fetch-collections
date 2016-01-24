@@ -5,19 +5,29 @@
 			padding-left: 10px;
 			overflow-x: hidden;
 			overflow-y: auto;
-			height: 61%;
+			height: 390px;
+		}
+		.new-comment-body {
+			padding-top: 5px;
+			margin-top: 5px;
+			padding-right: 10px;
+			padding-bottom: 0px;
+		}
+		.comment-submit-help {
+			font-size: x-small;
+			color: #707070;
+			display: inline-block;
+			float: right;	
 		}
 	</style>
 	<div class="collection-comment-body row">
 		<div class="collection-comment-list"></div>
 	</div>
-	<div class="new-comment-body">
-		<div class="col-xs-12">
+	<div class="new-comment-body row">
 			<div class="new-coment-form form-group">
 				<textarea class="form-control" rows="2" placeholder="enter comment here"></textarea>
-				<button class="save btn btn-sm btn-success pull-right">SEND</button>
+				<span class="comment-submit-help">Press enter to  Send</span>
 				<!-- <button class="cancel btn btn-sm btn-default pull-right">CANCEL</button> -->
 			</div>	
-		</div>
 	</div>
 </div>

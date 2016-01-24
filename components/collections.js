@@ -6,7 +6,7 @@ fetch.Stapes.CollectionTile=Stapes.subclass({
 		this.item=item;
 		this.manager=manager;
 		this.$parent=$parent;
-		var linkLength=40;
+		var linkLength=45;
 
 		item.modification_time=moment(item.modification_time).fromNow();
 		item.shared=(item.coowner_info.coowners>1)
@@ -112,7 +112,7 @@ fetch.Stapes.AddLinkToCollection=Stapes.subclass({
 			self.createItem(url, title);		
 		})
 
-		this.showNothing();
+		this.showButton();
 	},
 	showForm: function() {
 		this.$addlinkform.show();
@@ -714,6 +714,7 @@ fetch.Stapes.CollectionComment=Stapes.subclass({
 			this.comment.owner.profilepic=false;
 		if(this.comment.owner.nickname==null)
 			this.comment.owner.nickname=false;
+		comment.message = comment.message.replace(/\n/g,"<br>");
 
 		var self=this;
 		$.get("templates/collection-comment.tmpl", function(template) {
@@ -770,8 +771,9 @@ fetch.Stapes.CommentManager=Stapes.subclass({
 				}
 			});
 
-			self.$el.find(".save").on("click", function() {
-				self.addComment();
+			self.$el.find("textarea").on("keyup", function(e) {
+				if(e.keyCode==13 && e.shiftKey===false) 
+					self.addComment();
 			});
 
 			self.$el.find(".cancel").on("click", function() {
@@ -785,6 +787,7 @@ fetch.Stapes.CommentManager=Stapes.subclass({
 	},
 	addComment: function() {
 		var text=this.$el.find("textarea").val();
+		this.$el.find("textarea").val("");
 	
 		var self=this;
 		if(text==undefined || text=="")
