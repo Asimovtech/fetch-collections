@@ -110,7 +110,7 @@ input[name="search-query"]::-moz-placeholder {
 }
 
 .collection-manager-container {
-	max-height: 70%;
+	max-height: 90%;
 	overflow-y: auto;	
 }
 
