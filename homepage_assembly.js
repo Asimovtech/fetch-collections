@@ -12,7 +12,6 @@ $(document).ready(function() {
 	//fetch.togglefetch=new fetch.Stapes.ToggleFetch($("#toggle-fetch-btn"));
 	fetch.settings=new fetch.Stapes.Settings($("#settings"), "");
 	//fetch.support=new fetch.Stapes.Settings($("#support"), "#contact");
-	fetch.recentsearches=new fetch.Stapes.RecentSearches($("#recent-searches"));
 	fetch.timebackground=new fetch.Stapes.TimeBackground($("#background"));
 	fetch.realtimeinfo=new fetch.Stapes.RealTimeInfo($(".real-time-info"));
 });
