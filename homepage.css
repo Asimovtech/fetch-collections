@@ -201,6 +201,10 @@ input[name="search-query"]::-moz-placeholder {
 	color: #898989;
 }
 
+.collection-walkthrough {
+	overflow: visible;
+}
+
 .collection-link {
 	height: 35px;	
 	padding-left: 30px;

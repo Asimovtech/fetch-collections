@@ -8,6 +8,7 @@ $(document).ready(function() {
 	fetch.user.on("user", function() {
 		fetch.collectioncreator=new fetch.Stapes.CollectionCreator($(".create-collection"));
 		fetch.collections=new fetch.Stapes.CollectionManager($(".collection-manager-container"), fetch.collectioncreator);
+		fetch.collectionmenu=new fetch.Stapes.CollectionContextMenu();
 	});
 	//fetch.togglefetch=new fetch.Stapes.ToggleFetch($("#toggle-fetch-btn"));
 	fetch.settings=new fetch.Stapes.Settings($("#settings"), "");
